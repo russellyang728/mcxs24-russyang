@@ -61,6 +61,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -91,8 +93,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link active" data-scroll-target="#the-question-objective-and-motivation">1. The Question Objective, and Motivation</a></li>
+  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">2. Data and Their Properties</a>
   <ul class="collapse">
+  <li><a href="#variables-selected" id="toc-variables-selected" class="nav-link" data-scroll-target="#variables-selected">2.1 Variables Selected</a></li>
+  <li><a href="#why-chose-them" id="toc-why-chose-them" class="nav-link" data-scroll-target="#why-chose-them">2.2 Why Chose Them?</a></li>
+  <li><a href="#data-visualization" id="toc-data-visualization" class="nav-link" data-scroll-target="#data-visualization">2.3 Data Visualization</a></li>
+  <li><a href="#property-tested" id="toc-property-tested" class="nav-link" data-scroll-target="#property-tested">2.4 Property Tested</a></li>
+  </ul></li>
+  <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">3. The Model and Hypothesis</a>
+  <ul class="collapse">
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">3.1 Model</a></li>
+  <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">3.2 Hypothesis</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -125,12 +137,105 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <blockquote class="blockquote">
-<p><strong>Abstract.</strong> This is a suggested formatting for your abstract. This <strong>quarto</strong> document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.</p>
+<p><strong>Abstract.</strong> This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how policy affects employment.</p>
 <p><strong>Keywords.</strong> svars, fiscal policy, unemployment rates, government spending, tax revenue, inflation</p>
 </blockquote>
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>This is a template repository for the Research Report for <strong>Macroeconometrics</strong>. Learn more about about developing online reports with <strong>quarto</strong> at <a href="https://quarto.org/">quarto.org</a>.</p>
+<section id="the-question-objective-and-motivation" class="level1">
+<h1>1. The Question Objective, and Motivation</h1>
+<p>The objective of this research project is to assess the effects of fiscal policy shifts on unemployment rates. I aim to investigate how unemployment rates respond to changes in government spending and taxation under various fiscal policy frameworks.</p>
+<p>Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy’s influence on unemployment is timely. For instance, Leigh (2012) found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. Chapman and Kapuscinski (2000) identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.</p>
+</section>
+<section id="data-and-their-properties" class="level1">
+<h1>2. Data and Their Properties</h1>
+<section id="variables-selected" class="level2">
+<h2 class="anchored" data-anchor-id="variables-selected">2.1 Variables Selected</h2>
+<p>Unemployment Rate (UNEMP): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.</p>
+<p>Government Spending (GOVSPEND): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
+<p>Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
+<p>Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.</p>
+</section>
+<section id="why-chose-them" class="level2">
+<h2 class="anchored" data-anchor-id="why-chose-them">2.2 Why Chose Them?</h2>
+<p>The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment.</p>
+</section>
+<section id="data-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="data-visualization">2.3 Data Visualization</h2>
+<p>The time series plots[Figure 1: Time Series Data] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.</p>
+<p>Government spending’s steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue’s increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it’s both a reflection of and a contributor to the fiscal environment. Inflation’s volatility is without a clear trend line.</p>
+<p>These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.</p>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Time Series Data</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="property-tested" class="level2">
+<h2 class="anchored" data-anchor-id="property-tested">2.4 Property Tested</h2>
+<p>From the ACF test[Figure 2: Autocorrelation Function], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.</p>
+<p>From the PACF test[Figure 3: Partial Autocorrelation Function], for unemployment, there’s a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there’s little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Autocorrelation Function</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">Partial Autocorrelation Function</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="the-model-and-hypothesis" class="level1">
+<h1>3. The Model and Hypothesis</h1>
+<section id="model" class="level2">
+<h2 class="anchored" data-anchor-id="model">3.1 Model</h2>
+<p>The <strong>Structural Form (SF) model</strong> of Structural VARs is:</p>
+<span class="math display">\[\begin{align}
+B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t}
+\end{align}\]</span>
+<span class="math display">\[\begin{align}
+u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
+\end{align}\]</span>
+<ul>
+<li><p><span class="math inline">\(Y_{t}\)</span> is <span class="math inline">\(N \times 1\)</span> matrix of endogenous variable.</p></li>
+<li><p><span class="math inline">\(B_{0}\)</span> is <span class="math inline">\(N \times N\)</span> matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.</p></li>
+<li><p><span class="math inline">\(u_{t}\)</span> is a <span class="math inline">\(N \times 1\)</span> vector of conditionally on<span class="math inline">\(Y_{t-1}\)</span>orthogonal or independent structural shocks. Isolating these shocks allows us to identify dynamic effects of uncorrelated shocks on variables <span class="math inline">\(Y_{t}\)</span>.</p></li>
+</ul>
+<p>The <strong>Reduced Form (RF)</strong> representation is:</p>
+<span class="math display">\[\begin{align}
+Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t}
+\end{align}\]</span>
+<span class="math display">\[\begin{align}
+\epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
+\end{align}\]</span>
+<p>Either of the SF models lead to the same RF representation through various equivalence transformations</p>
+</section>
+<section id="hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis">3.2 Hypothesis</h2>
+<p>From time series plots, we have several hypothesis:</p>
+<ol type="1">
+<li><p>Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.</p></li>
+<li><p>Tax Revenue and Economic Activity Hypothesis: An increase in tax revenue due to economic growth might coincide with lower unemployment rates, an increase due solely to higher tax rates might suppress economic activity and potentially increase unemployment.</p></li>
+<li><p>Fiscal Policy Impact Lag Hypothesis: Given that fiscal policy changes do not have an immediate effect, we hypothesize that there are lags in the impact of government spending and tax changes on the unemployment rate.</p></li>
+</ol>
+</section>
 <section id="references" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
 
