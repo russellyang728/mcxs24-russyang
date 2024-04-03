@@ -10,7 +10,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how policy affects employment. 
+> **Abstract.** This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how policy affects employment.
 >
 > **Keywords.** svars, fiscal policy, unemployment rates, government spending, tax revenue, inflation
 
@@ -18,7 +18,7 @@ bibliography: references.bib
 
 The objective of this research project is to assess the effects of fiscal policy shifts on unemployment rates. I aim to investigate how unemployment rates respond to changes in government spending and taxation under various fiscal policy frameworks.
 
-Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy's influence on unemployment is timely. For instance, Leigh (2012) found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. Chapman and Kapuscinski (2000) identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.
+Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy's influence on unemployment is timely. For instance, @leigh2012 found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. @Chapman2000AvoidingRA identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.
 
 # 2. Data and Their Properties
 
@@ -128,7 +128,7 @@ infl_p = autoplot(infl) +
 
 ```
 
-The time series plots[Figure 1: Time Series Data] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
+The time series plots\[Figure 1: Time Series Data\] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
 
 Government spending's steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue's increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it's both a reflection of and a contributor to the fiscal environment. Inflation's volatility is without a clear trend line.
 
@@ -153,9 +153,10 @@ combined_plot
 
 ## 2.4 Property Tested
 
-From the ACF test[Figure 2: Autocorrelation Function], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.
+From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.
 
-From the PACF test[Figure 3: Partial Autocorrelation Function], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
+From the PACF test\[Figure 3: Partial Autocorrelation Function\], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
+
 ```{r fig.show='hold', out.width='50%'}
 #| echo: false
 #| message: false
@@ -184,10 +185,10 @@ pacf(infl, plot = TRUE , main = "PACF for Inflation")
 
 ```
 
-
 # 3. The Model and Hypothesis
 
 ## 3.1 Model
+
 The **Structural Form (SF) model** of Structural VARs is:
 
 ```{=tex}
@@ -200,12 +201,11 @@ B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t}
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 \end{align}
 ```
-- $Y_{t}$ is $N \times 1$ matrix of endogenous variable.
+-   $Y_{t}$ is $N \times 1$ matrix of endogenous variable.
 
-- $B_{0}$ is $N \times N$ matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.
+-   $B_{0}$ is $N \times N$ matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.
 
-- $u_{t}$ is a $N \times 1$ vector of conditionally on$Y_{t-1}$orthogonal or independent structural shocks. Isolating these shocks allows us to identify dynamic effects of uncorrelated shocks on variables $Y_{t}$.
-
+-   $u_{t}$ is a $N \times 1$ vector of conditionally on$Y_{t-1}$orthogonal or independent structural shocks. Isolating these shocks allows us to identify dynamic effects of uncorrelated shocks on variables $Y_{t}$.
 
 The **Reduced Form (RF)** representation is:
 
@@ -219,9 +219,8 @@ Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t}
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
 \end{align}
 ```
+Either of the SF models lead to the same RF representation through various equivalence transformations
 
-Either of the SF models lead to the same RF representation through
-various equivalence transformations
 ```{=tex}
 $$
 \epsilon_t = B u_t = B_0^{-1} u_t
@@ -235,15 +234,14 @@ $$
 \Sigma = BB' = B_0^{-1} B_0'^{-1}
 $$
 ```
-
 ## 3.2 Hypothesis
 
 From time series plots, we have several hypothesis:
 
-1. Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.
+1.  Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.
 
-2. Tax Revenue and Economic Activity Hypothesis: An increase in tax revenue due to economic growth might coincide with lower unemployment rates, an increase due solely to higher tax rates might suppress economic activity and potentially increase unemployment.
+2.  Tax Revenue and Economic Activity Hypothesis: An increase in tax revenue due to economic growth might coincide with lower unemployment rates, an increase due solely to higher tax rates might suppress economic activity and potentially increase unemployment.
 
-3. Fiscal Policy Impact Lag Hypothesis: Given that fiscal policy changes do not have an immediate effect, we hypothesize that there are lags in the impact of government spending and tax changes on the unemployment rate.
+3.  Fiscal Policy Impact Lag Hypothesis: Given that fiscal policy changes do not have an immediate effect, we hypothesize that there are lags in the impact of government spending and tax changes on the unemployment rate.
 
 ## References {.unnumbered}
