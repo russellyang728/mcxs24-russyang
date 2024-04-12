@@ -10,15 +10,15 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how policy affects employment.
+> **Abstract.** This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how fiscal policy affects employment.
 >
 > **Keywords.** svars, fiscal policy, unemployment rates, government spending, tax revenue, inflation
 
-# 1. The Question Objective, and Motivation
+# 1. The Question, Objective, and Motivation
 
 The objective of this research project is to assess the effects of fiscal policy shifts on unemployment rates. I aim to investigate how unemployment rates respond to changes in government spending and taxation under various fiscal policy frameworks.
 
-Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy's influence on unemployment is timely. For instance, @leigh2012 found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. @Chapman2000AvoidingRA identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.
+Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy's influence on unemployment is timely. For instance, @leigh2012 found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. @Chapman2000AvoidingRA identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings have piqued my curiosity about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.
 
 # 2. Data and Their Properties
 
@@ -50,7 +50,10 @@ library(knitr)
 
 unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J')
 
+
 unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
+
+# Covert monthly unemployment data to quarterly for analysis compatibility. 
 
 unemp <- to.quarterly(unemp,OHLC = FALSE)
 
@@ -134,7 +137,7 @@ Government spending's steady rise, with occasional steeper inclines, could imply
 
 These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.
 
-```{r fig.show='hold', out.width='30%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -157,7 +160,7 @@ From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate s
 
 From the PACF test\[Figure 3: Partial Autocorrelation Function\], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
 
-```{r fig.show='hold', out.width='50%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -171,7 +174,7 @@ acf(infl, plot = TRUE , main = "ACF for Inflation")
 
 ```
 
-```{r fig.show='hold', out.width='50%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
