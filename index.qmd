@@ -160,7 +160,7 @@ From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate s
 
 From the PACF test\[Figure 3: Partial Autocorrelation Function\], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
 
-```{r fig.show='hold', out.width='80%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -174,7 +174,7 @@ acf(infl, plot = TRUE , main = "ACF for Inflation")
 
 ```
 
-```{r fig.show='hold', out.width='50%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
