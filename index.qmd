@@ -32,6 +32,10 @@ Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, 
 
 Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
+Real Gross Domestic Product (RGDP): 
+
+Cash Rate (CR): 
+
 ## 2.2 Why Chose Them?
 
 The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment.
