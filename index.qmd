@@ -243,7 +243,7 @@ $$
 ```
 ## 3.2 Hypothesis
 
-From time series plots, we have several hypothesis:
+Here are the hypotheses I'm interested in:
 
 1.  Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.
 
