@@ -52,7 +52,7 @@ library(knitr)
 
 #download data
 
-unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J')
+unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J') # hey I think this is not "unemployment rate" but rather some measure of "unemployed people" is this right? check it out - the figure seems like it!
 
 
 unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
