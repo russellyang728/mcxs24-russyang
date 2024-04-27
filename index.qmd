@@ -32,9 +32,9 @@ Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, 
 
 Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
-Real Gross Domestic Product (RGDP): 
+Real Gross Domestic Product (RGDP): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
 
-Cash Rate (CR): 
+Cash Rate Target(CR): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
 
 ## 2.2 Why Chose Them?
 
@@ -44,14 +44,42 @@ The chosen variables are integral to capturing the broad dynamics of fiscal poli
 
 ```{r include=FALSE}
 library(readabs)
+library(readrba)
 library(xts)
 library(ggplot2)
 library(patchwork)
 library(tseries)
 library(knitr)
+library(zoo)
 
 #download data
 
+
+cr_dwld <- readrba::read_rba(series_id = "FIRMMCRTD")
+
+cr <- cr_dwld[, c("date", "value")]
+
+cr <- xts::xts(cr$value,cr$date)
+
+cr <- xts::to.quarterly(cr, OHLC = FALSE)
+
+
+cr_p = autoplot(cr) +
+
+ theme_classic()+
+
+ labs(title = "Cash Rate Target")+
+
+ theme(axis.title.x = element_blank(),
+
+ plot.title = element_text(hjust = 0.5,
+
+ face = "bold"))
+
+start_date <- start(cr)
+end_date <- end(cr)
+
+#unemployment rate data
 unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J') # hey I think this is not "unemployment rate" but rather some measure of "unemployed people" is this right? check it out - the figure seems like it!
 
 
@@ -60,6 +88,8 @@ unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
 # Covert monthly unemployment data to quarterly for analysis compatibility. 
 
 unemp <- to.quarterly(unemp,OHLC = FALSE)
+
+unemp <- window(unemp, start=start_date, end=end_date)
 
 unemp_p = autoplot(unemp) +
 
@@ -75,9 +105,8 @@ unemp_p = autoplot(unemp) +
 
  face = "bold"))
 
-start_date <- start(unemp)
 
-end_date <- end(unemp)
+#government spending data
 
 govspend_dwnld <- readabs::read_abs(series_id = 'A2304080V')
 
@@ -97,6 +126,9 @@ govspend_p = autoplot(govspend) +
 
  face = "bold"))
 
+
+#tax revenue data
+
 taxrev_dwnld <- readabs::read_abs(series_id = 'A2302794K')
 
 taxrev <- xts(taxrev_dwnld$value, order.by=as.Date(taxrev_dwnld$date))
@@ -114,6 +146,9 @@ taxrev_p = autoplot(taxrev) +
  plot.title = element_text(hjust = 0.5,
 
  face = "bold"))
+
+
+#inflation data
 
 infl_dwnld <- readabs::read_abs(series_id = 'A2325850V')
 
@@ -133,6 +168,35 @@ infl_p = autoplot(infl) +
 
  face = "bold"))
 
+
+# real gdp data
+rgdp_dwld <- readrba::read_rba(series_id = "GGDPCVGDP")
+
+rgdp <- rgdp_dwld[, c("date", "value")]
+
+rgdp$quarter <- zoo::as.yearqtr(rgdp$date)
+
+rgdp <- xts::xts(rgdp$value,rgdp$quarter)
+     
+rgdp <- window(rgdp, start=start_date, end=end_date)
+
+rgdp_p = autoplot(rgdp) +
+
+ theme_classic()+
+
+ labs(title = "Real GDP")+
+
+ theme(axis.title.x = element_blank(),
+
+ plot.title = element_text(hjust = 0.5,
+
+ face = "bold"))
+
+
+all_data <- merge(unemp, govspend, taxrev, infl, rgdp, cr)
+complete_data <- na.omit(all_data)
+data <- data.frame(date=index(complete_data), coredata(complete_data))
+
 ```
 
 The time series plots\[Figure 1: Time Series Data\] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
@@ -141,15 +205,15 @@ Government spending's steady rise, with occasional steeper inclines, could imply
 
 These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.
 
-```{r fig.show='hold', out.width='60%'}
+```{r fig.show='hold', out.width='100%'}
 #| echo: false
 #| message: false
 #| warning: false
-#| layout-nrow: 2
+#| layout-nrow: 3
 #| fig-cap: "Time Series Data"
 
-combined_plot <- unemp_p + govspend_p + taxrev_p + infl_p +
-  plot_layout(nrow = 2, ncol = 2) & 
+combined_plot <- unemp_p + govspend_p + taxrev_p + infl_p + rgdp_p + cr_p +
+  plot_layout(nrow = 3, ncol = 2) + 
   plot_annotation(
     title = "Time Series Data"
   )
@@ -164,31 +228,36 @@ From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate s
 
 From the PACF test\[Figure 3: Partial Autocorrelation Function\], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
 
-```{r fig.show='hold', out.width='80%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
 #| fig-cap: "Autocorrelation Function"
 
-par(mfrow = c(2, 2))
-acf(unemp,  plot = TRUE, main = "ACF for Unemplyment Rate")
-acf(govspend, plot = TRUE , main = "ACF for Government Spending")
-acf(taxrev, plot = TRUE , main = "ACF for Tax Revenue")
-acf(infl, plot = TRUE , main = "ACF for Inflation")
+par(mfrow = c(2, 3))
+acf(unemp,  plot = TRUE, main = "Unemplyment Rate")
+acf(govspend, plot = TRUE , main = "Government Spending")
+acf(taxrev, plot = TRUE , main = "Tax Revenue")
+acf(infl, plot = TRUE , main = "Inflation")
+acf(rgdp, plot = TRUE , main = "Tax Revenue")
+acf(cr, plot = TRUE , main = "Cash Rate")
+
 
 ```
 
-```{r fig.show='hold', out.width='80%'}
+```{r fig.show='hold', out.width='60%'}
 #| echo: false
 #| message: false
 #| warning: false
 #| fig-cap: "Partial Autocorrelation Function"
-#| 
-par(mfrow = c(2, 2))
-pacf(unemp,  plot = TRUE, main = "PACF for Unemplyment Rate")
-pacf(govspend, plot = TRUE , main = "PACF for Government Spending")
-pacf(taxrev, plot = TRUE , main = "PACF for Tax Revenue")
-pacf(infl, plot = TRUE , main = "PACF for Inflation")
+ 
+par(mfrow = c(2, 3))
+pacf(unemp,  plot = TRUE, main = "Unemplyment Rate")
+pacf(govspend, plot = TRUE , main = "Government Spending")
+pacf(taxrev, plot = TRUE , main = "Tax Revenue")
+pacf(infl, plot = TRUE , main = "Inflation")
+pacf(rgdp, plot = TRUE , main = "Tax Revenue")
+pacf(cr, plot = TRUE , main = "Cash Rate")
 
 ```
 
