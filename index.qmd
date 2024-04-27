@@ -243,6 +243,7 @@ acf(rgdp, plot = TRUE , main = "Tax Revenue")
 acf(cr, plot = TRUE , main = "Cash Rate Target")
 
 
+
 ```
 
 ```{r fig.show='hold', out.width='80%'}
@@ -258,6 +259,7 @@ pacf(taxrev, plot = TRUE , main = "Tax Revenue")
 pacf(infl, plot = TRUE , main = "Inflation")
 pacf(rgdp, plot = TRUE , main = "Tax Revenue")
 pacf(cr, plot = TRUE , main = "Cash Rate Target")
+
 
 ```
 
