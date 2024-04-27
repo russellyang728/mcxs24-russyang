@@ -80,7 +80,7 @@ start_date <- start(cr)
 end_date <- end(cr)
 
 #unemployment rate data
-unemp_dwnld <- readabs::read_abs(series_id = 'A85255725J') # hey I think this is not "unemployment rate" but rather some measure of "unemployed people" is this right? check it out - the figure seems like it!
+unemp_dwnld <- readabs::read_abs(series_id = 'A84423050A') 
 
 
 unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
