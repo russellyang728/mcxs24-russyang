@@ -312,7 +312,7 @@ $$
 ```
 ## 3.2 Hypothesis
 
-Here are the hypotheses I'm interested in:
+Here are the hypotheses I am interested in:
 
 1.  Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.
 
