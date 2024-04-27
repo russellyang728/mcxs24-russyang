@@ -193,10 +193,6 @@ rgdp_p = autoplot(rgdp) +
  face = "bold"))
 
 
-all_data <- merge(unemp, govspend, taxrev, infl, rgdp, cr)
-complete_data <- na.omit(all_data)
-data <- data.frame(date=index(complete_data), coredata(complete_data))
-
 ```
 
 The time series plots\[Figure 1: Time Series Data\] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
