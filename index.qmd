@@ -38,7 +38,7 @@ Cash Rate Target(CR): Quarterly data of the interest rate that banks pay to borr
 
 ## 2.2 Why Chose Them?
 
-The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment.
+The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment. Real GDP(RGDP) is included as it reflects the overall economic output and health, directly correlating with job market strength. The cash rate(CR) is a measure of monetary policy influence on fiscal effectiveness and employment levels.
 
 ## 2.3 Data Visualization
 
