@@ -265,16 +265,16 @@ pacf(cr, plot = TRUE , main = "Cash Rate Target")
 
 The **Structural Form (SF) model** of Structural VARs is:
 
-```{=tex}
+$$
 \begin{align}
 B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} 
 \end{align}
-```
-```{=tex}
+$$
+$$
 \begin{align}
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 \end{align}
-```
+$$
 -   $Y_{t}$ is $N \times 1$ matrix of endogenous variable.
 
 -   $B_{0}$ is $N \times N$ matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.
@@ -283,19 +283,20 @@ u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 
 The **Reduced Form (RF)** representation is:
 
-```{=tex}
+$$
 \begin{align}
 Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} 
 \end{align}
-```
-```{=tex}
+$$
+
+$$
 \begin{align}
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
 \end{align}
-```
+$$
 Either of the SF models lead to the same RF representation through various equivalence transformations
 
-```{=tex}
+
 $$
 \epsilon_t = B u_t = B_0^{-1} u_t
 $$
@@ -307,8 +308,49 @@ $$
 $$
 \Sigma = BB' = B_0^{-1} B_0'^{-1}
 $$
-```
-## 3.2 Hypothesis
+
+
+
+## 3.2 Deriviation
+
+The first step is to sample the reduced-form parameters ($\*A$, $\*\Sigma$). Adopting the conjugate Normal-Inverse-Wishart prior,
+
+
+$$
+\begin{align*}
+\mathbf{A}|\mathbf{\Sigma} &\sim \mathcal{MN}_{K \times N}(\underline{\mathbf{A}}, \underline{\mathbf{V}}, \mathbf{\Sigma}) \\
+\mathbf{\Sigma} &\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
+\end{align*}
+$$
+
+
+and let
+
+
+$$
+\begin{align*}
+\hat{A} &= (X'X)^{-1}X'Y \\
+R &= (Y - X\hat{A})'(Y - X\hat{A})
+\end{align*}
+$$
+
+$$
+\begin{align*}
+p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(Y - XA)'(Y - XA)\right] \right\} \\
+&\quad \times |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(A - \underline{A})'\underline{V}^{-1}(A - \underline{A})\right] \right\} \\
+&\quad \times |\Sigma|^{-(\underline{\nu}+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}(\underline{S}\Sigma^{-1}) \right\} \\
+&\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ R + (A - \hat{A})'X'X(A - \hat{A})\Sigma^{-1}\right] \right\} \\
+&\quad \times |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(A - \underline{A})'\underline{V}^{-1}(A - \underline{A})\Sigma^{-1}\right] \right\} \\
+&\quad \times |\Sigma|^{-(\underline{\nu}+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}(\underline{S}\Sigma^{-1}) \right\} \\
+&\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ ((A - \hat{A})'X'X(A - \hat{A}) + (A - \underline{A})'\underline{V}^{-1}(A - \underline{A}))\Sigma^{-1}\right] \right\} \\
+&\quad \times |\Sigma|^{-(\underline{\nu}+T+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ (R + \underline{S})\Sigma^{-1}\right] \right\} \\
+&= |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ (A - \bar{A})'\bar{V}^{-1}(A - \bar{A})\Sigma^{-1}\right] \right\} \\
+
+
+\end{align*}
+$$
+
+## 3.3 Hypothesis
 
 Here are the hypotheses I am interested in:
 
