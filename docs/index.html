@@ -21,7 +21,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -93,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link active" data-scroll-target="#the-question-objective-and-motivation">1. The Question Objective, and Motivation</a></li>
+  <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link active" data-scroll-target="#the-question-objective-and-motivation">1. The Question, Objective, and Motivation</a></li>
   <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">2. Data and Their Properties</a>
   <ul class="collapse">
   <li><a href="#variables-selected" id="toc-variables-selected" class="nav-link" data-scroll-target="#variables-selected">2.1 Variables Selected</a></li>
@@ -104,7 +123,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">3. The Model and Hypothesis</a>
   <ul class="collapse">
   <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">3.1 Model</a></li>
-  <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">3.2 Hypothesis</a></li>
+  <li><a href="#deriviation" id="toc-deriviation" class="nav-link" data-scroll-target="#deriviation">3.2 Deriviation</a></li>
+  <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">3.3 Hypothesis</a></li>
+  <li><a href="#identification" id="toc-identification" class="nav-link" data-scroll-target="#identification">3.4 Identification</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -137,13 +158,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <blockquote class="blockquote">
-<p><strong>Abstract.</strong> This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how policy affects employment.</p>
-<p><strong>Keywords.</strong> svars, fiscal policy, unemployment rates, government spending, tax revenue, inflation</p>
+<p><strong>Abstract.</strong> This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how fiscal policy affects employment.</p>
+<p><strong>Keywords.</strong> SVARs, Fiscal Policy, Unemployment Rates, Government Spending, Tax Revenue, Sign Restriction</p>
 </blockquote>
 <section id="the-question-objective-and-motivation" class="level1">
-<h1>1. The Question Objective, and Motivation</h1>
+<h1>1. The Question, Objective, and Motivation</h1>
 <p>The objective of this research project is to assess the effects of fiscal policy shifts on unemployment rates. I aim to investigate how unemployment rates respond to changes in government spending and taxation under various fiscal policy frameworks.</p>
-<p>Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy’s influence on unemployment is timely. For instance, Leigh (2012) found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. Chapman and Kapuscinski (2000) identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings drive me curious about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.</p>
+<p>Unemployment is pivotal in the macroeconomic framework, directly tied to social welfare and economic performance. Considering the economic challenges faced by Australia, the examination of fiscal policy’s influence on unemployment is timely. For instance, <span class="citation" data-cites="leigh2012">Leigh (<a href="#ref-leigh2012" role="doc-biblioref">2012</a>)</span> found that fiscal consolidation efforts in Australia could potentially lift unemployment rates in the short term. <span class="citation" data-cites="Chapman2000AvoidingRA">Chapman and Kapuscinski (<a href="#ref-Chapman2000AvoidingRA" role="doc-biblioref">2000</a>)</span> identified that the Australian labor market exhibits notable sensitivity to macroeconomic policy shifts, with fiscal measures playing a significant role in shaping employment trends. These findings have piqued my curiosity about understanding fiscal policy mechanisms in the Australian labor market. By conducting this research, I aim to provide an updated empirical analysis of how contemporary fiscal policy adjustments are impacting unemployment rates in Australia, thereby offering insights that may inform policy refinement for enhanced economic resilience and labor stability.</p>
 </section>
 <section id="data-and-their-properties" class="level1">
 <h1>2. Data and Their Properties</h1>
@@ -153,15 +174,18 @@ ul.task-list li input[type="checkbox"] {
 <p>Government Spending (GOVSPEND): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
 <p>Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
 <p>Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.</p>
+<p>Real Gross Domestic Product (RGDP): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.</p>
+<p>Cash Rate Target(CR): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.</p>
 </section>
 <section id="why-chose-them" class="level2">
 <h2 class="anchored" data-anchor-id="why-chose-them">2.2 Why Chose Them?</h2>
-<p>The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment.</p>
+<p>The chosen variables are integral to capturing the broad dynamics of fiscal policy and its impact on the labor market. The unemployment rate (UNEMP) is the direct indicator of labor market health. Government spending (GOVSPEND) and tax revenue (TAXREV) are key fiscal policy tools that directly affect aggregate demand, and by extension, employment and output. Inflation rate (INFL) is a crucial economic indicator that can reflect the demand-pull effects in the economy which, in a Keynesian context, may affect the level of employment. Real GDP(RGDP) is included as it reflects the overall economic output and health, directly correlating with job market strength. The cash rate(CR) is a measure of monetary policy influence on fiscal effectiveness and employment levels.</p>
 </section>
 <section id="data-visualization" class="level2">
 <h2 class="anchored" data-anchor-id="data-visualization">2.3 Data Visualization</h2>
 <p>The time series plots[Figure 1: Time Series Data] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.</p>
 <p>Government spending’s steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue’s increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it’s both a reflection of and a contributor to the fiscal environment. Inflation’s volatility is without a clear trend line.</p>
+<p>The steady increase of Real GDP shows the economy’s growth and resilience in response to policy measures and global economic shifts. The fluctuations in the Cash Rate Target reflect the central bank’s monetary policy adjustments aimed at maintaining stability and stimulating economic activity.</p>
 <p>These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.</p>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
@@ -175,6 +199,74 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>[Table 1: Summary Statistic] shows variables’ description during 1990 Q1 to 2023 Q4.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Summary Statistics</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">Mean</th>
+<th style="text-align: right;">SD</th>
+<th style="text-align: right;">Min</th>
+<th style="text-align: right;">Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">unemp</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">6.35</td>
+<td style="text-align: right;">1.88</td>
+<td style="text-align: right;">3.49</td>
+<td style="text-align: right;">11.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">govspend</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">76131.90</td>
+<td style="text-align: right;">25342.56</td>
+<td style="text-align: right;">42816.00</td>
+<td style="text-align: right;">134015.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">taxrev</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">84711.50</td>
+<td style="text-align: right;">45924.25</td>
+<td style="text-align: right;">27529.00</td>
+<td style="text-align: right;">203558.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">infl</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">-1.90</td>
+<td style="text-align: right;">3.80</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rgdp</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">403378.21</td>
+<td style="text-align: right;">115619.48</td>
+<td style="text-align: right;">229170.00</td>
+<td style="text-align: right;">609750.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cr</td>
+<td style="text-align: right;">136</td>
+<td style="text-align: right;">4.59</td>
+<td style="text-align: right;">2.86</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">16.75</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 <section id="property-tested" class="level2">
 <h2 class="anchored" data-anchor-id="property-tested">2.4 Property Tested</h2>
@@ -184,7 +276,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption class="figure-caption">Autocorrelation Function</figcaption>
 </figure>
 </div>
@@ -194,7 +286,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption class="figure-caption">Partial Autocorrelation Function</figcaption>
 </figure>
 </div>
@@ -207,43 +299,136 @@ ul.task-list li input[type="checkbox"] {
 <section id="model" class="level2">
 <h2 class="anchored" data-anchor-id="model">3.1 Model</h2>
 <p>The <strong>Structural Form (SF) model</strong> of Structural VARs is:</p>
-<span class="math display">\[\begin{align}
-B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t}
-\end{align}\]</span>
-<span class="math display">\[\begin{align}
+<span class="math display">\[\begin{align*}
+B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} \\
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
-\end{align}\]</span>
+\end{align*}\]</span>
 <ul>
 <li><p><span class="math inline">\(Y_{t}\)</span> is <span class="math inline">\(N \times 1\)</span> matrix of endogenous variable.</p></li>
 <li><p><span class="math inline">\(B_{0}\)</span> is <span class="math inline">\(N \times N\)</span> matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.</p></li>
 <li><p><span class="math inline">\(u_{t}\)</span> is a <span class="math inline">\(N \times 1\)</span> vector of conditionally on<span class="math inline">\(Y_{t-1}\)</span>orthogonal or independent structural shocks. Isolating these shocks allows us to identify dynamic effects of uncorrelated shocks on variables <span class="math inline">\(Y_{t}\)</span>.</p></li>
 </ul>
 <p>The <strong>Reduced Form (RF)</strong> representation is:</p>
-<span class="math display">\[\begin{align}
-Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t}
-\end{align}\]</span>
-<span class="math display">\[\begin{align}
+<span class="math display">\[\begin{align*}
+Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
-\end{align}\]</span>
+\end{align*}\]</span>
 <p>Either of the SF models lead to the same RF representation through various equivalence transformations</p>
+<span class="math display">\[\begin{align*}
+\epsilon_t = B u_t = B_0^{-1} u_t \\
+B_0 \epsilon_t = u_t \\
+\Sigma = BB' = B_0^{-1} B_0'^{-1}
+\end{align*}\]</span>
+</section>
+<section id="deriviation" class="level2">
+<h2 class="anchored" data-anchor-id="deriviation">3.2 Deriviation</h2>
+<p>The first step is to sample the reduced-form parameters (<span class="math inline">\(A\)</span>, <span class="math inline">\(\Sigma\)</span>). Adopting the conjugate Normal-Inverse-Wishart prior,</p>
+<span class="math display">\[\begin{align*}
+\mathbf{A}| \Sigma &amp;\sim \mathcal{MN}_{K \times N}(\underline{\mathbf{A}}, \underline{\mathbf{V}}, \Sigma) \\
+\Sigma &amp;\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
+\end{align*}\]</span>
+<p>and let</p>
+<span class="math display">\[\begin{align*}
+\hat{A} &amp;= (X'X)^{-1}X'Y \\
+R &amp;= (Y - X\hat{A})'(Y - X\hat{A})
+\end{align*}\]</span>
+<p>For the posterior distribution, we have</p>
+<span class="math display">\[\begin{align*}
+p(A, \Sigma | Y) &amp;\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(Y - XA)'(Y - XA)\right] \right\} \\
+&amp;\quad \times |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(A - \underline{A})'\underline{V}^{-1}(A - \underline{A})\right] \right\} \\
+&amp;\quad \times |\Sigma|^{-(\underline{\nu}+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}(\underline{S}\Sigma^{-1}) \right\} \\
+&amp;\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ R + (A - \hat{A})'X'X(A - \hat{A})\Sigma^{-1}\right] \right\} \\
+&amp;\quad \times |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(A - \underline{A})'\underline{V}^{-1}(A - \underline{A})\Sigma^{-1}\right] \right\} \\
+&amp;\quad \times |\Sigma|^{-(\underline{\nu}+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}(\underline{S}\Sigma^{-1}) \right\} \\
+&amp;\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ ((A - \hat{A})'X'X(A - \hat{A}) + (A - \underline{A})'\underline{V}^{-1}(A - \underline{A}))\Sigma^{-1}\right] \right\} \\
+&amp;\quad \times |\Sigma|^{-(\underline{\nu}+T+N+1)/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ (R + \underline{S})\Sigma^{-1}\right] \right\} \\
+&amp;= |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[ (A - \bar{A})'\bar{V}^{-1}(A - \bar{A})\Sigma^{-1}\right] \right\} \\
+&amp;\quad\times |\Sigma|^{-(\underline{\nu}+T+N+1)/2}\exp\left\{ -\frac{1}{2}\text{tr}\left[ (R+\underline{S}+\hat{A}'X'X\hat{A}+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A})\Sigma^{-1} \right] \right\} \\
+&amp;=|\Sigma|^{-T/2}\exp\left\{ -\frac{1}{2} \text{tr}\left[ (A-\overline{A})'\overline{V}^{-1}(A-\overline{A}) \Sigma^{-1} \right] \right\} \\
+&amp;\quad\times |\Sigma|^{-(\underline{\nu}+T+N+1)/2}\exp\left\{ -\frac{1}{2}\text{tr}\left[ (Y'Y+\underline{S}+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}\overline{A})\Sigma^{-1} \right] \right\} \\
+&amp;=p(A|\Sigma,Y)\times p(\Sigma|Y)
+\end{align*}\]</span>
+<p>Then we have</p>
+<span class="math display">\[\begin{align*}
+A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \overline{V},\Sigma) \\
+\Sigma|Y &amp;\sim \mathcal{IW}_N(\overline{S}, \overline{\nu})
+\end{align*}\]</span>
+<p>where</p>
+<span class="math display">\[\begin{align*}
+\overline{A} &amp;= \overline{V}(X'Y+\underline{V}^{-1}\underline{A}) \\
+\overline{V} &amp;= (X'X+\underline{V}^{-1})^{-1} \\
+\overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
+\overline{\nu} &amp;= \underline{\nu}+T
+\end{align*}\]</span>
 </section>
 <section id="hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="hypothesis">3.2 Hypothesis</h2>
-<p>From time series plots, we have several hypothesis:</p>
+<h2 class="anchored" data-anchor-id="hypothesis">3.3 Hypothesis</h2>
+<p>Here are the hypotheses I am interested in:</p>
 <ol type="1">
 <li><p>Counter-Cyclical Government Spending Hypothesis: Increases in government spending during periods of rising unemployment act as a counter-cyclical tool to stimulate economic activity and lower unemployment rates.</p></li>
 <li><p>Tax Revenue and Economic Activity Hypothesis: An increase in tax revenue due to economic growth might coincide with lower unemployment rates, an increase due solely to higher tax rates might suppress economic activity and potentially increase unemployment.</p></li>
 <li><p>Fiscal Policy Impact Lag Hypothesis: Given that fiscal policy changes do not have an immediate effect, we hypothesize that there are lags in the impact of government spending and tax changes on the unemployment rate.</p></li>
 </ol>
 </section>
+<section id="identification" class="level2">
+<h2 class="anchored" data-anchor-id="identification">3.4 Identification</h2>
+<p>To empirically test the hypotheses outlined in section 3.3, we employ a SVAR model complemented by sign restrictions that reflect our theoretical expectations about the economy. Sign restrictions are a non-intrusive way to impose economic theory in SVAR analysis, allowing the data to identify the model within the confines of the signs imposed on the impulse responses. Based on assumptions above, we have following sign restriction[Table 2: Sign Restriction]:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Sign Restriction</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Sign</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">unemp</td>
+<td style="text-align: left;">/</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">govspend</td>
+<td style="text-align: left;">+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">taxrev</td>
+<td style="text-align: left;">-</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">infl</td>
+<td style="text-align: left;">/</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rgdp</td>
+<td style="text-align: left;">+</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cr</td>
+<td style="text-align: left;">/</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
 <section id="references" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+
+
 
 
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Chapman2000AvoidingRA" class="csl-entry" role="listitem">
+Chapman, Bruce, and Cezary A. Kapuscinski. 2000. <span>“Avoiding Recessions and Australian Long-Term Unemployment.”</span> In. <a href="https://api.semanticscholar.org/CorpusID:152681286">https://api.semanticscholar.org/CorpusID:152681286</a>.
+</div>
+<div id="ref-leigh2012" class="csl-entry" role="listitem">
+Leigh, Andrew. 2012. <span>“How Much Did the 2009 Australian Fiscal Stimulus Boost Demand? Evidence from Household-Reported Spending Effects.”</span> <em>The B.E. Journal of Macroeconomics</em> 12 (1). <a href="https://doi.org/10.1515/1935-1690.2035">https://doi.org/10.1515/1935-1690.2035</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
