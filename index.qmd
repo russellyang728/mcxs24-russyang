@@ -1,8 +1,6 @@
 ---
 title: "The Effects of Fiscal Policy Shifts on Unemployment Rates"
 author: "Yansong Yang"
-format: pdf
-editor: visual
 
 execute:
   echo: false
@@ -381,7 +379,6 @@ where
 \overline{\nu} &= \underline{\nu}+T
 \end{align*}
 ```
-
 ## 3.3 Hypothesis
 
 Here are the hypotheses I am interested in:
@@ -394,7 +391,7 @@ Here are the hypotheses I am interested in:
 
 ## 3.4 Identification
 
-To empirically test the hypotheses outlined in section 3.3, we employ a SVAR model complemented by sign restrictions that reflect our theoretical expectations about the economy. Sign restrictions are a non-intrusive way to impose economic theory in SVAR analysis, allowing the data to identify the model within the confines of the signs imposed on the impulse responses. Based on assumptions above, we have following sign restriction\[Table 2: Sign Restriction\]: 
+To empirically test the hypotheses outlined in section 3.3, we employ a SVAR model complemented by sign restrictions that reflect our theoretical expectations about the economy. Sign restrictions are a non-intrusive way to impose economic theory in SVAR analysis, allowing the data to identify the model within the confines of the signs imposed on the impulse responses. Based on assumptions above, we have following sign restriction\[Table 2: Sign Restriction\]:
 
 ```{r}
 #| echo: false
