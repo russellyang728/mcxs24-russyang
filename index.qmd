@@ -12,7 +12,7 @@ bibliography: references.bib
 
 > **Abstract.** This study investigates the dynamic impact of fiscal policy shifts on unemployment rates through a Structural Vector Autoregression (SVAR) model. Utilizing time series data for government spending, tax revenue, inflation, and unemployment rates, we analyze the interplay between fiscal activities and labor market performance within an Australian context. The SVAR model, equipped to dissect the influence of systematic fiscal shocks, reveals insights into how fiscal policy affects employment.
 >
-> **Keywords.** svars, fiscal policy, unemployment rates, government spending, tax revenue, inflation
+> **Keywords.** SVARs, Fiscal Policy, Unemployment Rates, Government Spending, Tax Revenue, Sign Restriction
 
 # 1. The Question, Objective, and Motivation
 
@@ -63,21 +63,25 @@ cr <- xts::xts(cr$value,cr$date)
 
 cr <- xts::to.quarterly(cr, OHLC = FALSE)
 
+start_date <- start(cr)
+end_date1 <- as.Date("2023-12-31")
+end_date2 <- as.yearqtr("2023 Q4")
+
+cr = window(cr, start=start_date, end=end_date2)
 
 cr_p = autoplot(cr) +
+  
+  theme_classic()+
+  
+  labs(title = "Cash Rate Target")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
- theme_classic()+
 
- labs(title = "Cash Rate Target")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
-
-start_date <- start(cr)
-end_date <- end(cr)
 
 #unemployment rate data
 unemp_dwnld <- readabs::read_abs(series_id = 'A84423050A') 
@@ -89,21 +93,21 @@ unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
 
 unemp <- to.quarterly(unemp,OHLC = FALSE)
 
-unemp <- window(unemp, start=start_date, end=end_date)
+unemp <- window(unemp, start=start_date, end=end_date2)
 
 unemp_p = autoplot(unemp) +
-
- theme_classic()+
-
- scale_x_yearqtr(format = "%Y")+
-
- labs(title = "Unemployment Rate")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
+  
+  theme_classic()+
+  
+  scale_x_yearqtr(format = "%Y")+
+  
+  labs(title = "Unemployment Rate")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
 
 #government spending data
@@ -112,19 +116,19 @@ govspend_dwnld <- readabs::read_abs(series_id = 'A2304080V')
 
 govspend <- xts(govspend_dwnld$value, order.by=as.Date(govspend_dwnld$date))
 
-govspend <- window(govspend, start=start_date, end=end_date)
+govspend <- window(govspend, start=start_date, end=end_date1)
 
 govspend_p = autoplot(govspend) +
-
- theme_classic()+
-
- labs(title = "Government Spending")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
+  
+  theme_classic()+
+  
+  labs(title = "Government Spending")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
 
 #tax revenue data
@@ -133,19 +137,19 @@ taxrev_dwnld <- readabs::read_abs(series_id = 'A2302794K')
 
 taxrev <- xts(taxrev_dwnld$value, order.by=as.Date(taxrev_dwnld$date))
 
-taxrev <- window(taxrev, start=start_date, end=end_date)
+taxrev <- window(taxrev, start=start_date, end=end_date1)
 
 taxrev_p = autoplot(taxrev) +
-
- theme_classic()+
-
- labs(title = "Tax Revenue")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
+  
+  theme_classic()+
+  
+  labs(title = "Tax Revenue")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
 
 #inflation data
@@ -154,19 +158,19 @@ infl_dwnld <- readabs::read_abs(series_id = 'A2325850V')
 
 infl <- xts(infl_dwnld$value, order.by=as.Date(infl_dwnld$date))
 
-infl <- window(infl, start=start_date, end=end_date)
+infl <- window(infl, start=start_date, end=end_date1)
 
 infl_p = autoplot(infl) +
-
- theme_classic()+
-
- labs(title = "Inflation")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
+  
+  theme_classic()+
+  
+  labs(title = "Inflation")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
 
 # real gdp data
@@ -177,27 +181,28 @@ rgdp <- rgdp_dwld[, c("date", "value")]
 rgdp$quarter <- zoo::as.yearqtr(rgdp$date)
 
 rgdp <- xts::xts(rgdp$value,rgdp$quarter)
-     
-rgdp <- window(rgdp, start=start_date, end=end_date)
+
+rgdp <- window(rgdp, start=start_date, end=end_date2)
 
 rgdp_p = autoplot(rgdp) +
-
- theme_classic()+
-
- labs(title = "Real GDP")+
-
- theme(axis.title.x = element_blank(),
-
- plot.title = element_text(hjust = 0.5,
-
- face = "bold"))
-
+  
+  theme_classic()+
+  
+  labs(title = "Real GDP")+
+  
+  theme(axis.title.x = element_blank(),
+        
+        plot.title = element_text(hjust = 0.5,
+                                  
+                                  face = "bold"))
 
 ```
 
 The time series plots\[Figure 1: Time Series Data\] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
 
 Government spending's steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue's increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it's both a reflection of and a contributor to the fiscal environment. Inflation's volatility is without a clear trend line.
+
+The steady increase of Real GDP shows the economy’s growth and resilience in response to policy measures and global economic shifts. The fluctuations in the Cash Rate Target reflect the central bank’s monetary policy adjustments aimed at maintaining stability and stimulating economic activity.
 
 These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.
 
@@ -218,6 +223,33 @@ combined_plot
 
 ```
 
+\[Table 1: Summary Statistic\] shows variables' description during 1990 Q1 to 2023 Q4.
+
+```{r}
+#| echo: false
+#| message: false
+
+
+data_df <- data.frame(
+  unemp = coredata(unemp),
+  govspend = coredata(govspend),
+  taxrev = coredata(taxrev),
+  infl = coredata(infl),
+  rgdp = coredata(rgdp),
+  cr = coredata(cr)
+)
+
+Variable = c('unemp', 'govspend', 'taxrev','infl', 'rgdp','cr')
+N <- rep(136, length(Variable))
+Mean <- sapply(data_df, mean)
+SD <- sapply(data_df, sd)
+Min <- sapply(data_df, min)
+Max <- sapply(data_df, max)
+table1 =data.frame(N, Mean,SD, Min, Max)
+
+knitr::kable(table1, caption = "Summary Statistics", digits = 2)
+```
+
 ## 2.4 Property Tested
 
 From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.
@@ -235,7 +267,7 @@ acf(unemp,  plot = TRUE, main = "Unemplyment Rate")
 acf(govspend, plot = TRUE , main = "Government Spending")
 acf(taxrev, plot = TRUE , main = "Tax Revenue")
 acf(infl, plot = TRUE , main = "Inflation")
-acf(rgdp, plot = TRUE , main = "Tax Revenue")
+acf(rgdp, plot = TRUE , main = "Real GDP")
 acf(cr, plot = TRUE , main = "Cash Rate Target")
 
 
@@ -253,7 +285,7 @@ pacf(unemp,  plot = TRUE, main = "Unemplyment Rate")
 pacf(govspend, plot = TRUE , main = "Government Spending")
 pacf(taxrev, plot = TRUE , main = "Tax Revenue")
 pacf(infl, plot = TRUE , main = "Inflation")
-pacf(rgdp, plot = TRUE , main = "Tax Revenue")
+pacf(rgdp, plot = TRUE , main = "Real GDP")
 pacf(cr, plot = TRUE , main = "Cash Rate Target")
 
 
@@ -267,16 +299,11 @@ The **Structural Form (SF) model** of Structural VARs is:
 
 ```{=tex}
 \begin{align*}
-B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} 
-\end{align*}
-```  
-
-```{=tex}
-\begin{align*}
+B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} \\
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 \end{align*}
 ```
-- $Y_{t}$ is $N \times 1$ matrix of endogenous variable.
+-   $Y_{t}$ is $N \times 1$ matrix of endogenous variable.
 
 -   $B_{0}$ is $N \times N$ matrix of contemporaneous relationships also called structural matrix. It captures contemporaneous relationships between variables.
 
@@ -286,12 +313,7 @@ The **Reduced Form (RF)** representation is:
 
 ```{=tex}
 \begin{align*}
-Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} 
-\end{align*}
-```
-
-```{=tex}
-\begin{align*}
+Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
 \end{align*}
 ```
@@ -304,7 +326,6 @@ B_0 \epsilon_t = u_t \\
 \Sigma = BB' = B_0^{-1} B_0'^{-1}
 \end{align*}
 ```
-
 ## 3.2 Deriviation
 
 The first step is to sample the reduced-form parameters ($A$, $\Sigma$). Adopting the conjugate Normal-Inverse-Wishart prior,
@@ -312,10 +333,9 @@ The first step is to sample the reduced-form parameters ($A$, $\Sigma$). Adoptin
 ```{=tex}
 \begin{align*}
 \mathbf{A}| \Sigma &\sim \mathcal{MN}_{K \times N}(\underline{\mathbf{A}}, \underline{\mathbf{V}}, \Sigma) \\
-\mathbf{\Sigma} &\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
+\Sigma &\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
 \end{align*}
 ```
-
 and let
 
 ```{=tex}
@@ -324,8 +344,8 @@ and let
 R &= (Y - X\hat{A})'(Y - X\hat{A})
 \end{align*}
 ```
+For the posterior distribution, we have
 
-For the posterior distribution, we have 
 ```{=tex}
 \begin{align*}
 p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(Y - XA)'(Y - XA)\right] \right\} \\
@@ -343,7 +363,6 @@ p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\le
 &=p(A|\Sigma,Y)\times p(\Sigma|Y)
 \end{align*}
 ```
-
 Then we have
 
 ```{=tex}
@@ -352,7 +371,6 @@ A|\Sigma,Y &\sim \mathcal{MN}_{K\times N}(\overline{A}, \overline{V},\Sigma) \\
 \Sigma|Y &\sim \mathcal{IW}_N(\overline{S}, \overline{\nu})
 \end{align*}
 ```
-
 where
 
 ```{=tex}
@@ -373,5 +391,19 @@ Here are the hypotheses I am interested in:
 2.  Tax Revenue and Economic Activity Hypothesis: An increase in tax revenue due to economic growth might coincide with lower unemployment rates, an increase due solely to higher tax rates might suppress economic activity and potentially increase unemployment.
 
 3.  Fiscal Policy Impact Lag Hypothesis: Given that fiscal policy changes do not have an immediate effect, we hypothesize that there are lags in the impact of government spending and tax changes on the unemployment rate.
+
+## 3.4 Identification
+
+To empirically test the hypotheses outlined in section 3.3, we employ a SVAR model complemented by sign restrictions that reflect our theoretical expectations about the economy. Sign restrictions are a non-intrusive way to impose economic theory in SVAR analysis, allowing the data to identify the model within the confines of the signs imposed on the impulse responses. Based on assumptions above, we have following sign restriction\[Table 2: Sign Restriction\]: 
+
+```{r}
+#| echo: false
+#| message: false
+
+Sign = c('/','+','-','/','+','/')
+
+table2 = data.frame(Variable,Sign)
+knitr::kable(table2, caption = "Sign Restriction", digits = 2)
+```
 
 ## References {.unnumbered}
