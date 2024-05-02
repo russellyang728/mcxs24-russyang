@@ -178,3 +178,23 @@ table1 =data.frame(N, Mean,SD, Min, Max)
 
 
 knitr::kable(table1, caption = "Summary Statistics", digits = 2)
+
+
+Sign = c('/','+','-','/','+','/')
+
+table2 = data.frame(variable,Sign)
+knitr::kable(table2, caption = "Sign Restriction", digits = 2)
+
+
+
+
+set.seed(2024)
+RW1 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+plot.ts(RW1,main="Random Walk 1", col=4,xlab="")
+
+
+RW2 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+plot.ts(RW2,main="Random Walk 2", col=4,xlab="")
+
+RW  <- cbind(RW1,RW2)
+RW
