@@ -309,6 +309,18 @@ $$
 
 -   $u_{t}$ is a $N \times 1$ vector of conditionally on$Y_{t-1}$orthogonal or independent structural shocks. Isolating these shocks allows us to identify dynamic effects of uncorrelated shocks on variables $Y_{t}$.
 
+$$
+Y_t= 
+\begin{pmatrix}
+unemp_t\\
+ govspend_t\\
+ taxrev_t\\
+ infl_t\\
+ gdp_t\\
+ cr_t
+\end{pmatrix}
+$$ 
+
 The **Reduced Form (RF)** representation is:
 
 $$
@@ -627,6 +639,163 @@ $$
 
 Same as $Section3.2$, Gibb Sampler is used to get draws. At each iteration, we draw $\Sigma^{(s)}$ and $A^{(s)}$. Then, $\overline{a}^{(s)}$ can be drawn by $\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})$ which follows normal distribution. Finally, return {$A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}$}.
 
+```{r fig.show='hold', out.width='60%'}
+#| echo: false
+
+set.seed(4048)
+RW1 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+RW2 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 
 
+RW  <- cbind(RW1,RW2)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Y = RW[2:nrow(RW),]
+X = matrix(1,nrow(Y),1)
+X = cbind(X,RW[2: nrow(RW)-1,])
+N = 2
+p = 1
+K = 1+p*N
+S1 = 1000
+S2 = 4000
+S_all = S1+S2
+ 
+A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
+Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+ 
+kappa.1 = 0.02^2
+kappa.2 = 100
+A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:3,] = diag(N)
+V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior = diag(diag(Sigma.hat))
+nu.prior = N+1
+
+m_a <- 0  # mean of the diagonal elements of A
+s_a_squared <- 1  # variance of the diagonal elements of A
+
+# Create the diagonal matrix for the prior mean of A
+a_prior <- matrix(0, nrow = N, ncol = N)
+diag(a_prior) <- rep(m_a, N)
+ 
+V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
+V.bar = solve(V.bar.inv)
+A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
+nu.bar = nrow(Y) + nu.prior
+S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+S.bar.inv = solve(S.bar)
+
+Sigma.posterior = rWishart(S_all, df=nu.bar, Sigma=S.bar.inv) 
+Sigma.posterior = apply(Sigma.posterior,3,solve)
+Sigma.posterior = array(Sigma.posterior,c(N,N,S_all))
+A.posterior = array(rnorm(prod(c(dim(A.bar),S_all))),c(dim(A.bar),S_all)) # whole random draw of A
+B0.tilde = array(NA,c(N,N,S_all))
+L = t(chol(V.bar))
+Bplus.tilde = array(NA,c(N,K,S_all))
+ 
+ for (s in 1:S_all){
+   cholSigma.s = chol(Sigma.posterior[,,s])
+   B0.tilde[,,s] = solve(t(cholSigma.s)) 
+   A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
+   Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
+ } 
+ restriction = diag(c(1,1))
+ i.vec = c()
+ Q.store = array(NA,c(N,N,S_all))
+ B0.store = array(NA,c(N,N,S_all))
+ Bplus.store = array(NA,c(N,K,S_all))
+ A.store = array (NA,c(K,N,S_all))
+ Sigma.store = array(NA,c(N,N,S_all))
+
+ for (s in 1:S_all) {
+   A = A.posterior[,,s]
+   Sigma = Sigma.posterior[,,s]
+   B0.tilde1 = B0.tilde[,,s]
+   Bplus.tilde1 = Bplus.tilde[,,s]
+   
+   sign.restrictions.do.not.hold = TRUE
+   i=1
+   
+   while (sign.restrictions.do.not.hold){
+     X = matrix(rnorm(N*N),N,N)
+     QR = qr(X, tol = 1e-10)
+     Q = qr.Q(QR,complete=TRUE)
+     R = qr.R(QR,complete=TRUE)
+     Q = t(Q %*% diag(sign(diag(R))))
+     B0 = Q%*%B0.tilde1
+     Bplus = Q%*%Bplus.tilde1
+     B0.inv = solve(B0)
+     check = all(diag(B0)>0)
+     if (check==1){sign.restrictions.do.not.hold=FALSE}
+     i=i+1
+   }
+   i.vec <- c(i.vec, i)
+   Q.store[,,s] <- Q
+   B0.store[,,s] <- B0
+   B0.mean <- apply(B0.store,1:2,mean)
+   Bplus.store[,,s] <- Bplus
+   Bplus.mean <- apply(Bplus.store,1:2,mean)
+ }
+
+```
+
+Here are the results of posterior mean of $A$ and $\Sigma$. Both covariance showed identity matrix.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+A_mean <- apply(A.posterior, 1:2, mean)
+A_df <- as.data.frame(A_mean)
+colnames(A_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
+knitr::kable(A_df, caption = "Posterior Mean of A", digits = 2)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
+Sigma_df <- as.data.frame(Sigma_mean)
+colnames(Sigma_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma", digits = 2)
+
+```
+
+The sign restrictions seem to enforce non-negative impacts in the matrix elements.  Because all parameters in $B_0$ and $B+$ are with positive sign. 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+B0_df <- as.data.frame(B0.mean)
+colnames(B0_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(B0_df, caption = "Posterior Mean of B0", digits = 2)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Bplus_df <- as.data.frame(Bplus.mean[, 2:3])
+colnames(Bplus_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(Bplus_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(Bplus_df, caption = "Posterior Mean of B+", digits = 2) 
+```
 ## References {.unnumbered}
