@@ -387,7 +387,22 @@ $$
 \end{align*}
 $$
 
-We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
+
+Here are model process:
+
+1. We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
+
+2.Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
+
+3.From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an
+independent standard normal distribution. Let $P$ = $QR$ be the
+$QR$ decomposition of $P$ with the diagonal of R normalized to be
+positive. The random matrix Q is orthogonal and is a draw from
+the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+
+4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
+
+5. From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
 
 
 ## 3.2 Simulation of Basic Model
@@ -416,172 +431,98 @@ RW  <- cbind(RW1,RW2)
 
 Y = RW[2:nrow(RW),]
 X = matrix(1,nrow(Y),1)
-X = cbind(X,RW[2: nrow(RW)-1,]) 
-S = 1000                           
-N = ncol(Y)                      
+X = cbind(X,RW[2: nrow(RW)-1,])
+N = 2
 p = 1
-K = N*p + 1                     
-
-# generate MLE of A and Sigma 
-A.hat        = solve(t(X)%*%X)%*%t(X)%*%Y                
-Sigma.hat    = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)   
-
-# Get the Minnesota prior 
-GetPrior.parameters <- function (N,p,Sigma.hat) {
-  
-  kappa.1 <- 0.02 # assume kappa1 is 0.02
-  kappa.2 <- 100  # assume kappa2 is 100
-  
-  K = 1 + N*p 
-  
-  A_prior = matrix(0,K,N)
-  A_prior[2:(N+1),] = diag(N) 
-  V_prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-  S_prior = diag(diag(Sigma.hat))
-  nu_prior = N+1
-  
-  return (list(A_prior=A_prior,
-               V_prior = V_prior,
-               S_prior = S_prior,
-               nu_prior = nu_prior))
-}
-
-# find the prior for the sample
-Prior = GetPrior.parameters(N=N,p=p,Sigma.hat=Sigma.hat)
-
-# Get the posterior parameters 
-Posterior_parameters <- function (X,Y,A,V,S,nu) {
-  
-  V_bar.inv <- t(X)%*%X + solve(V)
-  V_bar <- solve(V_bar.inv)
-  A_bar <- V_bar%*%(t(X)%*%Y + solve(V)%*%A)
-  nu_bar <- nrow(Y) + nu
-  S_bar <- S + t(Y)%*%Y + t(A)%*%solve(V)%*%A - t(A_bar)%*%V_bar.inv%*%A_bar
-  
-  
-  return (list(V_bar = V_bar,
-               A_bar = A_bar,
-               nu_bar = nu_bar,
-               S_bar = S_bar))
-}
-
-# Get the posterior parameters for the simulated sample
-posterior_pram = Posterior_parameters(X=X,Y=Y,A=Prior$A_prior,V=Prior$V_prior,
-                                      S=Prior$S_prior,nu=Prior$nu_prior)
-
-posterior.draws = function(S, posterior_pram){
-  
-  A.bar  <- posterior_pram$A_bar
-  V.bar  <- posterior_pram$V_bar
-  S.bar  <- posterior_pram$S_bar
-  nu.bar <- posterior_pram$nu_bar
-  
-  B0.tilde <- array(NA,c(N,N,S))
-  B1.tilde <- array(NA,c(N,K,S))
-  L        <- t(chol(V.bar)) 
-  
-  Sigma.posterior   <- rWishart(S, df=nu.bar, Sigma=solve(S.bar))  
-  Sigma.posterior   <- apply(Sigma.posterior,3,solve)            
-  Sigma.posterior   <- array(Sigma.posterior,c(N,N,S))   
-  A.posterior       <- array(rnorm(prod(c(dim(A.bar),S))),c(dim(A.bar),S))
-  
-  # Compute the initial value of SF parameters
-  for (s in 1:S){
-    cholSigma.s      <- chol(Sigma.posterior[,,s])
-    B0.tilde[,,s] <- solve(t(cholSigma.s)) 
-    A.posterior[,,s] <- A.bar + L%*%A.posterior[,,s]%*%cholSigma.s 
-    B1.tilde[,,s]  <- B0.tilde[,,s]%*%t(A.posterior[,,s])
-  }
-  
- # Sample draws from the joint posterior distribution 
-  return(list(A.posterior     = A.posterior,
-              B0.tilde        = B0.tilde,
-              B1.tilde        = B1.tilde,
-              Sigma.posterior = Sigma.posterior))
-}
-
-# Draw samples of A, sigma and SF parameters
-draws = posterior.draws(S = 1000, posterior_pram = posterior_pram)
-
-ImposeSignRestriction <- function (restrictions,N,p,S,posterior.draws){
-
-B0.draws      = array(NA,c(N,N,S))
-B1.draws      = array(NA,c(N,(1+N*p),S))
-
-B0.tilde = posterior.draws$B0.tilde
-B1.tilde = posterior.draws$B1.tilde
-R1 = restrictions
-
-i.vec = c()
+K = 1+p*N
 S = 1000
-for (s in 1:S){
-  B0.t    = B0.tilde[,,s]
-  B1.t    = B1.tilde[,,s]
-  sign.restrictions.do.not.hold = TRUE
-  i=1
-  while (sign.restrictions.do.not.hold){
-  Z           = matrix(rnorm(4),2,2)
-  QR          = qr(Z, tol = 1e-10)
-  Q           = qr.Q(QR,complete=TRUE)
-  R           = qr.R(QR,complete=TRUE)
-  Q           = t(Q %*% diag(sign(diag(R))))
-  B0          = Q%*%B0.t
-  B1          = Q%*%B1.t
-  B0.inv      = solve(B0)
-  check       = prod(R1 %*% B0 %*% diag(N)[,1]  >= 0)
-  if (check==1){sign.restrictions.do.not.hold=FALSE}
-  i=i+1
-  }
-  i.vec = c(i.vec,i) 
-  B0.draws[,,s] = B0
-  B1.draws[,,s] = B1
-}
-return (list(B0.draws = B0.draws,
-             B1.draws = B1.draws,
-             i = i.vec))
-}
-
-sign.restrictions = c(1,1)
-R1            = diag(sign.restrictions)
-
-
-A.check <- array(NA,c(N+1,N,S))
-S.check <- array(NA,c(N,N,S))
-
-Restriction_output = ImposeSignRestriction(restrictions = R1,N=N,p=p,S=S,posterior.draws=draws )
-
-B0.draws1 = Restriction_output$B0.draws
-B1.draws1 = Restriction_output$B1.draws
-
-for (s in 1:S){
-  # convert B0 into Sigma 
-  S.check[,,s] <- solve(B0.draws1[,,s]) %*% t(solve(B0.draws1[,,s]))
-  A.check[,,s] <- t(solve(B0.draws1[,,s] )%*% B1.draws1[,,s])
  
-}
+A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
+Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+ 
+kappa.1 = 0.02^2
+kappa.2 = 100
+A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:3,] = diag(N)
+V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior = diag(diag(Sigma.hat))
+nu.prior = N+1
+ 
+V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
+V.bar = solve(V.bar.inv)
+A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
+nu.bar = nrow(Y) + nu.prior
+S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+S.bar.inv = solve(S.bar)
 
-d1 <- round(apply(A.check,1:2,mean),4)
-d2 <- round(apply(S.check,1:2,mean),4)
 
-# B0 and B1 has positive diagonal 
-# similar number in diagonal 
-d3 <-round(apply(B0.draws1,1:2,mean),4)
-d4 <-round(apply(B1.draws1,1:2,mean),4)
+Sigma.posterior = rWishart(S, df=nu.bar, Sigma=S.bar.inv) 
+Sigma.posterior = apply(Sigma.posterior,3,solve)
+Sigma.posterior = array(Sigma.posterior,c(N,N,S))
+A.posterior = array(rnorm(prod(c(dim(A.bar),S))),c(dim(A.bar),S)) # whole random draw of A
+B0.tilde = array(NA,c(N,N,S))
+L = t(chol(V.bar))
+Bplus.tilde = array(NA,c(N,K,S))
+ 
+ for (s in 1:S){
+   cholSigma.s = chol(Sigma.posterior[,,s])
+   B0.tilde[,,s] = solve(t(cholSigma.s)) 
+   A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
+   Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
+ } 
+ restriction = diag(c(1,1))
+ i.vec = c()
+ Q.store = array(NA,c(N,N,S))
+ B0.store = array(NA,c(N,N,S))
+ Bplus.store = array(NA,c(N,K,S))
+ A.store = array (NA,c(K,N,S))
+ Sigma.store = array(NA,c(N,N,S))
+
+ for (s in 1:S) {
+   A = A.posterior[,,s]
+   Sigma = Sigma.posterior[,,s]
+   B0.tilde1 = B0.tilde[,,s]
+   Bplus.tilde1 = Bplus.tilde[,,s]
+   
+   sign.restrictions.do.not.hold = TRUE
+   i=1
+   
+   while (sign.restrictions.do.not.hold){
+     X = matrix(rnorm(N*N),N,N)
+     QR = qr(X, tol = 1e-10)
+     Q = qr.Q(QR,complete=TRUE)
+     R = qr.R(QR,complete=TRUE)
+     Q = t(Q %*% diag(sign(diag(R))))
+     B0 = Q%*%B0.tilde1
+     Bplus = Q%*%Bplus.tilde1
+     B0.inv = solve(B0)
+     check = all(diag(B0)>0)
+     if (check==1){sign.restrictions.do.not.hold=FALSE}
+     i=i+1
+   }
+   i.vec <- c(i.vec, i)
+   Q.store[,,s] <- Q
+   B0.store[,,s] <- B0
+   B0.mean <- apply(B0.store,1:2,mean)
+   Bplus.store[,,s] <- Bplus
+   Bplus.mean <- apply(Bplus.store,1:2,mean)
+ }
+
 ```
 
-Then after drawing, we have following results:
+Then after drawing, we have following results of $A$ and $\Sigma$.
 
 ```{r}
 #| echo: false
 #| message: false
 #| warning: false
 
-A <- c('Constant', 'Y1-Lag','Y2-Lag')
-Simulation_Y1 = d1[,1]
-Simulation_Y2 = d1[,2]
-table2 =data.frame(A,Simulation_Y1, Simulation_Y2)
+A_mean <- apply(A.posterior, 1:2, mean)
+A_df <- as.data.frame(A_mean)
+colnames(A_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
+knitr::kable(A_df, caption = "Posterior Mean of A", digits = 2)
 
-knitr::kable(table2, caption = "Posterior Mean of A", digits = 2)
 ```
 
 ```{r}
@@ -589,13 +530,39 @@ knitr::kable(table2, caption = "Posterior Mean of A", digits = 2)
 #| message: false
 #| warning: false
 
-Sigma <- c('Y1-Lag','Y2-Lag')
-Simulation_Y1 = d2[,1]
-Simulation_Y2 = d2[,2]
-table3 =data.frame(Sigma,Simulation_Y1,Simulation_Y2)
+Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
+Sigma_df <- as.data.frame(Sigma_mean)
+colnames(Sigma_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
 
-knitr::kable(table3, caption = "Posterior Mean of Sigma", digits = 2)
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma", digits = 2)
 
+```
+
+From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficients in both $B_0$ and $B+$ matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also,  the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+B0_df <- as.data.frame(B0.mean)
+colnames(B0_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(B0_df, caption = "Posterior Mean of B0", digits = 2)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Bplus_df <- as.data.frame(Bplus.mean[, 2:3])
+colnames(Bplus_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(Bplus_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(Bplus_df, caption = "Posterior Mean of B+", digits = 2) 
 ```
 
 ## 3.3 Extension Model
@@ -655,10 +622,10 @@ $$
 \end{align*}
 $$
 
-Then $\overline{a}^{(s)}$ can be drawn by $\Sigma^{(s)}$ and $A^{(s)}$ which two can be generated as in $Section 3.2$.
 
 ## 3.4 Simulation of Extension Model
 
+Same as $Section3.2$, Gibb Sampler is used to get draws. At each iteration, we draw $\Sigma^{(s)}$ and $A^{(s)}$. Then, $\overline{a}^{(s)}$ can be drawn by $\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})$ which follows normal distribution. Finally, return {$A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}$}.
 
 
 
