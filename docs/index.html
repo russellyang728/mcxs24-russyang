@@ -372,7 +372,16 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 \overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
 \end{align*}
 \]</span></p>
-<p>We can draw <span class="math inline">\(\Sigma^{(s)}\)</span> and then <span class="math inline">\(A^{(s)}\)</span> for each iteration <span class="math inline">\(s\)</span> to form sample draws through joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}\)</span>.</p>
+<p>Here are model process:</p>
+<ol type="1">
+<li>We can draw <span class="math inline">\(\Sigma^{(s)}\)</span> and then <span class="math inline">\(A^{(s)}\)</span> for each iteration <span class="math inline">\(s\)</span> to form sample draws through joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}\)</span>.</li>
+</ol>
+<p>2.Then, compute the initial value of SF parameters to have <span class="math inline">\(\tilde{B_{0}} = chol(\Sigma^{(s)-1})\)</span> and <span class="math inline">\(\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}\)</span>.</p>
+<p>3.From here, we employ sign restriction by adopting a diagonal restrict matrix <span class="math inline">\(R\)</span>. Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(N*N\)</span> random matrix with each element having an independent standard normal distribution. Let <span class="math inline">\(P\)</span> = <span class="math inline">\(QR\)</span> be the <span class="math inline">\(QR\)</span> decomposition of <span class="math inline">\(P\)</span> with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices <span class="math inline">\(O(N)\)</span>.</p>
+<ol start="4" type="1">
+<li><p>Use matrix <span class="math inline">\(Q^{(D)}\)</span> to compute parameters <span class="math inline">\(B_{0} = Q\tilde{B_{0}}\)</span> and <span class="math inline">\(B_{+} = Q\tilde{B_{+}}\)</span>.</p></li>
+<li><p>From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.</p></li>
+</ol>
 </section>
 <section id="simulation-of-basic-model" class="level2">
 <h2 class="anchored" data-anchor-id="simulation-of-basic-model">3.2 Simulation of Basic Model</h2>
@@ -395,14 +404,14 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 </div>
 </div>
 </div>
-<p>Then after drawing, we have following results:</p>
+<p>Then after drawing, we have following results of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>Posterior Mean of A</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">A</th>
+<th style="text-align: left;"></th>
 <th style="text-align: right;">Simulation_Y1</th>
 <th style="text-align: right;">Simulation_Y2</th>
 </tr>
@@ -433,7 +442,7 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <caption>Posterior Mean of Sigma</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Sigma</th>
+<th style="text-align: left;"></th>
 <th style="text-align: right;">Simulation_Y1</th>
 <th style="text-align: right;">Simulation_Y2</th>
 </tr>
@@ -448,6 +457,59 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <td style="text-align: left;">Y2-Lag</td>
 <td style="text-align: right;">-0.01</td>
 <td style="text-align: right;">0.94</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>From the tables of posterior mean of <span class="math inline">\(B_0\)</span> and <span class="math inline">\(B+\)</span>.The signs of the coefficients in both <span class="math inline">\(B_0\)</span> and <span class="math inline">\(B+\)</span> matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also, the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of B0</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Simulation_Y1</th>
+<th style="text-align: right;">Simulation_Y2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Y1-Lag</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Y2-Lag</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.65</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of B+</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Simulation_Y1</th>
+<th style="text-align: right;">Simulation_Y2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Y1-Lag</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">-0.02</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Y2-Lag</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">0.64</td>
 </tr>
 </tbody>
 </table>
@@ -496,10 +558,10 @@ exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \ri
 \overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+\frac{A_{1,22}}{\Sigma_{22}V_{33}})
 \end{align*}
 \]</span></p>
-<p>Then <span class="math inline">\(\overline{a}^{(s)}\)</span> can be drawn by <span class="math inline">\(\Sigma^{(s)}\)</span> and <span class="math inline">\(A^{(s)}\)</span> which two can be generated as in <span class="math inline">\(Section 3.2\)</span>.</p>
 </section>
 <section id="simulation-of-extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="simulation-of-extension-model">3.4 Simulation of Extension Model</h2>
+<p>Same as <span class="math inline">\(Section3.2\)</span>, Gibb Sampler is used to get draws. At each iteration, we draw <span class="math inline">\(\Sigma^{(s)}\)</span> and <span class="math inline">\(A^{(s)}\)</span>. Then, <span class="math inline">\(\overline{a}^{(s)}\)</span> can be drawn by <span class="math inline">\(\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})\)</span> which follows normal distribution. Finally, return {<span class="math inline">\(A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}\)</span>}.</p>
 </section>
 <section id="references" class="level2 unnumbered">
 
