@@ -406,11 +406,7 @@ Here are model process:
 
 2.Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
 
-3.From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an
-independent standard normal distribution. Let $P$ = $QR$ be the
-$QR$ decomposition of $P$ with the diagonal of R normalized to be
-positive. The random matrix Q is orthogonal and is a draw from
-the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+3.From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
 
 4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
@@ -524,7 +520,7 @@ Bplus.tilde = array(NA,c(N,K,S))
 
 Then after drawing, we have following results of $A$ and $\Sigma$.
 
-```{r}
+```{r Tables showing A and Sigma from the random walks}
 #| echo: false
 #| message: false
 #| warning: false
