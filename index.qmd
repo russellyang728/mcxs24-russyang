@@ -579,19 +579,20 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+", digits = 2)
 
 ## 3.3 Extension Model
 
-We try to analyse an extension on $A$.
+We try to analyse an extension on $A$, where $\underline{A}=[O_{N*1}\ \  \ I_N \  \ \ O_{N*(p-1)N}]'$
 
-$\underline{a}$ is the prior mean only for diagonal elements of $A$.
+$\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
 
 
 $$
 \begin{align*}
+&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
 \mathbf{A}| \mathbf{\Sigma} &\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
-& \underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
+ &\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
 $$
 
-The full conditional posterior of $a$ can be derived as below:
+The full conditional posterior of $\underline{a}$ can be derived as below:
 
 $$
 \begin{align*}
@@ -617,27 +618,38 @@ $$
 &\propto p(\underline{a})\left[\prod_{n=1}^Np(A_{1,nn}|\Sigma,\underline{a},\underline{V})\right] \\
 & \propto exp\left\{ -\frac{1}{2}\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a} \right\}
 exp\left\{ -\frac{(\underline{a}-A_{1,11})^2}{\Sigma_{11}\underline{V}_{22}} \right\}
-exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} \\
+exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} ···
+exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}} \right\}\\
 & = exp\left\{ -\frac{1}{2}\left(\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a}+ \frac{(\underline{a}-A_{1,11}
 )^2}{\Sigma_{11}\underline{V}_{22}} + \frac{(\underline{a}-A_{1,22}
-)^2}{\Sigma_{22}\underline{V}_{33}}\right) \right\} \\
-& = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}})+Constant\right) \right\}\\
+)^2}{\Sigma_{22}\underline{V}_{33}}+···+\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}\right)  \right\} \\
+& = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}+···+\frac{1}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}}···+\frac{A_{1,nn}}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}})+Constant\right) \right\}\\
 & = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\} 
 \end{align*}
 $$
-Hence,
+Hence, full conditional posterior of $\underline{a}$ is in a form of normal distribution where,
 
 $$
 \begin{align*}
-\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+\frac{1}{\Sigma_{22}V_{33}})^{-1} \\
-\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+\frac{A_{1,22}}{\Sigma_{22}V_{33}})
+\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+···+\frac{1}{\Sigma_{nn}V_{(n+1)(n+1)}})^{-1} \\
+\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+···+\frac{A_{1,nn}}{\Sigma_{nn}V_{(n+1)(n+1)}})
 \end{align*}
 $$
 
 
 ## 3.4 Simulation of Extension Model
 
-Same as $Section3.2$, Gibb Sampler is used to get draws. At each iteration, we draw $\Sigma^{(s)}$ and $A^{(s)}$. Then, $\overline{a}^{(s)}$ can be drawn by $\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})$ which follows normal distribution. Finally, return {$A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}$}.
+Different to $Section3.2$, Gibb Sampler is used to get draws. 
+
+At each iteration, 
+
+1. Compute $\overline{a}$ and $\overline{s}^2_a$.
+
+2. Draw sample $\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}$.
+
+3. Compute $\overline{A},\overline{V},\overline{S},\overline{\nu}$.
+
+4. Draw sample $\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}$.
 
 ```{r fig.show='hold', out.width='60%'}
 #| echo: false
@@ -675,6 +687,7 @@ A.prior[2:3,] = diag(N)
 V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior = diag(diag(Sigma.hat))
 nu.prior = N+1
+
 
 m_a <- 0  # mean of the diagonal elements of A
 s_a_squared <- 1  # variance of the diagonal elements of A
