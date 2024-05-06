@@ -529,15 +529,16 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 </section>
 <section id="extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="extension-model">3.3 Extension Model</h2>
-<p>We try to analyse an extension on <span class="math inline">\(A\)</span>.</p>
-<p><span class="math inline">\(\underline{a}\)</span> is the prior mean only for diagonal elements of <span class="math inline">\(A\)</span>.</p>
+<p>We try to analyse an extension on <span class="math inline">\(A\)</span>, where <span class="math inline">\(\underline{A}=[O_{N*1}\ \  \ I_N \  \ \ O_{N*(p-1)N}]'\)</span></p>
+<p><span class="math inline">\(\underline{a}\)</span> is the prior mean only for diagonal elements of <span class="math inline">\(A\)</span>. So,</p>
 <p><span class="math display">\[
 \begin{align*}
+&amp;\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
 \mathbf{A}| \mathbf{\Sigma} &amp;\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
-&amp; \underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
+&amp;\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
 \]</span></p>
-<p>The full conditional posterior of <span class="math inline">\(a\)</span> can be derived as below:</p>
+<p>The full conditional posterior of <span class="math inline">\(\underline{a}\)</span> can be derived as below:</p>
 <p><span class="math display">\[
 \begin{align*}
 &amp;\underline{a}|Y,X,A,\Sigma \propto L(A,\Sigma,Y,X)p(A|\Sigma,\underline{a}) p(\Sigma) p(\underline{a}) \\
@@ -555,24 +556,32 @@ A_{1,nn}|\Sigma,\underline{a},\underline{V} &amp;\sim N(\underline{a},\Sigma_{nn
 &amp;\propto p(\underline{a})\left[\prod_{n=1}^Np(A_{1,nn}|\Sigma,\underline{a},\underline{V})\right] \\
 &amp; \propto exp\left\{ -\frac{1}{2}\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a} \right\}
 exp\left\{ -\frac{(\underline{a}-A_{1,11})^2}{\Sigma_{11}\underline{V}_{22}} \right\}
-exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} \\
+exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} ···
+exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}} \right\}\\
 &amp; = exp\left\{ -\frac{1}{2}\left(\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a}+ \frac{(\underline{a}-A_{1,11}
 )^2}{\Sigma_{11}\underline{V}_{22}} + \frac{(\underline{a}-A_{1,22}
-)^2}{\Sigma_{22}\underline{V}_{33}}\right) \right\} \\
-&amp; = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}})+Constant\right) \right\}\\
+)^2}{\Sigma_{22}\underline{V}_{33}}+···+\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}\right)  \right\} \\
+&amp; = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}+···+\frac{1}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}}···+\frac{A_{1,nn}}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}})+Constant\right) \right\}\\
 &amp; = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\}
 \end{align*}
-\]</span> Hence,</p>
+\]</span> Hence, full conditional posterior of <span class="math inline">\(\underline{a}\)</span> is in a form of normal distribution where,</p>
 <p><span class="math display">\[
 \begin{align*}
-\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+\frac{1}{\Sigma_{22}V_{33}})^{-1} \\
-\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+\frac{A_{1,22}}{\Sigma_{22}V_{33}})
+\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+···+\frac{1}{\Sigma_{nn}V_{(n+1)(n+1)}})^{-1} \\
+\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+···+\frac{A_{1,nn}}{\Sigma_{nn}V_{(n+1)(n+1)}})
 \end{align*}
 \]</span></p>
 </section>
 <section id="simulation-of-extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="simulation-of-extension-model">3.4 Simulation of Extension Model</h2>
-<p>Same as <span class="math inline">\(Section3.2\)</span>, Gibb Sampler is used to get draws. At each iteration, we draw <span class="math inline">\(\Sigma^{(s)}\)</span> and <span class="math inline">\(A^{(s)}\)</span>. Then, <span class="math inline">\(\overline{a}^{(s)}\)</span> can be drawn by <span class="math inline">\(\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})\)</span> which follows normal distribution. Finally, return {<span class="math inline">\(A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}\)</span>}.</p>
+<p>Different to <span class="math inline">\(Section3.2\)</span>, Gibb Sampler is used to get draws.</p>
+<p>At each iteration,</p>
+<ol type="1">
+<li><p>Compute <span class="math inline">\(\overline{a}\)</span> and <span class="math inline">\(\overline{s}^2_a\)</span>.</p></li>
+<li><p>Draw sample <span class="math inline">\(\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\overline{A},\overline{V},\overline{S},\overline{\nu}\)</span>.</p></li>
+<li><p>Draw sample <span class="math inline">\(\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}\)</span>.</p></li>
+</ol>
 <p>Here are the results of posterior mean of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. Both covariance showed identity matrix.</p>
 <div class="cell">
 <div class="cell-output-display">
