@@ -356,7 +356,21 @@ $$
 \Sigma &\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
 \end{align*}
 $$
-and let
+
+From Minnesota Prior, we have following parameters
+
+$$
+\begin{align}
+\underline{A} &= [0_{N \times 1} \quad I_N \quad 0_{N \times (p-1)N}]' \\ 
+Var[vec(A)] &= \Sigma \otimes  \underline{V} \\
+\underline{V} &= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
+\end{align}
+$$
+$\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$.
+
+$\kappa_2$ is the overall shrinkage level for the constant term with common value $100$.
+
+$p$ is the length. And, finally let
 
 $$
 \begin{align*}
@@ -364,7 +378,8 @@ $$
 R &= (Y - X\hat{A})'(Y - X\hat{A})
 \end{align*}
 $$
-For the posterior distribution, we have
+
+For the full conditional posterior distribution, we have
 
 $$
 \begin{align*}
@@ -380,7 +395,7 @@ p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\le
 &=p(A|\Sigma,Y)\times p(\Sigma|Y)
 \end{align*}
 $$
-Then we have
+Then we get
 
 $$
 \begin{align*}
@@ -404,13 +419,13 @@ Here are model process:
 
 1. We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
-2.Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
+2. Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
 
-3.From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
 
 4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
-5. From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
+5. From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
 
 
 ## 3.2 Simulation of Basic Model
@@ -529,7 +544,7 @@ A_mean <- apply(A.posterior, 1:2, mean)
 A_df <- as.data.frame(A_mean)
 colnames(A_df) <- c("Simulation_Y1", "Simulation_Y2")
 rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
-knitr::kable(A_df, caption = "Posterior Mean of A", digits = 2)
+knitr::kable(A_df, caption = "Posterior Mean of A")
 
 ```
 
@@ -543,7 +558,7 @@ Sigma_df <- as.data.frame(Sigma_mean)
 colnames(Sigma_df) <- c("Simulation_Y1", "Simulation_Y2")
 rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
 
-knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma", digits = 2)
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
 
 ```
 
@@ -558,7 +573,7 @@ B0_df <- as.data.frame(B0.mean)
 colnames(B0_df) <- c("Simulation_Y1", "Simulation_Y2")
 rownames(B0_df) <- c("Y1-Lag", "Y2-Lag")
 
-knitr::kable(B0_df, caption = "Posterior Mean of B0", digits = 2)
+knitr::kable(B0_df, caption = "Posterior Mean of B0")
 ```
 
 ```{r}
@@ -570,20 +585,23 @@ Bplus_df <- as.data.frame(Bplus.mean[, 2:3])
 colnames(Bplus_df) <- c("Simulation_Y1", "Simulation_Y2")
 rownames(Bplus_df) <- c("Y1-Lag", "Y2-Lag")
 
-knitr::kable(Bplus_df, caption = "Posterior Mean of B+", digits = 2) 
+knitr::kable(Bplus_df, caption = "Posterior Mean of B+") 
 ```
 
 ## 3.3 Extension Model
 
-We try to analyse an extension on $A$.
+Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
 
-$\underline{a}$ is the prior mean only for diagonal elements of $A$.
+$\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
 
 
 $$
 \begin{align*}
+&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
+\\
 \mathbf{A}| \mathbf{\Sigma} &\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
-& \underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
+\\
+ &\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
 $$
 
@@ -603,47 +621,55 @@ A_{1,nn}|\Sigma,\underline{a},\underline{V} &\sim N(\underline{a},\Sigma_{nn}\un
 \end{align*}
 $$
 
-
 So we have
-
-
 
 $$
 \begin{align*}
 &\propto p(\underline{a})\left[\prod_{n=1}^Np(A_{1,nn}|\Sigma,\underline{a},\underline{V})\right] \\
 & \propto exp\left\{ -\frac{1}{2}\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a} \right\}
 exp\left\{ -\frac{(\underline{a}-A_{1,11})^2}{\Sigma_{11}\underline{V}_{22}} \right\}
-exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} \\
+exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} ···
+exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}} \right\}\\
 & = exp\left\{ -\frac{1}{2}\left(\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a}+ \frac{(\underline{a}-A_{1,11}
 )^2}{\Sigma_{11}\underline{V}_{22}} + \frac{(\underline{a}-A_{1,22}
-)^2}{\Sigma_{22}\underline{V}_{33}}\right) \right\} \\
-& = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}})+Constant\right) \right\}\\
+)^2}{\Sigma_{22}\underline{V}_{33}}+···+\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}\right)  \right\} \\
+& = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}+···+\frac{1}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}}···+\frac{A_{1,nn}}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}})+Constant\right) \right\}\\
 & = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\} 
 \end{align*}
 $$
-Hence,
+
+Hence, full conditional posterior of $\underline{a}$ is in a form of normal distribution where,
 
 $$
 \begin{align*}
-\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+\frac{1}{\Sigma_{22}V_{33}})^{-1} \\
-\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+\frac{A_{1,22}}{\Sigma_{22}V_{33}})
+\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+···+\frac{1}{\Sigma_{nn}V_{(n+1)(n+1)}})^{-1} \\
+\overline{a} = \overline{s_a}^2(\frac{m_a}{\underline{s}^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+···+\frac{A_{1,nn}}{\Sigma_{nn}V_{(n+1)(n+1)}})
 \end{align*}
 $$
 
 
 ## 3.4 Simulation of Extension Model
 
-Same as $Section3.2$, Gibb Sampler is used to get draws. At each iteration, we draw $\Sigma^{(s)}$ and $A^{(s)}$. Then, $\overline{a}^{(s)}$ can be drawn by $\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})$ which follows normal distribution. Finally, return {$A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}$}.
+Different to $Section3.2$, Gibb Sampler is used to get draws. 
+
+At each iteration, 
+
+1. Compute $\overline{a}$ and $\overline{s}^2_a$.
+
+2. Draw sample $\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}$.
+
+3. Compute $\overline{A},\overline{V},\overline{S},\overline{\nu}$.
+
+4. Draw sample $\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}$.
 
 ```{r fig.show='hold', out.width='60%'}
 #| echo: false
 
-set.seed(4048)
-RW1 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
-RW2 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+set.seed(2024)
+RW11 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+RW22 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 
-
-RW  <- cbind(RW1,RW2)
+RW.1 <- cbind(RW11,RW22)
 ```
 
 ```{r}
@@ -651,96 +677,151 @@ RW  <- cbind(RW1,RW2)
 #| message: false
 #| warning: false
 
-Y = RW[2:nrow(RW),]
-X = matrix(1,nrow(Y),1)
-X = cbind(X,RW[2: nrow(RW)-1,])
-N = 2
-p = 1
-K = 1+p*N
-S1 = 1000
-S2 = 4000
-S_all = S1+S2
- 
+Y <- RW.1[2:nrow(RW.1),]
+
+Y            = RW.1[2:nrow(RW.1),]
+X            = matrix(1,nrow(Y),1)
+X            = cbind(X,RW.1[2: nrow(RW.1)-1,])
+N            = 2            # number of variables
+p            = 1            # number of lags
+K            = 1+p*N
+S            = 5000         # sample size
+
+sign.restrictions = c(1,1)
+
 A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
 Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
- 
-kappa.1 = 0.02^2
-kappa.2 = 100
-A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
-A.prior[2:3,] = diag(N)
-V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-S.prior = diag(diag(Sigma.hat))
-nu.prior = N+1
 
-m_a <- 0  # mean of the diagonal elements of A
-s_a_squared <- 1  # variance of the diagonal elements of A
+kappa.1     <- 0.02^2
+kappa.2     <- 100
 
-# Create the diagonal matrix for the prior mean of A
-a_prior <- matrix(0, nrow = N, ncol = N)
-diag(a_prior) <- rep(m_a, N)
- 
-V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
-V.bar = solve(V.bar.inv)
-A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
-nu.bar = nrow(Y) + nu.prior
-S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
-S.bar.inv = solve(S.bar)
+A.prior     <- matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] <- diag(N)
+V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior     <- diag(diag(Sigma.hat))
+nu.prior    <- N+1
+m_a =1
 
-Sigma.posterior = rWishart(S_all, df=nu.bar, Sigma=S.bar.inv) 
-Sigma.posterior = apply(Sigma.posterior,3,solve)
-Sigma.posterior = array(Sigma.posterior,c(N,N,S_all))
-A.posterior = array(rnorm(prod(c(dim(A.bar),S_all))),c(dim(A.bar),S_all)) # whole random draw of A
-B0.tilde = array(NA,c(N,N,S_all))
-L = t(chol(V.bar))
-Bplus.tilde = array(NA,c(N,K,S_all))
- 
- for (s in 1:S_all){
-   cholSigma.s = chol(Sigma.posterior[,,s])
-   B0.tilde[,,s] = solve(t(cholSigma.s)) 
-   A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
-   Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
- } 
- restriction = diag(c(1,1))
- i.vec = c()
- Q.store = array(NA,c(N,N,S_all))
- B0.store = array(NA,c(N,N,S_all))
- Bplus.store = array(NA,c(N,K,S_all))
- A.store = array (NA,c(K,N,S_all))
- Sigma.store = array(NA,c(N,N,S_all))
+Sigma.posterior.store    <- array(NA, c(N,N,S))
+A.posterior.store        <- array(NA, c((1+p*N),N,S))
+B0.posterior.store       <- array(NA,c(N,N,S))
+B1.posterior.store       <- array(NA,c(N,K,S))
 
- for (s in 1:S_all) {
-   A = A.posterior[,,s]
-   Sigma = Sigma.posterior[,,s]
-   B0.tilde1 = B0.tilde[,,s]
-   Bplus.tilde1 = Bplus.tilde[,,s]
-   
-   sign.restrictions.do.not.hold = TRUE
-   i=1
-   
-   while (sign.restrictions.do.not.hold){
-     X = matrix(rnorm(N*N),N,N)
-     QR = qr(X, tol = 1e-10)
-     Q = qr.Q(QR,complete=TRUE)
-     R = qr.R(QR,complete=TRUE)
-     Q = t(Q %*% diag(sign(diag(R))))
-     B0 = Q%*%B0.tilde1
-     Bplus = Q%*%Bplus.tilde1
-     B0.inv = solve(B0)
-     check = all(diag(B0)>0)
-     if (check==1){sign.restrictions.do.not.hold=FALSE}
-     i=i+1
-   }
-   i.vec <- c(i.vec, i)
-   Q.store[,,s] <- Q
-   B0.store[,,s] <- B0
-   B0.mean <- apply(B0.store,1:2,mean)
-   Bplus.store[,,s] <- Bplus
-   Bplus.mean <- apply(Bplus.store,1:2,mean)
- }
+compute_sbar2 = function(s2, Sigma, V) {
+  sbar2 = 1/s2
+  for (i in 1:nrow(Sigma)) {
+    sbar2 = sbar2 + 1/(Sigma[i,i]*V[i+1,i+1])
+  }
+  return(1/sbar2)
+}
+
+compute_a_posterior = function(sbar2, Sigma,V,A){
+  a_posterior = m_a/sbar2
+  n=nrow(Sigma)
+  A_1 = A[2:(n-1),]
+  for(i in 1:n) {
+    a_posterior = a_posterior + A_1[i,i]/(Sigma[i,i]*V[i+1,i+1])
+  }
+  return(sbar2*a_posterior)
+}
+
+s2 = 1
+a.posterior.store = numeric(S)
+Sigma.posterior   <- rWishart(1, df=nu.prior, Sigma=S.prior)[,,1]
+V.bar = V.prior
+A.posterior = A.prior
+
+for (s in 1:S){
+  sbar2 = compute_sbar2(s2, Sigma.posterior,V.bar)
+  a_posterior = compute_a_posterior(sbar2, Sigma.posterior,V.bar, A.posterior)
+  a.posterior = rnorm(1, a_posterior, sqrt(sbar2))
+  a.posterior.store[s] = a.posterior
+    
+  # Matrix normal-inverse Wishart posterior parameters
+  V.bar.inv <- t(X)%*%X + diag(1/diag(V.prior))
+  V.bar     <- solve(V.bar.inv)
+  A.bar     <- V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%(A.prior*a.posterior))
+  nu.bar    <- nrow(Y) + nu.prior
+  S.bar     <- S.prior + t(Y)%*%Y + t((A.prior*a.posterior))%*%diag(1/diag(V.prior))%*%(A.prior*a.posterior) - t(A.bar)%*%V.bar.inv%*%A.bar
+  S.bar.inv <- solve(S.bar)
+  
+  
+  # Draw Posterior distribution
+  Sigma.posterior   <- rWishart(1, df=nu.bar, Sigma=S.bar.inv)[,,1]
+  Sigma.posterior.store[,,s]   <- solve(Sigma.posterior)
+  
+  # Draw A from matrix-variate normal distribution
+  A.posterior = matrix(mvtnorm::rmvnorm(1, mean=as.vector(A.bar), sigma=Sigma.posterior.store[,,s]%x%V.bar), ncol=N)
+  A.posterior.store[,,s] = A.posterior
+  
+  ## Draw from the Structural Form
+  cholSigma.s        <- chol(Sigma.posterior.store[,,s])
+  B0.posterior.store[,,s]  <- solve(t(cholSigma.s)) 
+  B1.posterior.store[,,s]  <- B0.posterior.store[,,s]%*%t(A.posterior.store [,,s])
+}
+
+# Identification via sign restrictions 
+R1 <- diag(sign.restrictions)
+
+# Storage matrices for Q identified estimates
+i.vec <- c()
+Q.store      <- array(NA,c(N,N,(S)))
+B0.store    <- array(NA,c(N,N,(S)))
+B1.store     <- array(NA,c(N,K,(S)))
+A.store     <- array(NA,c(K,N,S))
+Sigma.store  <- array(NA,c(N,N,S))
+
+for (s in 1:S){
+  A             <- A.posterior.store[,,s]
+  Sigma         <- Sigma.posterior.store[,,s]
+  B0.tilde      <- B0.posterior.store[,,s]
+  B1.tilde      <- B1.posterior.store[,,s]
+  
+  sign.restrictions.do.not.hold = TRUE
+  i=1
+  while (sign.restrictions.do.not.hold){
+    X           <- matrix(rnorm(N*N),N,N)         
+    QR          <- qr(X, tol = 1e-10)
+    Q           <- qr.Q(QR,complete=TRUE)
+    R           <- qr.R(QR,complete=TRUE)
+    Q           <- t(Q %*% diag(sign(diag(R))))
+    B0          <- Q%*%B0.tilde                    
+    B1          <- Q%*%B1.tilde                   
+    B0.inv      <- solve(B0)      
+    check       <- all(c(B0[1,1], B0[2,2]) > 0)
+    
+    if (check){sign.restrictions.do.not.hold=FALSE}
+    i=i+1 
+  }
+  i.vec <- c(i.vec,i) 
+  
+  Q.store[,,s] <- Q
+  B0.store[,,s] <- B0
+  B0.mean <- apply(B0.store,1:2,mean)
+  B1.store[,,s] <- B1
+  B1.mean <- apply(B1.store,1:2,mean)
+  A.store[,,s]       <- A
+  A.mean             <- apply(A,1:2,mean)
+  Sigma.store[,,s]   <- Sigma
+  Sigma.mean         <- apply(Sigma,1:2,mean)
+}
 
 ```
 
-Here are the results of posterior mean of $A$ and $\Sigma$. Both covariance showed identity matrix.
+We get the mean of $\overline{a}$ first:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+a_mean <- data.frame(a = mean(a.posterior.store))
+colnames(a_mean) <- "Posterior Mean of a"
+knitr::kable(a_mean,align = 'c',index = FALSE)
+
+```
+
+And then generate the results of posterior mean of $A$ and $\Sigma$. Both covariance close to identity matrix.
 
 ```{r}
 #| echo: false
@@ -751,7 +832,7 @@ A_mean <- apply(A.posterior, 1:2, mean)
 A_df <- as.data.frame(A_mean)
 colnames(A_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
-knitr::kable(A_df, caption = "Posterior Mean of A", digits = 2)
+knitr::kable(A_df, caption = "Posterior Mean of A")
 
 ```
 
@@ -765,7 +846,7 @@ Sigma_df <- as.data.frame(Sigma_mean)
 colnames(Sigma_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
 
-knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma", digits = 2)
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
 
 ```
 
@@ -777,10 +858,10 @@ The sign restrictions seem to enforce non-negative impacts in the matrix element
 #| warning: false
 
 B0_df <- as.data.frame(B0.mean)
-colnames(B0_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
-rownames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+colnames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+rownames(B0_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 
-knitr::kable(B0_df, caption = "Posterior Mean of B0", digits = 2)
+knitr::kable(B0_df, caption = "Posterior Mean of B0")
 ```
 
 ```{r}
@@ -788,10 +869,11 @@ knitr::kable(B0_df, caption = "Posterior Mean of B0", digits = 2)
 #| message: false
 #| warning: false
 
-Bplus_df <- as.data.frame(Bplus.mean[, 2:3])
-colnames(Bplus_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
-rownames(Bplus_df) <- c("Y1-Lag", "Y2-Lag")
+Bplus_df <- as.data.frame(Bplus.mean)
+colnames(Bplus_df) <- c("Constant","Y1-Lag", "Y2-Lag")
+rownames(Bplus_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 
-knitr::kable(Bplus_df, caption = "Posterior Mean of B+", digits = 2) 
+knitr::kable(Bplus_df, caption = "Posterior Mean of B+") 
 ```
+
 ## References {.unnumbered}
