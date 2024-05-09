@@ -348,13 +348,24 @@ B_0 \epsilon_t = u_t \\
 \mathbf{A}| \mathbf{\Sigma} &amp;\sim \mathcal{MN}_{K \times N}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}}) \\
 \Sigma &amp;\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
 \end{align*}
-\]</span> and let</p>
+\]</span></p>
+<p>From Minnesota Prior, we have following parameters</p>
+<p><span class="math display">\[
+\begin{align}
+\underline{A} &amp;= [0_{N \times 1} \quad I_N \quad 0_{N \times (p-1)N}]' \\
+Var[vec(A)] &amp;= \Sigma \otimes  \underline{V} \\
+\underline{V} &amp;= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
+\end{align}
+\]</span> <span class="math inline">\(\kappa_1\)</span> is the overall shrinkage level for autoregressive slopes with common value <span class="math inline">\(0.02^{2}\)</span>.</p>
+<p><span class="math inline">\(\kappa_2\)</span> is the overall shrinkage level for the constant term with common value <span class="math inline">\(100\)</span>.</p>
+<p><span class="math inline">\(p\)</span> is the length. And, finally let</p>
 <p><span class="math display">\[
 \begin{align*}
 \hat{A} &amp;= (X'X)^{-1}X'Y \\
 R &amp;= (Y - X\hat{A})'(Y - X\hat{A})
 \end{align*}
-\]</span> For the posterior distribution, we have</p>
+\]</span></p>
+<p>For the full conditional posterior distribution, we have</p>
 <p><span class="math display">\[
 \begin{align*}
 p(A, \Sigma | Y) &amp;\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\left[(Y - XA)'(Y - XA)\right] \right\} \\
@@ -368,7 +379,7 @@ p(A, \Sigma | Y) &amp;\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr
 &amp;\quad\times |\Sigma|^{-(\underline{\nu}+T+N+1)/2}\exp\left\{ -\frac{1}{2}\text{tr}\left[ (Y'Y+\underline{S}+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}\overline{A})\Sigma^{-1} \right] \right\} \\
 &amp;=p(A|\Sigma,Y)\times p(\Sigma|Y)
 \end{align*}
-\]</span> Then we have</p>
+\]</span> Then we get</p>
 <p><span class="math display">\[
 \begin{align*}
 A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V},) \\
@@ -389,7 +400,7 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <li><p>Then, compute the initial value of SF parameters to have <span class="math inline">\(\tilde{B_{0}} = chol(\Sigma^{(s)-1})\)</span> and <span class="math inline">\(\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}\)</span>.</p></li>
 <li><p>From here, we employ sign restriction by adopting a diagonal restrict matrix <span class="math inline">\(R\)</span>. Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(N*N\)</span> random matrix with each element having an independent standard normal distribution. Let <span class="math inline">\(P\)</span> = <span class="math inline">\(QR\)</span> be the <span class="math inline">\(QR\)</span> decomposition of <span class="math inline">\(P\)</span> with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices <span class="math inline">\(O(N)\)</span>.</p></li>
 <li><p>Use matrix <span class="math inline">\(Q^{(D)}\)</span> to compute parameters <span class="math inline">\(B_{0} = Q\tilde{B_{0}}\)</span> and <span class="math inline">\(B_{+} = Q\tilde{B_{+}}\)</span>.</p></li>
-<li><p>From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.</p></li>
+<li><p>From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.</p></li>
 </ol>
 </section>
 <section id="simulation-of-basic-model" class="level2">
@@ -530,7 +541,7 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 </section>
 <section id="extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="extension-model">3.3 Extension Model</h2>
-<p>We try to analyse an extension on <span class="math inline">\(A\)</span>, where <span class="math inline">\(\underline{A}=[O_{N*1}\ \  \ I_N \  \ \ O_{N*(p-1)N}]'\)</span></p>
+<p>Since from released public reports, the mean of <span class="math inline">\(A\)</span> is seldom deeply analyzed. Hence, we try to discover an extension on <span class="math inline">\(A\)</span>.</p>
 <p><span class="math inline">\(\underline{a}\)</span> is the prior mean only for diagonal elements of <span class="math inline">\(A\)</span>. So,</p>
 <p><span class="math display">\[
 \begin{align*}
@@ -567,7 +578,8 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 &amp; = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}+···+\frac{1}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}}···+\frac{A_{1,nn}}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}})+Constant\right) \right\}\\
 &amp; = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\}
 \end{align*}
-\]</span> Hence, full conditional posterior of <span class="math inline">\(\underline{a}\)</span> is in a form of normal distribution where,</p>
+\]</span></p>
+<p>Hence, full conditional posterior of <span class="math inline">\(\underline{a}\)</span> is in a form of normal distribution where,</p>
 <p><span class="math display">\[
 \begin{align*}
 \overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+···+\frac{1}{\Sigma_{nn}V_{(n+1)(n+1)}})^{-1} \\
