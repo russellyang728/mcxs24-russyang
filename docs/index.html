@@ -385,11 +385,9 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 \]</span></p>
 <p>Here are model process:</p>
 <ol type="1">
-<li>We can draw <span class="math inline">\(\Sigma^{(s)}\)</span> and then <span class="math inline">\(A^{(s)}\)</span> for each iteration <span class="math inline">\(s\)</span> to form sample draws through joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}\)</span>.</li>
-</ol>
-<p>2.Then, compute the initial value of SF parameters to have <span class="math inline">\(\tilde{B_{0}} = chol(\Sigma^{(s)-1})\)</span> and <span class="math inline">\(\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}\)</span>.</p>
-<p>3.From here, we employ sign restriction by adopting a diagonal restrict matrix <span class="math inline">\(R\)</span>. Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(N*N\)</span> random matrix with each element having an independent standard normal distribution. Let <span class="math inline">\(P\)</span> = <span class="math inline">\(QR\)</span> be the <span class="math inline">\(QR\)</span> decomposition of <span class="math inline">\(P\)</span> with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices <span class="math inline">\(O(N)\)</span>.</p>
-<ol start="4" type="1">
+<li><p>We can draw <span class="math inline">\(\Sigma^{(s)}\)</span> and then <span class="math inline">\(A^{(s)}\)</span> for each iteration <span class="math inline">\(s\)</span> to form sample draws through joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}\)</span>.</p></li>
+<li><p>Then, compute the initial value of SF parameters to have <span class="math inline">\(\tilde{B_{0}} = chol(\Sigma^{(s)-1})\)</span> and <span class="math inline">\(\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}\)</span>.</p></li>
+<li><p>From here, we employ sign restriction by adopting a diagonal restrict matrix <span class="math inline">\(R\)</span>. Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(N*N\)</span> random matrix with each element having an independent standard normal distribution. Let <span class="math inline">\(P\)</span> = <span class="math inline">\(QR\)</span> be the <span class="math inline">\(QR\)</span> decomposition of <span class="math inline">\(P\)</span> with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices <span class="math inline">\(O(N)\)</span>.</p></li>
 <li><p>Use matrix <span class="math inline">\(Q^{(D)}\)</span> to compute parameters <span class="math inline">\(B_{0} = Q\tilde{B_{0}}\)</span> and <span class="math inline">\(B_{+} = Q\tilde{B_{+}}\)</span>.</p></li>
 <li><p>From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.</p></li>
 </ol>
@@ -430,18 +428,18 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Constant</td>
-<td style="text-align: right;">0.05</td>
-<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">0.0537239</td>
+<td style="text-align: right;">0.0189261</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.9939985</td>
+<td style="text-align: right;">0.0071675</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.0008838</td>
+<td style="text-align: right;">0.9946591</td>
 </tr>
 </tbody>
 </table>
@@ -461,13 +459,13 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.96</td>
-<td style="text-align: right;">-0.01</td>
+<td style="text-align: right;">0.9635555</td>
+<td style="text-align: right;">-0.0116637</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">-0.01</td>
-<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">-0.0116637</td>
+<td style="text-align: right;">0.9415589</td>
 </tr>
 </tbody>
 </table>
@@ -481,20 +479,20 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Simulation_Y1</th>
-<th style="text-align: right;">Simulation_Y2</th>
+<th style="text-align: right;">Y1-Lag</th>
+<th style="text-align: right;">Y2-Lag</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">-0.02</td>
+<td style="text-align: left;">Simulation_Y1</td>
+<td style="text-align: right;">0.6395591</td>
+<td style="text-align: right;">-0.0220170</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.65</td>
+<td style="text-align: left;">Simulation_Y2</td>
+<td style="text-align: right;">0.0402778</td>
+<td style="text-align: right;">0.6467075</td>
 </tr>
 </tbody>
 </table>
@@ -507,20 +505,23 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Simulation_Y1</th>
-<th style="text-align: right;">Simulation_Y2</th>
+<th style="text-align: right;">Constant</th>
+<th style="text-align: right;">Y1-Lag</th>
+<th style="text-align: right;">Y2-Lag</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.64</td>
-<td style="text-align: right;">-0.02</td>
+<td style="text-align: left;">Simulation_Y1</td>
+<td style="text-align: right;">0.0346082</td>
+<td style="text-align: right;">0.6354305</td>
+<td style="text-align: right;">-0.0212149</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.04</td>
-<td style="text-align: right;">0.64</td>
+<td style="text-align: left;">Simulation_Y2</td>
+<td style="text-align: right;">0.0155527</td>
+<td style="text-align: right;">0.0446449</td>
+<td style="text-align: right;">0.6432964</td>
 </tr>
 </tbody>
 </table>
@@ -529,15 +530,18 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 </section>
 <section id="extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="extension-model">3.3 Extension Model</h2>
-<p>We try to analyse an extension on <span class="math inline">\(A\)</span>.</p>
-<p><span class="math inline">\(\underline{a}\)</span> is the prior mean only for diagonal elements of <span class="math inline">\(A\)</span>.</p>
+<p>We try to analyse an extension on <span class="math inline">\(A\)</span>, where <span class="math inline">\(\underline{A}=[O_{N*1}\ \  \ I_N \  \ \ O_{N*(p-1)N}]'\)</span></p>
+<p><span class="math inline">\(\underline{a}\)</span> is the prior mean only for diagonal elements of <span class="math inline">\(A\)</span>. So,</p>
 <p><span class="math display">\[
 \begin{align*}
+&amp;\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
+\\
 \mathbf{A}| \mathbf{\Sigma} &amp;\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
-&amp; \underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
+\\
+&amp;\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
 \]</span></p>
-<p>The full conditional posterior of <span class="math inline">\(a\)</span> can be derived as below:</p>
+<p>The full conditional posterior of <span class="math inline">\(\underline{a}\)</span> can be derived as below:</p>
 <p><span class="math display">\[
 \begin{align*}
 &amp;\underline{a}|Y,X,A,\Sigma \propto L(A,\Sigma,Y,X)p(A|\Sigma,\underline{a}) p(\Sigma) p(\underline{a}) \\
@@ -555,25 +559,50 @@ A_{1,nn}|\Sigma,\underline{a},\underline{V} &amp;\sim N(\underline{a},\Sigma_{nn
 &amp;\propto p(\underline{a})\left[\prod_{n=1}^Np(A_{1,nn}|\Sigma,\underline{a},\underline{V})\right] \\
 &amp; \propto exp\left\{ -\frac{1}{2}\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a} \right\}
 exp\left\{ -\frac{(\underline{a}-A_{1,11})^2}{\Sigma_{11}\underline{V}_{22}} \right\}
-exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} \\
+exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \right\} ···
+exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}} \right\}\\
 &amp; = exp\left\{ -\frac{1}{2}\left(\frac{(\underline{a}-m_a)^2}{\underline{s}^2_a}+ \frac{(\underline{a}-A_{1,11}
 )^2}{\Sigma_{11}\underline{V}_{22}} + \frac{(\underline{a}-A_{1,22}
-)^2}{\Sigma_{22}\underline{V}_{33}}\right) \right\} \\
-&amp; = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}})+Constant\right) \right\}\\
+)^2}{\Sigma_{22}\underline{V}_{33}}+···+\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}\right)  \right\} \\
+&amp; = exp\left\{-\frac{1}{2} \left(\underline{a}^2(\frac{1}{\underline{s}^2_a}+ \frac{1}{\Sigma_{11}\underline{V}_{22}} + \frac{1}{\Sigma_{22}\underline{V}_{33}}+···+\frac{1}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}}) -2a(\frac{m_a}{\underline{s}^2_a}+ \frac{A_{1,11}}{\Sigma_{11}\underline{V}_{22}} + \frac{A_{1,22}}{\Sigma_{22}\underline{V}_{33}}···+\frac{A_{1,nn}}{\Sigma_{nn}\underline{V}_{(n+1)(n+1)}})+Constant\right) \right\}\\
 &amp; = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\}
 \end{align*}
-\]</span> Hence,</p>
+\]</span> Hence, full conditional posterior of <span class="math inline">\(\underline{a}\)</span> is in a form of normal distribution where,</p>
 <p><span class="math display">\[
 \begin{align*}
-\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+\frac{1}{\Sigma_{22}V_{33}})^{-1} \\
-\overline{a} = \overline{s}^2(\frac{m_a}{s^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+\frac{A_{1,22}}{\Sigma_{22}V_{33}})
+\overline{s}^2_a = (\frac{1}{\underline{s}^2_a}+\frac{1}{\Sigma_{11}V_{22}}+···+\frac{1}{\Sigma_{nn}V_{(n+1)(n+1)}})^{-1} \\
+\overline{a} = \overline{s_a}^2(\frac{m_a}{\underline{s}^2_a}+\frac{A_{1,11}}{\Sigma_{11}V_{22}}+···+\frac{A_{1,nn}}{\Sigma_{nn}V_{(n+1)(n+1)}})
 \end{align*}
 \]</span></p>
 </section>
 <section id="simulation-of-extension-model" class="level2">
 <h2 class="anchored" data-anchor-id="simulation-of-extension-model">3.4 Simulation of Extension Model</h2>
-<p>Same as <span class="math inline">\(Section3.2\)</span>, Gibb Sampler is used to get draws. At each iteration, we draw <span class="math inline">\(\Sigma^{(s)}\)</span> and <span class="math inline">\(A^{(s)}\)</span>. Then, <span class="math inline">\(\overline{a}^{(s)}\)</span> can be drawn by <span class="math inline">\(\underline{a}^{(s)} \sim p(\underline{a}|Y,X,\Sigma^{(s)},A^{(s)})\)</span> which follows normal distribution. Finally, return {<span class="math inline">\(A^{(s)},\Sigma^{(s)},\underline{a}^{(s)}\)</span>}.</p>
-<p>Here are the results of posterior mean of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. Both covariance showed identity matrix.</p>
+<p>Different to <span class="math inline">\(Section3.2\)</span>, Gibb Sampler is used to get draws.</p>
+<p>At each iteration,</p>
+<ol type="1">
+<li><p>Compute <span class="math inline">\(\overline{a}\)</span> and <span class="math inline">\(\overline{s}^2_a\)</span>.</p></li>
+<li><p>Draw sample <span class="math inline">\(\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}\)</span>.</p></li>
+<li><p>Compute <span class="math inline">\(\overline{A},\overline{V},\overline{S},\overline{\nu}\)</span>.</p></li>
+<li><p>Draw sample <span class="math inline">\(\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}\)</span>.</p></li>
+</ol>
+<p>We get the mean of <span class="math inline">\(\overline{a}\)</span> first:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Posterior Mean of a</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1.319082</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>And then generate the results of posterior mean of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. Both covariance close to identity matrix.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
@@ -588,18 +617,18 @@ exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \ri
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Constant</td>
-<td style="text-align: right;">0.11</td>
-<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">0.0352469</td>
+<td style="text-align: right;">-0.0122197</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">1.00</td>
-<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1.0080256</td>
+<td style="text-align: right;">0.0033268</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">-0.0080424</td>
+<td style="text-align: right;">0.9973419</td>
 </tr>
 </tbody>
 </table>
@@ -619,13 +648,13 @@ exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \ri
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">1.03</td>
-<td style="text-align: right;">-0.03</td>
+<td style="text-align: right;">0.7976533</td>
+<td style="text-align: right;">-0.0244415</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">-0.03</td>
-<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">-0.0244415</td>
+<td style="text-align: right;">0.7930590</td>
 </tr>
 </tbody>
 </table>
@@ -639,20 +668,20 @@ exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \ri
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Simulation_Y1ext</th>
-<th style="text-align: right;">Simulation_Y2ext</th>
+<th style="text-align: right;">Y1-Lag</th>
+<th style="text-align: right;">Y2-Lag</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.62</td>
-<td style="text-align: right;">0.02</td>
+<td style="text-align: left;">Simulation_Y1ext</td>
+<td style="text-align: right;">0.5821011</td>
+<td style="text-align: right;">0.0156686</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.66</td>
+<td style="text-align: left;">Simulation_Y2ext</td>
+<td style="text-align: right;">-0.0025638</td>
+<td style="text-align: right;">0.5862764</td>
 </tr>
 </tbody>
 </table>
@@ -665,20 +694,23 @@ exp\left\{ -\frac{(\underline{a}-A_{1,22})^2}{\Sigma_{22}\underline{V}_{33}} \ri
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Simulation_Y1ext</th>
-<th style="text-align: right;">Simulation_Y2ext</th>
+<th style="text-align: right;">Constant</th>
+<th style="text-align: right;">Y1-Lag</th>
+<th style="text-align: right;">Y2-Lag</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Y1-Lag</td>
-<td style="text-align: right;">0.62</td>
-<td style="text-align: right;">0.02</td>
+<td style="text-align: left;">Simulation_Y1ext</td>
+<td style="text-align: right;">0.0346082</td>
+<td style="text-align: right;">0.6354305</td>
+<td style="text-align: right;">-0.0212149</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Y2-Lag</td>
-<td style="text-align: right;">0.02</td>
-<td style="text-align: right;">0.65</td>
+<td style="text-align: left;">Simulation_Y2ext</td>
+<td style="text-align: right;">0.0155527</td>
+<td style="text-align: right;">0.0446449</td>
+<td style="text-align: right;">0.6432964</td>
 </tr>
 </tbody>
 </table>

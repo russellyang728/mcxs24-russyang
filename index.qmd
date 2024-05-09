@@ -423,6 +423,7 @@ Here are model process:
 
 3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
 
+
 4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
 5. From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
@@ -570,8 +571,8 @@ From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficient
 #| warning: false
 
 B0_df <- as.data.frame(B0.mean)
-colnames(B0_df) <- c("Simulation_Y1", "Simulation_Y2")
-rownames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+colnames(B0_df) <- c("Y1-Lag", "Y2-Lag")
+rownames(B0_df) <- c("Simulation_Y1", "Simulation_Y2")
 
 knitr::kable(B0_df, caption = "Posterior Mean of B0")
 ```
@@ -581,9 +582,9 @@ knitr::kable(B0_df, caption = "Posterior Mean of B0")
 #| message: false
 #| warning: false
 
-Bplus_df <- as.data.frame(Bplus.mean[, 2:3])
-colnames(Bplus_df) <- c("Simulation_Y1", "Simulation_Y2")
-rownames(Bplus_df) <- c("Y1-Lag", "Y2-Lag")
+Bplus_df <- as.data.frame(Bplus.mean)
+colnames(Bplus_df) <- c("Constant","Y1-Lag", "Y2-Lag")
+rownames(Bplus_df) <- c("Simulation_Y1", "Simulation_Y2")
 
 knitr::kable(Bplus_df, caption = "Posterior Mean of B+") 
 ```
@@ -591,6 +592,7 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 ## 3.3 Extension Model
 
 Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
+
 
 $\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
 
@@ -605,7 +607,7 @@ $$
 \end{align*}
 $$
 
-The full conditional posterior of $a$ can be derived as below:
+The full conditional posterior of $\underline{a}$ can be derived as below:
 
 $$
 \begin{align*}
