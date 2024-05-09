@@ -356,7 +356,21 @@ $$
 \Sigma &\sim \mathcal{IW}_N(\underline{\mathbf{S}}, \underline{\nu})
 \end{align*}
 $$
-and let
+
+From Minnesota Prior, we have following parameters
+
+$$
+\begin{align}
+\underline{A} &= [0_{N \times 1} \quad I_N \quad 0_{N \times (p-1)N}]' \\ 
+Var[vec(A)] &= \Sigma \otimes  \underline{V} \\
+\underline{V} &= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
+\end{align}
+$$
+$\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$.
+
+$\kappa_2$ is the overall shrinkage level for the constant term with common value $100$.
+
+$p$ is the length. And, finally let
 
 $$
 \begin{align*}
@@ -364,7 +378,8 @@ $$
 R &= (Y - X\hat{A})'(Y - X\hat{A})
 \end{align*}
 $$
-For the posterior distribution, we have
+
+For the full conditional posterior distribution, we have
 
 $$
 \begin{align*}
@@ -380,7 +395,7 @@ p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\le
 &=p(A|\Sigma,Y)\times p(\Sigma|Y)
 \end{align*}
 $$
-Then we have
+Then we get
 
 $$
 \begin{align*}
@@ -406,12 +421,12 @@ Here are model process:
 
 2. Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
 
-3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the
-$QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+
 
 4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
-5. From above, get corresponding IRF(Impluse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
+5. From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
 
 
 ## 3.2 Simulation of Basic Model
@@ -521,7 +536,7 @@ Bplus.tilde = array(NA,c(N,K,S))
 
 Then after drawing, we have following results of $A$ and $\Sigma$.
 
-```{r}
+```{r Tables showing A and Sigma from the random walks}
 #| echo: false
 #| message: false
 #| warning: false
@@ -576,7 +591,8 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 
 ## 3.3 Extension Model
 
-We try to analyse an extension on $A$, where $\underline{A}=[O_{N*1}\ \  \ I_N \  \ \ O_{N*(p-1)N}]'$
+Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
+
 
 $\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
 
@@ -607,10 +623,7 @@ A_{1,nn}|\Sigma,\underline{a},\underline{V} &\sim N(\underline{a},\Sigma_{nn}\un
 \end{align*}
 $$
 
-
 So we have
-
-
 
 $$
 \begin{align*}
@@ -626,6 +639,7 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 & = exp \left\{-\frac{1}{2}(\frac{(\underline{a}-\overline{a})^2}{\overline{s}^2_a}) \right\} 
 \end{align*}
 $$
+
 Hence, full conditional posterior of $\underline{a}$ is in a form of normal distribution where,
 
 $$
@@ -863,4 +877,5 @@ rownames(Bplus_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 
 knitr::kable(Bplus_df, caption = "Posterior Mean of B+") 
 ```
+
 ## References {.unnumbered}
