@@ -22,17 +22,17 @@ Unemployment is pivotal in the macroeconomic framework, directly tied to social 
 
 ## 2.1 Variables Selected
 
-Unemployment Rate (UNEMP): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
+Unemployment Rate(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
 
-Government Spending (GOVSPEND): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
+Government Spending(GOVSPEND)(in billion$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
 
-Tax Revenue (TAXREV): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
+Tax Revenue(TAXREV)(in billion$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
 
-Inflation Rate (INFL): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
+Inflation Rate(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
-Real Gross Domestic Product (RGDP): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
+Real Gross Domestic Product(RGDP)(in billion$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
 
-Cash Rate Target(CR): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
+Cash Rate Target(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
 
 ## 2.2 Why Chose Them?
 
@@ -52,16 +52,10 @@ library(zoo)
 library(dplyr)
 
 #download data
-
-
 cr_dwld <- readrba::read_rba(series_id = "FIRMMCRTD")
-
 cr <- cr_dwld[, c("date", "value")]
-
 cr <- xts::xts(cr$value,cr$date)
-
 cr <- xts::to.quarterly(cr, OHLC = FALSE)
-
 start_date <- start(cr)
 end_date1 <- as.Date("2023-12-31")
 end_date2 <- as.yearqtr("2023 Q4")
@@ -69,130 +63,73 @@ end_date2 <- as.yearqtr("2023 Q4")
 cr = window(cr, start=start_date, end=end_date2)
 
 cr_p = autoplot(cr) +
-  
   theme_classic()+
-  
   labs(title = "Cash Rate Target")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
-
-
 
 #unemployment rate data
 unemp_dwnld <- readabs::read_abs(series_id = 'A84423050A') 
-
-
 unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
 
 # Covert monthly unemployment data to quarterly for analysis compatibility. 
-
 unemp <- to.quarterly(unemp,OHLC = FALSE)
-
 unemp <- window(unemp, start=start_date, end=end_date2)
 
 unemp_p = autoplot(unemp) +
-  
   theme_classic()+
-  
   scale_x_yearqtr(format = "%Y")+
-  
   labs(title = "Unemployment Rate")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
 
-
 #government spending data
-
 govspend_dwnld <- readabs::read_abs(series_id = 'A2304080V')
-
 govspend <- xts(govspend_dwnld$value, order.by=as.Date(govspend_dwnld$date))
-
 govspend <- window(govspend, start=start_date, end=end_date1)
 
 govspend_p = autoplot(govspend) +
-  
   theme_classic()+
-  
   labs(title = "Government Spending")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
-
 
 #tax revenue data
-
 taxrev_dwnld <- readabs::read_abs(series_id = 'A2302794K')
-
 taxrev <- xts(taxrev_dwnld$value, order.by=as.Date(taxrev_dwnld$date))
-
 taxrev <- window(taxrev, start=start_date, end=end_date1)
-
 taxrev_p = autoplot(taxrev) +
-  
   theme_classic()+
-  
   labs(title = "Tax Revenue")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
-
 
 #inflation data
-
 infl_dwnld <- readabs::read_abs(series_id = 'A2325850V')
-
 infl <- xts(infl_dwnld$value, order.by=as.Date(infl_dwnld$date))
-
 infl <- window(infl, start=start_date, end=end_date1)
-
 infl_p = autoplot(infl) +
-  
   theme_classic()+
-  
   labs(title = "Inflation")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
-
 
 # real gdp data
 rgdp_dwld <- readrba::read_rba(series_id = "GGDPCVGDP")
-
 rgdp <- rgdp_dwld[, c("date", "value")]
-
 rgdp$quarter <- zoo::as.yearqtr(rgdp$date)
-
 rgdp <- xts::xts(rgdp$value,rgdp$quarter)
-
 rgdp <- window(rgdp, start=start_date, end=end_date2)
-
 rgdp_p = autoplot(rgdp) +
-  
   theme_classic()+
-  
   labs(title = "Real GDP")+
-  
   theme(axis.title.x = element_blank(),
-        
         plot.title = element_text(hjust = 0.5,
-                                  
                                   face = "bold"))
 
 ```
@@ -227,7 +164,6 @@ combined_plot
 ```{r}
 #| echo: false
 #| message: false
-
 
 data_df <- data.frame(
   unemp = coredata(unemp),
@@ -269,8 +205,6 @@ acf(infl, plot = TRUE , main = "Inflation")
 acf(rgdp, plot = TRUE , main = "Real GDP")
 acf(cr, plot = TRUE , main = "Cash Rate Target")
 
-
-
 ```
 
 ```{r fig.show='hold', out.width='80%'}
@@ -286,7 +220,6 @@ pacf(taxrev, plot = TRUE , main = "Tax Revenue")
 pacf(infl, plot = TRUE , main = "Inflation")
 pacf(rgdp, plot = TRUE , main = "Real GDP")
 pacf(cr, plot = TRUE , main = "Cash Rate Target")
-
 
 ```
 
@@ -341,6 +274,7 @@ B_0 \epsilon_t = u_t \\
 $$
 
 Rewrite the RF models in matrix
+
 $$
 \begin{gather*}
 \mathbf{Y} = \mathbf{X}\mathbf{A} + \mathbf{E} \\
@@ -414,7 +348,6 @@ $$
 \end{align*}
 $$
 
-
 Here are model process:
 
 1. We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
@@ -422,7 +355,6 @@ Here are model process:
 2. Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
 
 3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
-
 
 4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
@@ -438,7 +370,7 @@ First, we test the dynamics of two bi-variate Gaussian random walk processes,whi
 #| label: fig-actificial-data
 #| fig-cap: Bi-variate Gaussian random walk
 
-set.seed(2024)
+set.seed(2048)
 RW1 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 plot.ts(RW1,main="Random Walk 1", col=4,xlab="")
 
@@ -667,7 +599,7 @@ At each iteration,
 ```{r fig.show='hold', out.width='60%'}
 #| echo: false
 
-set.seed(2024)
+set.seed(2048)
 RW11 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 RW22 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 
@@ -877,5 +809,10 @@ rownames(Bplus_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 
 knitr::kable(Bplus_df, caption = "Posterior Mean of B+") 
 ```
+
+
+# 4. Empirical Analysis
+
+
 
 ## References {.unnumbered}
