@@ -164,6 +164,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#empirical-analysis" id="toc-empirical-analysis" class="nav-link" data-scroll-target="#empirical-analysis">4. Empirical Analysis</a>
   <ul class="collapse">
+  <li><a href="#impulse-response" id="toc-impulse-response" class="nav-link" data-scroll-target="#impulse-response">4.1 Impulse Response</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -250,7 +251,7 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">N</th>
+<th style="text-align: right;">n</th>
 <th style="text-align: right;">Mean</th>
 <th style="text-align: right;">SD</th>
 <th style="text-align: right;">Min</th>
@@ -784,6 +785,20 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 </section>
 <section id="empirical-analysis" class="level1">
 <h1>4. Empirical Analysis</h1>
+<section id="impulse-response" class="level2">
+<h2 class="anchored" data-anchor-id="impulse-response">4.1 Impulse Response</h2>
+<p>Impulse response functions(IRF) to orthogonal shocks computed for an empirically relevant SVAR model are considered the dynamic causal effects of the underlying shocks on economic measurements, <span class="math inline">\(Y_t\)</span> for example.</p>
+<p>The following graphs are impulse response of basic model after real data are incorporated. The response of unemployment rate is relatively flat, indicating that the shock might have a limited impact on unemployment. So do real GDP, inflation, and cash rate. Positive effect shows by the increasing trend of tax revenue while slightly decreasing trend suggests that the shock leads to a reduction in government expenditure over time.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="references" class="level2 unnumbered">
 
 
