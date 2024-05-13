@@ -175,12 +175,12 @@ data_df <- data.frame(
 )
 
 Variable = c('unemp', 'govspend', 'taxrev','infl', 'rgdp','cr')
-N <- rep(136, length(Variable))
+n <- rep(136, length(Variable))
 Mean <- sapply(data_df, mean)
 SD <- sapply(data_df, sd)
 Min <- sapply(data_df, min)
 Max <- sapply(data_df, max)
-table1 =data.frame(N, Mean,SD, Min, Max)
+table1 =data.frame(n, Mean,SD, Min, Max)
 
 knitr::kable(table1, caption = "Summary Statistics", digits = 2)
 ```
@@ -410,7 +410,6 @@ A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
 nu.bar = nrow(Y) + nu.prior
 S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
 S.bar.inv = solve(S.bar)
-
 
 Sigma.posterior = rWishart(S, df=nu.bar, Sigma=S.bar.inv) 
 Sigma.posterior = apply(Sigma.posterior,3,solve)
@@ -812,6 +811,178 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 
 
 # 4. Empirical Analysis
+
+## 4.1 Impulse Response
+
+Impulse response functions(IRF) to orthogonal shocks computed for an empirically relevant SVAR model are considered the dynamic causal effects of the underlying shocks on economic measurements, $Y_t$ for example.
+
+The following graphs are impulse response of basic model after real data are incorporated. The response of unemployment rate is relatively flat, indicating that the shock might have a limited impact on unemployment. So do real GDP, inflation, and cash rate. Positive effect shows by the increasing trend of tax revenue while slightly decreasing trend suggests that the shock leads to a reduction in government expenditure over time.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+### Incorporate real data
+Y = data_df[2:nrow(data_df),]
+Y <- as.matrix(Y)
+X = matrix(1,nrow(Y),1)
+X = cbind(X,data_df[2: nrow(data_df)-1,])
+X <- as.matrix(X)
+N = 6
+p = 1
+K = 1+p*N
+S = n[1]
+
+# MLE
+###############
+A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
+Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+# prior distribution
+###############
+kappa.1 = 0.02^2
+kappa.2 = 100
+A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] = diag(N)
+V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior = diag(diag(Sigma.hat))
+nu.prior = N+1
+
+# normal-inverse Wishard posterior parameters
+###############
+V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
+V.bar = solve(V.bar.inv)
+A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
+nu.bar = nrow(Y) + nu.prior
+S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+S.bar.inv = solve(S.bar)
+
+# posterior draws 
+###############
+Sigma.posterior = rWishart(S, df=nu.bar, Sigma=S.bar.inv) 
+Sigma.posterior = apply(Sigma.posterior,3,solve)
+Sigma.posterior = array(Sigma.posterior,c(N,N,S))
+A.posterior = array(rnorm(prod(c(dim(A.bar),S))),c(dim(A.bar),S)) # whole random draw of A
+B0.tilde = array(NA,c(N,N,S))
+L = t(chol(V.bar))
+Bplus.tilde = array(NA,c(N,K,S))
+
+for (s in 1:S){
+  cholSigma.s = chol(Sigma.posterior[,,s])
+  B0.tilde[,,s] = solve(t(cholSigma.s)) 
+  A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
+  Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
+} 
+restriction = diag(c(-1,1,-1,-1,0,0))
+i.vec = c()
+Q.store = array(NA,c(N,N,S))
+B0.store = array(NA,c(N,N,S))
+Bplus.store = array(NA,c(N,K,S))
+A.store = array (NA,c(K,N,S))
+Sigma.store = array(NA,c(N,N,S))
+
+for (s in 1:S) {
+  A = A.posterior[,,s]
+  Sigma = Sigma.posterior[,,s]
+  B0.tilde1 = B0.tilde[,,s]
+  Bplus.tilde1 = Bplus.tilde[,,s]
+  
+  sign.restrictions.do.not.hold = TRUE
+  i=1
+  
+  while (sign.restrictions.do.not.hold){
+    X = matrix(rnorm(N*N),N,N)
+    QR = qr(X, tol = 1e-10)
+    Q = qr.Q(QR,complete=TRUE)
+    R = qr.R(QR,complete=TRUE)
+    Q = t(Q %*% diag(sign(diag(R))))
+    B0 = Q%*%B0.tilde1
+    Bplus = Q%*%Bplus.tilde1
+    B0.inv = solve(B0)
+    check = all(diag(B0)>0)
+    if (check==1){sign.restrictions.do.not.hold=FALSE}
+    i=i+1
+  }
+  i.vec <- c(i.vec, i)
+  Q.store[,,s] <- Q
+  B0.store[,,s] <- B0
+  B0.mean <- apply(B0.store,1:2,mean)
+  Bplus.store[,,s] <- Bplus
+  Bplus.mean <- apply(Bplus.store,1:2,mean)
+}
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+A.posterior = array(NA,c(K,N,S))
+B.posterior = array(NA,c(N,N,S))
+for (s in 1:S){
+  B = solve(B0.store[,,s])
+  B.posterior[,,s]= B 
+  A.posterior[,,s]= t(B %*% Bplus.store[,,s]) 
+}
+
+h=8
+IRF.posterior     = array(NA,c(N,N,h+1,S))
+IRF.inf.posterior = array(NA,c(N,N,S))
+FEVD.posterior    = array(NA,c(N,N,h+1,S))
+J                 = cbind(diag(N),matrix(0,N,N*(p-1)))
+for (s in 1:S){
+  A.bold          = rbind(t(A.posterior[2:(1+N*p),,s]),cbind(diag(N*(p-1)),matrix(0,N*(p-1),N)))
+  IRF.inf.posterior[,,s]          = J %*% solve(diag(N*p)-A.bold) %*% t(J) %*% B.posterior[,,s]
+  A.bold.power    = A.bold
+  for (i in 1:(h+1)){
+    if (i==1){
+      IRF.posterior[,,i,s]        = B.posterior[,,s]
+    } else {
+      IRF.posterior[,,i,s]        = J %*% A.bold.power %*% t(J) %*% IRF.posterior[,,i-1,s]
+      A.bold.power                = A.bold.power %*% A.bold
+    }
+    for (n in 1:N){
+      for (nn in 1:N){
+        FEVD.posterior[n,nn,i,s]  = sum(IRF.posterior[n,nn,1:i,s]^2)
+      }
+    }
+    FEVD.posterior[,,i,s]         = diag(1/apply(FEVD.posterior[,,i,s],1,sum))%*%FEVD.posterior[,,i,s]
+  }
+}
+FEVD.posterior    = 100*FEVD.posterior
+
+IRF.posterior.mps = IRF.posterior[,2,,]
+IRFs.k1           = apply(IRF.posterior.mps,1:2,median)
+IRFs.k1           = apply(IRF.posterior.mps,1:2,median)
+IRFs.inf.k1       = apply(IRF.posterior.mps,1,mean)
+rownames(IRFs.k1) = colnames(data_df)
+
+library(HDInterval)
+IRFs.k1.hdi    = apply(IRF.posterior.mps,1:2,hdi, credMass=0.68)
+hh             = 1:(h+1)
+
+names <- c("Unemployment Rate","Government Spending","Tax Revenue","Inflation", "Real GDP","Cash Rate Target")
+
+par(mfrow=c(4,2), mar=c(2,2,2,2),cex.axis=1, cex.lab=1)
+for (n in 1:N){
+  ylims     = range(IRFs.k1[n,hh],IRFs.k1.hdi[,n,1:(h+1)],0)
+  plot(hh,IRFs.k1[n,hh], type="l", ylim=ylims, axes=FALSE, xlab="", main=names[n])
+  if (n==5){
+    axis(1,c(1,5,9),c("0","1 year","2 year"))
+  } else {
+    axis(1,c(1,5,9),c("0","1 year","2 year"))
+  }
+  axis(2,c(ylims[1],0,ylims[2]),round(c(ylims[1],0,ylims[2]),3))
+  polygon(c(hh,(h+1):1), c(IRFs.k1.hdi[1,n,hh],IRFs.k1.hdi[2,n,(h+1):1]), col="#8EE4AF",border="#756BB1")
+  abline(h=0)
+  lines(hh, IRFs.k1[n,hh],lwd=2,col="black")
+}
+
+```
+
+
 
 
 
