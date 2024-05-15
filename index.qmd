@@ -24,13 +24,13 @@ Unemployment is pivotal in the macroeconomic framework, directly tied to social 
 
 Unemployment Rate(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
 
-Government Spending(GOVSPEND)(in billion$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
+Government Spending(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
 
-Tax Revenue(TAXREV)(in billion$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
+Tax Revenue(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
 
 Inflation Rate(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
-Real Gross Domestic Product(RGDP)(in billion$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
+Real Gross Domestic Product(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
 
 Cash Rate Target(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
 
@@ -300,7 +300,7 @@ Var[vec(A)] &= \Sigma \otimes  \underline{V} \\
 \underline{V} &= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
 \end{align}
 $$
-$\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$.
+$\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$. But in this report, I take value $1^{2}$.
 
 $\kappa_2$ is the overall shrinkage level for the constant term with common value $100$.
 
@@ -874,7 +874,7 @@ for (s in 1:S){
   A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
   Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
 } 
-restriction = diag(c(-1,1,-1,-1,0,0))
+restriction = diag(c(0,1,-1,-1,0,0))
 i.vec = c()
 Q.store = array(NA,c(N,N,S))
 B0.store = array(NA,c(N,N,S))
@@ -1080,7 +1080,7 @@ for (s in 1:S){
 }
 
 # Identification via sign restrictions 
-R1 <- diag(c(-1,1,-1,-1,0,0))
+R1 <- diag(c(0,1,-1,-1,0,0))
 
 # Storage matrices for Q identified estimates
 i.vec <- c()
