@@ -818,6 +818,8 @@ Impulse response functions(IRF) to orthogonal shocks computed for an empirically
 
 The following graphs are impulse responses of basic model after real data are incorporated. The response of unemployment rate is slightly decreasing, indicating that the shock might have a limited but negative impact on it. The slight upward trend  suggests an expansion in government expenditure following the shock. Obvious positive effect is shown by tax revenue,real GDP, and cash rate target while initial jump followed by stabilization of inflation suggests that the shock might lead to short-term inflationary pressures that stabilize over time.
 
+From the impulse response plots, we can conclude there are significant effect on unemployment rate and government spending, but no effect for others.
+
 ```{r}
 #| echo: false
 #| message: false
@@ -900,7 +902,7 @@ for (s in 1:S) {
     B0 = Q%*%B0.tilde1
     Bplus = Q%*%Bplus.tilde1
     B0.inv = solve(B0)
-    check = all(B0.inv[1,2]<0, B0.inv[2,2] > 0, B0.inv[3,2]<0, B0.inv[4,2]<0 )
+    check = all(B0.inv[2,2] > 0, B0.inv[3,2]<0, B0.inv[4,2]<0 )
     if (check){sign.restrictions.do.not.hold=FALSE}
     i=i+1
   }
@@ -988,7 +990,7 @@ for (n in 1:N){
 
 ```
 
-Here are the impulse responses for extension model. Compared with baseline model, all patterns are similar.
+Here are the impulse responses for extension model. Compared with baseline model, the effect on unemployment rate turns to insignificant.
 
 ```{r}
 #| echo: false
@@ -1107,7 +1109,7 @@ for (s in 1:S){
     B0          <- Q%*%B0.tilde                    
     B1          <- Q%*%B1.tilde                   
     B0.inv      <- solve(B0)      
-    check       <- all(B0.inv[1,2]<0, B0.inv[2,2] > 0, B0.inv[3,2]<0, B0.inv[4,2]<0 )
+    check       <- all(B0.inv[2,2] > 0, B0.inv[3,2]<0, B0.inv[4,2]<0 )
     
     if (check){sign.restrictions.do.not.hold=FALSE}
     i=i+1 
