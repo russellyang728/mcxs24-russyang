@@ -818,7 +818,7 @@ Impulse response functions(IRF) to orthogonal shocks computed for an empirically
 
 The following graphs are impulse responses of basic model after real data are incorporated. The response of unemployment rate is slightly decreasing, indicating that the shock might have a limited but negative impact on it. The slight upward trend  suggests an expansion in government expenditure following the shock. Obvious positive effect is shown by tax revenue,real GDP, and cash rate target while initial jump followed by stabilization of inflation suggests that the shock might lead to short-term inflationary pressures that stabilize over time.
 
-From the impulse response plots, we can conclude there are significant effect on unemployment rate and government spending, but no effect for others.
+From the impulse response plots, we can conclude there is significant effect on government spending, but insignificant for others.
 
 ```{r}
 #| echo: false
@@ -990,7 +990,7 @@ for (n in 1:N){
 
 ```
 
-Here are the impulse responses for extension model. Compared with baseline model, the effect on unemployment rate turns to insignificant.
+Here are the impulse responses for extension model. Compared with baseline model, even the effect on government spending turns to insignificant.
 
 ```{r}
 #| echo: false
