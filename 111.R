@@ -1,200 +1,135 @@
-library(readabs)
-library(readrba)
-library(xts)
-library(ggplot2)
-library(patchwork)
-library(tseries)
-library(knitr)
-library(zoo)
+set.seed(2048)
+RW11 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
+RW22 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 
-#download data
+RW.1 <- cbind(RW11,RW22)
+
+Y <- RW.1[2:nrow(RW.1),]
+
+Y            = RW.1[2:nrow(RW.1),]
+X            = matrix(1,nrow(Y),1)
+X            = cbind(X,RW.1[2: nrow(RW.1)-1,])
+N            = 2            # number of variables
+p            = 1            # number of lags
+K            = 1+p*N
+S            = 5000         # sample size
+
+sign.restrictions = c(1,1)
+
+A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
+Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+kappa.1     <- 0.02^2
+kappa.2     <- 100
+
+A.prior     <- matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N+1),] <- diag(N)
+V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior     <- diag(diag(Sigma.hat))
+nu.prior    <- N+1
+m_a =1
+
+Sigma.posterior.store    <- array(NA, c(N,N,S))
+A.posterior.store        <- array(NA, c((1+p*N),N,S))
+B0.posterior.store       <- array(NA,c(N,N,S))
+B1.posterior.store       <- array(NA,c(N,K,S))
+
+compute_sbar2 = function(s2, Sigma, V) {
+  sbar2 = 1/s2
+  for (i in 1:nrow(Sigma)) {
+    sbar2 = sbar2 + 1/(Sigma[i,i]*V[i+1,i+1])
+  }
+  return(1/sbar2)
+}
 
 
-cr_dwld <- readrba::read_rba(series_id = "FIRMMCRTD")
+compute_a_posterior = function(sbar2, Sigma,V,A){
+  a_posterior = m_a/sbar2
+  n=nrow(Sigma)
+  A_1 = A[2:(n-1),]
+  for(i in 1:n) {
+    a_posterior = a_posterior + A_1[i,i]/(Sigma[i,i]*V[i+1,i+1])
+  }
+  return(sbar2*a_posterior)
+}
 
-cr <- cr_dwld[, c("date", "value")]
+s2 = 1
+a.posterior.store = numeric(S)
+Sigma.posterior   <- rWishart(1, df=nu.prior, Sigma=S.prior)[,,1]
+V.bar = V.prior
+A.posterior = A.prior
 
-cr <- xts::xts(cr$value,cr$date)
-
-cr <- xts::to.quarterly(cr, OHLC = FALSE)
-
-start_date <- start(cr)
-end_date1 <- as.Date("2023-12-31")
-end_date2 <- as.yearqtr("2023 Q4")
-
-cr = window(cr, start=start_date, end=end_date2)
-
-cr_p = autoplot(cr) +
+for (s in 1:S){
+  sbar2 = compute_sbar2(s2, Sigma.posterior,V.bar)
+  a_posterior = compute_a_posterior(sbar2, Sigma.posterior,V.bar, A.posterior)
+  a.posterior = rnorm(1, a_posterior, sqrt(sbar2))
+  a.posterior.store[s] = a.posterior
   
-  theme_classic()+
+  # Matrix normal-inverse Wishart posterior parameters
+  V.bar.inv <- t(X)%*%X + diag(1/diag(V.prior))
+  V.bar     <- solve(V.bar.inv)
+  A.bar     <- V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%(A.prior*a.posterior))
+  nu.bar    <- nrow(Y) + nu.prior
+  S.bar     <- S.prior + t(Y)%*%Y + t((A.prior*a.posterior))%*%diag(1/diag(V.prior))%*%(A.prior*a.posterior) - t(A.bar)%*%V.bar.inv%*%A.bar
+  S.bar.inv <- solve(S.bar)
   
-  labs(title = "Cash Rate Target")+
   
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-
-
-#unemployment rate data
-unemp_dwnld <- readabs::read_abs(series_id = 'A84423050A') 
-
-
-unemp <- xts(unemp_dwnld$value, order.by=as.Date(unemp_dwnld$date))
-
-# Covert monthly unemployment data to quarterly for analysis compatibility. 
-
-unemp <- to.quarterly(unemp,OHLC = FALSE)
-
-unemp <- window(unemp, start=start_date, end=end_date2)
-
-unemp_p = autoplot(unemp) +
+  # Draw Posterior distribution
+  Sigma.posterior   <- rWishart(1, df=nu.bar, Sigma=S.bar.inv)[,,1]
+  Sigma.posterior.store[,,s]   <- solve(Sigma.posterior)
   
-  theme_classic()+
+  # Draw A from matrix-variate normal distribution
+  A.posterior = matrix(mvtnorm::rmvnorm(1, mean=as.vector(A.bar), sigma=Sigma.posterior.store[,,s]%x%V.bar), ncol=N)
+  A.posterior.store[,,s] = A.posterior
   
-  scale_x_yearqtr(format = "%Y")+
+  ## Draw from the Structural Form
+  cholSigma.s        <- chol(Sigma.posterior.store[,,s])
+  B0.posterior.store[,,s]  <- solve(t(cholSigma.s)) 
+  B1.posterior.store[,,s]  <- B0.posterior.store[,,s]%*%t(A.posterior.store [,,s])
+}
+
+# Identification via sign restrictions 
+R1 <- diag(sign.restrictions)
+
+# Storage matrices for Q identified estimates
+i.vec <- c()
+Q.store      <- array(NA,c(N,N,(S)))
+B0.store    <- array(NA,c(N,N,(S)))
+B1.store     <- array(NA,c(N,K,(S)))
+A.store     <- array(NA,c(K,N,S))
+Sigma.store  <- array(NA,c(N,N,S))
+
+for (s in 1:S){
+  A             <- A.posterior.store[,,s]
+  Sigma         <- Sigma.posterior.store[,,s]
+  B0.tilde      <- B0.posterior.store[,,s]
+  B1.tilde      <- B1.posterior.store[,,s]
   
-  labs(title = "Unemployment Rate")+
+  sign.restrictions.do.not.hold = TRUE
+  i=1
+  while (sign.restrictions.do.not.hold){
+    X           <- matrix(rnorm(N*N),N,N)         
+    QR          <- qr(X, tol = 1e-10)
+    Q           <- qr.Q(QR,complete=TRUE)
+    R           <- qr.R(QR,complete=TRUE)
+    Q           <- t(Q %*% diag(sign(diag(R))))
+    B0          <- Q%*%B0.tilde                    
+    B1          <- Q%*%B1.tilde                   
+    B0.inv      <- solve(B0)      
+    check       <- all(c(B0[1,1], B0[2,2]) > 0)
+    
+    if (check){sign.restrictions.do.not.hold=FALSE}
+    i=i+1 
+  }
+  i.vec <- c(i.vec,i) 
   
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-
-#government spending data
-
-govspend_dwnld <- readabs::read_abs(series_id = 'A2304080V')
-
-govspend <- xts(govspend_dwnld$value, order.by=as.Date(govspend_dwnld$date))
-
-govspend <- window(govspend, start=start_date, end=end_date1)
-
-govspend_p = autoplot(govspend) +
-  
-  theme_classic()+
-  
-  labs(title = "Government Spending")+
-  
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-
-#tax revenue data
-
-taxrev_dwnld <- readabs::read_abs(series_id = 'A2302794K')
-
-taxrev <- xts(taxrev_dwnld$value, order.by=as.Date(taxrev_dwnld$date))
-
-taxrev <- window(taxrev, start=start_date, end=end_date1)
-
-taxrev_p = autoplot(taxrev) +
-  
-  theme_classic()+
-  
-  labs(title = "Tax Revenue")+
-  
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-
-#inflation data
-
-infl_dwnld <- readabs::read_abs(series_id = 'A2325850V')
-
-infl <- xts(infl_dwnld$value, order.by=as.Date(infl_dwnld$date))
-
-infl <- window(infl, start=start_date, end=end_date1)
-
-infl_p = autoplot(infl) +
-  
-  theme_classic()+
-  
-  labs(title = "Inflation")+
-  
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-
-# real gdp data
-rgdp_dwld <- readrba::read_rba(series_id = "GGDPCVGDP")
-
-rgdp <- rgdp_dwld[, c("date", "value")]
-
-rgdp$quarter <- zoo::as.yearqtr(rgdp$date)
-
-rgdp <- xts::xts(rgdp$value,rgdp$quarter)
-
-rgdp <- window(rgdp, start=start_date, end=end_date2)
-
-rgdp_p = autoplot(rgdp) +
-  
-  theme_classic()+
-  
-  labs(title = "Real GDP")+
-  
-  theme(axis.title.x = element_blank(),
-        
-        plot.title = element_text(hjust = 0.5,
-                                  
-                                  face = "bold"))
-
-length(unemp)
-length(govspend)
-length(taxrev)
-length(infl)
-length(rgdp)
-length(cr)
-
-data_df <- data.frame(
-  unemp = coredata(unemp),
-  govspend = coredata(govspend),
-  taxrev = coredata(taxrev),
-  infl = coredata(infl),
-  rgdp = coredata(rgdp),
-  cr = coredata(cr)
-)
-data_df
-
-variable = c('unemp', 'govspend', 'taxrev','infl', 'rgdp','cr')
-N <- rep(136, length(variable))
-Mean <- sapply(data_df, mean)
-SD <- sapply(data_df, sd)
-Min <- sapply(data_df, min)
-Max <- sapply(data_df, max)
-table1 =data.frame(N, Mean,SD, Min, Max)
-
-
-knitr::kable(table1, caption = "Summary Statistics", digits = 2)
-
-
-Sign = c('/','+','-','/','+','/')
-
-table2 = data.frame(variable,Sign)
-knitr::kable(table2, caption = "Sign Restriction", digits = 2)
-
-
-
-
-set.seed(2024)
-RW1 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
-plot.ts(RW1,main="Random Walk 1", col=4,xlab="")
-
-
-RW2 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
-plot.ts(RW2,main="Random Walk 2", col=4,xlab="")
-
-RW  <- cbind(RW1,RW2)
-RW
+  Q.store[,,s] <- Q
+  B0.store[,,s] <- B0
+  B0.mean <- apply(B0.store,1:2,mean)
+  B1.store[,,s] <- B1
+  B1.mean <- apply(B1.store,1:2,mean)
+  A.store[,,s]       <- A
+  A.mean             <- apply(A,1:2,mean)
+  Sigma.store[,,s]   <- Sigma
+  Sigma.mean         <- apply(Sigma,1:2,mean)
+}

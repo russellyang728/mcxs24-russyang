@@ -212,10 +212,10 @@ window.Quarto = {
 <section id="variables-selected" class="level2">
 <h2 class="anchored" data-anchor-id="variables-selected">2.1 Variables Selected</h2>
 <p>Unemployment Rate(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.</p>
-<p>Government Spending(GOVSPEND)(in billion$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
-<p>Tax Revenue(TAXREV)(in billion$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
+<p>Government Spending(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
+<p>Tax Revenue(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
 <p>Inflation Rate(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.</p>
-<p>Real Gross Domestic Product(RGDP)(in billion$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.</p>
+<p>Real Gross Domestic Product(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.</p>
 <p>Cash Rate Target(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.</p>
 </section>
 <section id="why-chose-them" class="level2">
@@ -401,7 +401,7 @@ B_0 \epsilon_t = u_t \\
 Var[vec(A)] &amp;= \Sigma \otimes  \underline{V} \\
 \underline{V} &amp;= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
 \end{align}
-\]</span> <span class="math inline">\(\kappa_1\)</span> is the overall shrinkage level for autoregressive slopes with common value <span class="math inline">\(0.02^{2}\)</span>.</p>
+\]</span> <span class="math inline">\(\kappa_1\)</span> is the overall shrinkage level for autoregressive slopes with common value <span class="math inline">\(0.02^{2}\)</span>. But in this report, I take value <span class="math inline">\(1^{2}\)</span>.</p>
 <p><span class="math inline">\(\kappa_2\)</span> is the overall shrinkage level for the constant term with common value <span class="math inline">\(100\)</span>.</p>
 <p><span class="math inline">\(p\)</span> is the length. And, finally let</p>
 <p><span class="math display">\[
