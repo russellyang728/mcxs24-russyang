@@ -381,7 +381,7 @@ RW  <- cbind(RW1,RW2)
 ```
 
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
