@@ -525,14 +525,14 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
 
 
-$\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
+$\underline{a}$ is the prior mean only for diagonal elements of $A_1$. So, 
 
 
 $$
 \begin{align*}
-&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
+&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \mathbf{I}_N\ \ \ O_{N*(p-1)N}]'\\
 \\
-\mathbf{A}| \mathbf{\Sigma} &\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
+\mathbf{A}| \mathbf{\Sigma},\underline{a} &\sim \mathcal{MN}(\underline{a}\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
 \\
  &\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
