@@ -606,7 +606,7 @@ RW.1 <- cbind(RW11,RW22)
 ```
 
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
