@@ -231,7 +231,7 @@ The **Structural Form (SF) model** of Structural VARs is:
 
 $$
 \begin{gather*}
-B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} \\
+B_{0} Y_{t} =b_{0}  + \sum_{i=1}^{p} (B_{i}Y_{t-i} )+u_{t} \\
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 \end{gather*}
 $$
