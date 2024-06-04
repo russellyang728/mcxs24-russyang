@@ -258,7 +258,7 @@ The **Reduced Form (RF)** representation is:
 
 $$
 \begin{gather*}
-Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
+Y_{t} =\mu_{0}  + \sum_{i=1}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
 \end{gather*}
 $$
