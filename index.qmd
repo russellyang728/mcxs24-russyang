@@ -381,7 +381,7 @@ RW  <- cbind(RW1,RW2)
 ```
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 
@@ -403,7 +403,12 @@ A.prior[2:3,] = diag(N)
 V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior = diag(diag(Sigma.hat))
 nu.prior = N+1
- 
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
 V.bar = solve(V.bar.inv)
 A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
@@ -462,7 +467,7 @@ Bplus.tilde = array(NA,c(N,K,S))
    Bplus.store[,,s] <- Bplus
    Bplus.mean <- apply(Bplus.store,1:2,mean)
  }
-
+ 
 ```
 
 Then after drawing, we have following results of $A$ and $\Sigma$.
@@ -606,7 +611,7 @@ RW.1 <- cbind(RW11,RW22)
 ```
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 
@@ -634,6 +639,12 @@ V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior     <- diag(diag(Sigma.hat))
 nu.prior    <- N+1
 m_a =1
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 
 Sigma.posterior.store    <- array(NA, c(N,N,S))
 A.posterior.store        <- array(NA, c((1+p*N),N,S))
