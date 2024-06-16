@@ -381,7 +381,7 @@ RW  <- cbind(RW1,RW2)
 ```
 
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -403,12 +403,7 @@ A.prior[2:3,] = diag(N)
 V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior = diag(diag(Sigma.hat))
 nu.prior = N+1
-```
 
-```{r}
-#| echo: true
-#| message: false
-#| warning: false
 V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
 V.bar = solve(V.bar.inv)
 A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
@@ -611,7 +606,7 @@ RW.1 <- cbind(RW11,RW22)
 ```
 
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -639,12 +634,6 @@ V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior     <- diag(diag(Sigma.hat))
 nu.prior    <- N+1
 m_a =1
-```
-
-```{r}
-#| echo: true
-#| message: false
-#| warning: false
 
 Sigma.posterior.store    <- array(NA, c(N,N,S))
 A.posterior.store        <- array(NA, c((1+p*N),N,S))
@@ -688,7 +677,6 @@ for (s in 1:S){
   nu.bar    <- nrow(Y) + nu.prior
   S.bar     <- S.prior + t(Y)%*%Y + t((A.prior*a.posterior))%*%diag(1/diag(V.prior))%*%(A.prior*a.posterior) - t(A.bar)%*%V.bar.inv%*%A.bar
   S.bar.inv <- solve(S.bar)
-  
   
   # Draw Posterior distribution
   Sigma.posterior   <- rWishart(1, df=nu.bar, Sigma=S.bar.inv)[,,1]
