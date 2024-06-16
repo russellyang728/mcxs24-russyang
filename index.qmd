@@ -381,7 +381,7 @@ RW  <- cbind(RW1,RW2)
 ```
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 
@@ -395,7 +395,15 @@ S = 1000
  
 A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
 Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
  
+GetPrior.parameters <- function (N,p,Sigma.hat){
+
 kappa.1 = 1
 kappa.2 = 100
 A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
@@ -404,13 +412,53 @@ V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior = diag(diag(Sigma.hat))
 nu.prior = N+1
 
+return (list(A.prior=A.prior,
+             V.prior = V.prior,
+             S.prior = S.prior,
+             nu.prior = nu.prior))
+}
+
+# find the prior for the sample
+Prior = GetPrior.parameters(N=N,p=p,Sigma.hat=Sigma.hat)
+
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+Posterior_parameters <- function(X,Y,A.prior,V.prior,S.prior,nu.prior){
+  
 V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
 V.bar = solve(V.bar.inv)
 A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
 nu.bar = nrow(Y) + nu.prior
 S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
-S.bar.inv = solve(S.bar)
 
+
+return (list(V.bar = V.bar,
+             A.bar = A.bar,
+             nu.bar = nu.bar,
+             S.bar = S.bar))
+}
+
+Posterior_pram = Posterior_parameters(X=X,Y=Y,A=Prior$A.prior,V=Prior$V.prior,
+                                      S=Prior$S.prior,nu=Prior$nu.prior)
+
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
+A.bar  <- Posterior_pram$A.bar
+V.bar  <- Posterior_pram$V.bar
+S.bar  <- Posterior_pram$S.bar
+nu.bar <- Posterior_pram$nu.bar
+S.bar.inv = solve(S.bar)
+  
 Sigma.posterior = rWishart(S, df=nu.bar, Sigma=S.bar.inv) 
 Sigma.posterior = apply(Sigma.posterior,3,solve)
 Sigma.posterior = array(Sigma.posterior,c(N,N,S))
@@ -425,6 +473,44 @@ Bplus.tilde = array(NA,c(N,K,S))
    A.posterior[,,s] = A.bar + L%*%A.posterior[,,s]%*%cholSigma.s # for each random draw of A
    Bplus.tilde[,,s] = B0.tilde[,,s]%*%t(A.posterior[,,s]) 
  } 
+```
+
+Then after drawing, we have following results of $A$ and $\Sigma$.
+
+```{r Tables showing A and Sigma from the random walks}
+#| echo: false
+#| message: false
+#| warning: false
+
+A_mean <- apply(A.posterior, 1:2, mean)
+A_df <- as.data.frame(A_mean)
+colnames(A_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
+knitr::kable(A_df, caption = "Posterior Mean of A")
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
+Sigma_df <- as.data.frame(Sigma_mean)
+colnames(Sigma_df) <- c("Simulation_Y1", "Simulation_Y2")
+rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
+
+```
+
+From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficients in both $B_0$ and $B+$ matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also,  the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
+
  restriction = diag(c(1,1))
  i.vec = c()
  Q.store = array(NA,c(N,N,S))
@@ -464,37 +550,6 @@ Bplus.tilde = array(NA,c(N,K,S))
  }
  
 ```
-
-Then after drawing, we have following results of $A$ and $\Sigma$.
-
-```{r Tables showing A and Sigma from the random walks}
-#| echo: false
-#| message: false
-#| warning: false
-
-A_mean <- apply(A.posterior, 1:2, mean)
-A_df <- as.data.frame(A_mean)
-colnames(A_df) <- c("Simulation_Y1", "Simulation_Y2")
-rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
-knitr::kable(A_df, caption = "Posterior Mean of A")
-
-```
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-
-Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
-Sigma_df <- as.data.frame(Sigma_mean)
-colnames(Sigma_df) <- c("Simulation_Y1", "Simulation_Y2")
-rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
-
-knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
-
-```
-
-From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficients in both $B_0$ and $B+$ matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also,  the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.
 
 ```{r}
 #| echo: false
@@ -606,7 +661,7 @@ RW.1 <- cbind(RW11,RW22)
 ```
 
 ```{r}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 
@@ -624,6 +679,12 @@ sign.restrictions = c(1,1)
 
 A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
 Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
 
 kappa.1     <- 1
 kappa.2     <- 100
@@ -633,12 +694,20 @@ A.prior[2:(N+1),] <- diag(N)
 V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior     <- diag(diag(Sigma.hat))
 nu.prior    <- N+1
-m_a =1
+m_a <- 1
 
 Sigma.posterior.store    <- array(NA, c(N,N,S))
 A.posterior.store        <- array(NA, c((1+p*N),N,S))
 B0.posterior.store       <- array(NA,c(N,N,S))
 B1.posterior.store       <- array(NA,c(N,K,S))
+```
+
+Two functions code are added representing the derived posterior.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 
 compute_sbar2 = function(s2, Sigma, V) {
   sbar2 = 1/s2
@@ -657,12 +726,27 @@ compute_a_posterior = function(sbar2, Sigma,V,A){
   }
   return(sbar2*a_posterior)
 }
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
 
 s2 = 0.1
 a.posterior.store = numeric(S)
 Sigma.posterior   <- rWishart(1, df=nu.prior, Sigma=S.prior)[,,1]
 V.bar = V.prior
 A.posterior = A.prior
+
+```
+
+The following codes are to get posterior mean of each element.
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 
 for (s in 1:S){
   sbar2 = compute_sbar2(s2, Sigma.posterior,V.bar)
@@ -691,7 +775,56 @@ for (s in 1:S){
   B0.posterior.store[,,s]  <- solve(t(cholSigma.s)) 
   B1.posterior.store[,,s]  <- B0.posterior.store[,,s]%*%t(A.posterior.store [,,s])
 }
+```
 
+We get the mean of $\overline{a}$ first:
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+a_mean <- data.frame(a = mean(a.posterior.store))
+colnames(a_mean) <- "Posterior Mean of a"
+knitr::kable(a_mean,align = 'c',index = FALSE, caption = "Posterior Mean of a")
+
+```
+
+And then generate the results of posterior mean of $A$ and $\Sigma$. Both covariance close to identity matrix.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+A_mean <- apply(A.posterior, 1:2, mean)
+A_df <- as.data.frame(A_mean)
+colnames(A_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
+knitr::kable(A_df, caption = "Posterior Mean of A")
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
+Sigma_df <- as.data.frame(Sigma_mean)
+colnames(Sigma_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
+rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
+
+knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
+
+```
+
+The sign restrictions seem to enforce non-negative impacts in the matrix elements.  Because all parameters in $B_0$ and $B+$ are with positive sign. 
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 # Identification via sign restrictions 
 R1 <- diag(sign.restrictions)
 
@@ -739,50 +872,6 @@ for (s in 1:S){
 }
 
 ```
-
-We get the mean of $\overline{a}$ first:
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-
-a_mean <- data.frame(a = mean(a.posterior.store))
-colnames(a_mean) <- "Posterior Mean of a"
-knitr::kable(a_mean,align = 'c',index = FALSE)
-
-```
-
-And then generate the results of posterior mean of $A$ and $\Sigma$. Both covariance close to identity matrix.
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-
-A_mean <- apply(A.posterior, 1:2, mean)
-A_df <- as.data.frame(A_mean)
-colnames(A_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
-rownames(A_df) <- c("Constant", "Y1-Lag", "Y2-Lag")
-knitr::kable(A_df, caption = "Posterior Mean of A")
-
-```
-
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
-
-Sigma_mean <- apply(Sigma.posterior, 1:2, mean)
-Sigma_df <- as.data.frame(Sigma_mean)
-colnames(Sigma_df) <- c("Simulation_Y1ext", "Simulation_Y2ext")
-rownames(Sigma_df) <- c("Y1-Lag", "Y2-Lag")
-
-knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
-
-```
-
-The sign restrictions seem to enforce non-negative impacts in the matrix elements.  Because all parameters in $B_0$ and $B+$ are with positive sign. 
 
 ```{r}
 #| echo: false
