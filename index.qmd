@@ -231,7 +231,7 @@ The **Structural Form (SF) model** of Structural VARs is:
 
 $$
 \begin{gather*}
-B_{0} Y_{t} =b_{0}  + \sum_{i=0}^{p} (B_{i}Y_{t-i} )+u_{t} \\
+B_{0} Y_{t} =b_{0}  + \sum_{i=1}^{p} (B_{i}Y_{t-i} )+u_{t} \\
 u_{t}|Y_{t-1} \sim iid(0_{N},I_{N}  )
 \end{gather*}
 $$
@@ -258,7 +258,7 @@ The **Reduced Form (RF)** representation is:
 
 $$
 \begin{gather*}
-Y_{t} =\mu_{0}  + \sum_{i=0}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
+Y_{t} =\mu_{0}  + \sum_{i=1}^{p} (A_{i}Y_{t-i} )+\epsilon_{t} \\
 \epsilon_{t}|Y_{t-1} \sim iid(0_{N},\Sigma )
 \end{gather*}
 $$
@@ -403,7 +403,12 @@ A.prior[2:3,] = diag(N)
 V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior = diag(diag(Sigma.hat))
 nu.prior = N+1
- 
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
 V.bar = solve(V.bar.inv)
 A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
@@ -462,7 +467,7 @@ Bplus.tilde = array(NA,c(N,K,S))
    Bplus.store[,,s] <- Bplus
    Bplus.mean <- apply(Bplus.store,1:2,mean)
  }
-
+ 
 ```
 
 Then after drawing, we have following results of $A$ and $\Sigma$.
@@ -525,14 +530,14 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
 
 
-$\underline{a}$ is the prior mean only for diagonal elements of $A$. So, 
+$\underline{a}$ is the prior mean only for diagonal elements of $A_1$. So, 
 
 
 $$
 \begin{align*}
-&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \ \ \ O_{N*(p-1)N}]'\\
+&\underline{a}*\underline{A}=[O_{N*1}\ \ \ \underline{a}_N \mathbf{I}_N\ \ \ O_{N*(p-1)N}]'\\
 \\
-\mathbf{A}| \mathbf{\Sigma} &\sim \mathcal{MN}(\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
+\mathbf{A}| \mathbf{\Sigma},\underline{a} &\sim \mathcal{MN}(\underline{a}\underline{\mathbf{A}},\mathbf{\Sigma}, \underline{\mathbf{V}})  \\
 \\
  &\underline{a} \sim N(\underline{m}_a,\underline{s}^2_a) \\
 \end{align*}
@@ -634,6 +639,12 @@ V.prior     <- diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior     <- diag(diag(Sigma.hat))
 nu.prior    <- N+1
 m_a =1
+```
+
+```{r}
+#| echo: true
+#| message: false
+#| warning: false
 
 Sigma.posterior.store    <- array(NA, c(N,N,S))
 A.posterior.store        <- array(NA, c((1+p*N),N,S))
@@ -651,7 +662,7 @@ compute_sbar2 = function(s2, Sigma, V) {
 compute_a_posterior = function(sbar2, Sigma,V,A){
   a_posterior = m_a/sbar2
   n=nrow(Sigma)
-  A_1 = A[2:(n-1),]
+  A_1 = A[2:(n+1),]
   for(i in 1:n) {
     a_posterior = a_posterior + A_1[i,i]/(Sigma[i,i]*V[i+1,i+1])
   }
