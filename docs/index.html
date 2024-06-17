@@ -196,9 +196,9 @@ window.Quarto = {
   <li><a href="#extension-model" id="toc-extension-model" class="nav-link" data-scroll-target="#extension-model">3.3 Extension Model</a></li>
   <li><a href="#simulation-of-extension-model" id="toc-simulation-of-extension-model" class="nav-link" data-scroll-target="#simulation-of-extension-model">3.4 Simulation of Extension Model</a></li>
   </ul></li>
-  <li><a href="#empirical-analysis" id="toc-empirical-analysis" class="nav-link" data-scroll-target="#empirical-analysis">4. Empirical Analysis</a>
+  <li><a href="#stochastic-volatility" id="toc-stochastic-volatility" class="nav-link" data-scroll-target="#stochastic-volatility">4. Stochastic Volatility</a></li>
+  <li><a href="#impulse-response" id="toc-impulse-response" class="nav-link" data-scroll-target="#impulse-response">5.Impulse Response</a>
   <ul class="collapse">
-  <li><a href="#impulse-response" id="toc-impulse-response" class="nav-link" data-scroll-target="#impulse-response">4.1 Impulse Response</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -511,6 +511,7 @@ Figure&nbsp;2: Bi-variate Gaussian random walk
 </div>
 </div>
 </div>
+<p>We get the posterior parameters and draws by following two functions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Posterior_parameters <span class="ot">&lt;-</span> <span class="cf">function</span>(X,Y,A.prior,V.prior,S.prior,nu.prior){</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -527,32 +528,94 @@ Figure&nbsp;2: Bi-variate Gaussian random walk
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">S.bar =</span> S.bar))</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Posterior_pram <span class="ot">=</span> <span class="fu">Posterior_parameters</span>(<span class="at">X=</span>X,<span class="at">Y=</span>Y,<span class="at">A=</span>Prior<span class="sc">$</span>A.prior,<span class="at">V=</span>Prior<span class="sc">$</span>V.prior,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">S=</span>Prior<span class="sc">$</span>S.prior,<span class="at">nu=</span>Prior<span class="sc">$</span>nu.prior)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Posterior_param <span class="ot">=</span> <span class="fu">Posterior_parameters</span>(<span class="at">X=</span>X,<span class="at">Y=</span>Y,<span class="at">A=</span>Prior<span class="sc">$</span>A.prior,<span class="at">V=</span>Prior<span class="sc">$</span>V.prior, <span class="at">S=</span>Prior<span class="sc">$</span>S.prior,<span class="at">nu=</span>Prior<span class="sc">$</span>nu.prior)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">#######################################################################</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Posterior.draws <span class="ot">=</span> <span class="cf">function</span>(S, Posterior_param){</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  A.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>A.bar</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  V.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>V.bar</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  S.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>S.bar</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  nu.bar <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>nu.bar</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  B0.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  Bplus.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  L        <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar)) </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">rWishart</span>(S, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span><span class="fu">solve</span>(S.bar))  </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)            </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,S))   </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  A.posterior       <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute the initial value of SF parameters</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    cholSigma.s      <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    B0.tilde[,,s] <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s] <span class="ot">&lt;-</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span>cholSigma.s </span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    Bplus.tilde[,,s]  <span class="ot">&lt;-</span> B0.tilde[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior[,,s])</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample draws from the joint posterior distribution </span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">A.posterior     =</span> A.posterior,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">B0.tilde        =</span> B0.tilde,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">Bplus.tilde        =</span> Bplus.tilde,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>              <span class="at">Sigma.posterior =</span> Sigma.posterior))</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">=</span> <span class="fu">Posterior.draws</span>(<span class="at">S =</span> <span class="dv">1000</span>, <span class="at">Posterior_param =</span> Posterior_param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Then we employed sign restriction into the posterior draws.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>A.bar  <span class="ot">&lt;-</span> Posterior_pram<span class="sc">$</span>A.bar</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>V.bar  <span class="ot">&lt;-</span> Posterior_pram<span class="sc">$</span>V.bar</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>S.bar  <span class="ot">&lt;-</span> Posterior_pram<span class="sc">$</span>S.bar</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>nu.bar <span class="ot">&lt;-</span> Posterior_pram<span class="sc">$</span>nu.bar</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>S.bar.inv <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>WithSignRestriction <span class="ot">&lt;-</span> <span class="cf">function</span> (restriction,N,p,S,Posterior.draws){</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  A.posterior <span class="ot">=</span> draws<span class="sc">$</span>A.posterior</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior <span class="ot">=</span> draws<span class="sc">$</span>Sigma.posterior</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  B0.tilde <span class="ot">=</span> draws<span class="sc">$</span>B0.tilde</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  Bplus.tilde <span class="ot">=</span> draws<span class="sc">$</span>Bplus.tilde</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Sigma.posterior <span class="ot">=</span> <span class="fu">rWishart</span>(S, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv) </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Sigma.posterior <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>Sigma.posterior <span class="ot">=</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>A.posterior <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S)) <span class="co"># whole random draw of A</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>B0.tilde <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>L <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>Bplus.tilde <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>   cholSigma.s <span class="ot">=</span> <span class="fu">chol</span>(Sigma.posterior[,,s])</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>   B0.tilde[,,s] <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>   A.posterior[,,s] <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span>cholSigma.s <span class="co"># for each random draw of A</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>   Bplus.tilde[,,s] <span class="ot">=</span> B0.tilde[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior[,,s]) </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a> } </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  restriction <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  i.vec <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  Q.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  B0.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  Bplus.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  A.store <span class="ot">=</span> <span class="fu">array</span> (<span class="cn">NA</span>,<span class="fu">c</span>(K,N,S))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  Sigma.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S) {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">=</span> A.posterior[,,s]</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    Sigma <span class="ot">=</span> Sigma.posterior[,,s]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    B0.tilde1 <span class="ot">=</span> B0.tilde[,,s]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    Bplus.tilde1 <span class="ot">=</span> Bplus.tilde[,,s]</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    sign.restrictions.do.not.hold <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (sign.restrictions.do.not.hold){</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      X <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(N<span class="sc">*</span>N),N,N)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      QR <span class="ot">=</span> <span class="fu">qr</span>(X, <span class="at">tol =</span> <span class="fl">1e-10</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      Q <span class="ot">=</span> <span class="fu">qr.Q</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      R <span class="ot">=</span> <span class="fu">qr.R</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>      Q <span class="ot">=</span> <span class="fu">t</span>(Q <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sign</span>(<span class="fu">diag</span>(R))))</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      B0 <span class="ot">=</span> Q<span class="sc">%*%</span>B0.tilde1</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      Bplus <span class="ot">=</span> Q<span class="sc">%*%</span>Bplus.tilde1</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      B0.inv <span class="ot">=</span> <span class="fu">solve</span>(B0)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      check <span class="ot">=</span> <span class="fu">all</span>(<span class="fu">diag</span>(B0)<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (check<span class="sc">==</span><span class="dv">1</span>){sign.restrictions.do.not.hold<span class="ot">=</span><span class="cn">FALSE</span>}</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>      i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>(i.vec, i)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    Q.store[,,s] <span class="ot">&lt;-</span> Q</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    B0.store[,,s] <span class="ot">&lt;-</span> B0</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    B0.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B0.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    Bplus.store[,,s] <span class="ot">&lt;-</span> Bplus</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    Bplus.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(Bplus.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (<span class="fu">list</span>(<span class="at">B0.store =</span> B0.store,</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>               <span class="at">Bplus.store =</span> Bplus.store,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>               <span class="at">i =</span> i.vec))</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then after drawing, we have following results of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>.</p>
+<p>After drawing, we have following results of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
@@ -612,65 +675,26 @@ Figure&nbsp;2: Bi-variate Gaussian random walk
 </div>
 <p>From the tables of posterior mean of <span class="math inline">\(B_0\)</span> and <span class="math inline">\(B+\)</span>.The signs of the coefficients in both <span class="math inline">\(B_0\)</span> and <span class="math inline">\(B+\)</span> matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also, the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> restriction <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> i.vec <span class="ot">=</span> <span class="fu">c</span>()</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a> Q.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a> B0.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a> Bplus.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a> A.store <span class="ot">=</span> <span class="fu">array</span> (<span class="cn">NA</span>,<span class="fu">c</span>(K,N,S))</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a> Sigma.store <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S) {</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>   A <span class="ot">=</span> A.posterior[,,s]</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>   Sigma <span class="ot">=</span> Sigma.posterior[,,s]</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>   B0.tilde1 <span class="ot">=</span> B0.tilde[,,s]</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>   Bplus.tilde1 <span class="ot">=</span> Bplus.tilde[,,s]</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>   sign.restrictions.do.not.hold <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>   i<span class="ot">=</span><span class="dv">1</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>   </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>   <span class="cf">while</span> (sign.restrictions.do.not.hold){</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>     X <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(N<span class="sc">*</span>N),N,N)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>     QR <span class="ot">=</span> <span class="fu">qr</span>(X, <span class="at">tol =</span> <span class="fl">1e-10</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>     Q <span class="ot">=</span> <span class="fu">qr.Q</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>     R <span class="ot">=</span> <span class="fu">qr.R</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>     Q <span class="ot">=</span> <span class="fu">t</span>(Q <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sign</span>(<span class="fu">diag</span>(R))))</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>     B0 <span class="ot">=</span> Q<span class="sc">%*%</span>B0.tilde1</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>     Bplus <span class="ot">=</span> Q<span class="sc">%*%</span>Bplus.tilde1</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>     B0.inv <span class="ot">=</span> <span class="fu">solve</span>(B0)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>     check <span class="ot">=</span> <span class="fu">all</span>(<span class="fu">diag</span>(B0)<span class="sc">&gt;</span><span class="dv">0</span>)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span> (check<span class="sc">==</span><span class="dv">1</span>){sign.restrictions.do.not.hold<span class="ot">=</span><span class="cn">FALSE</span>}</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>     i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>   }</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>   i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>(i.vec, i)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>   Q.store[,,s] <span class="ot">&lt;-</span> Q</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>   B0.store[,,s] <span class="ot">&lt;-</span> B0</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>   B0.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B0.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>   Bplus.store[,,s] <span class="ot">&lt;-</span> Bplus</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>   Bplus.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(Bplus.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a> }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>Posterior Mean of B0</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;"></th>
-<th style="text-align: right;">Y1-Lag</th>
-<th style="text-align: right;">Y2-Lag</th>
+<th style="text-align: right;">Simulation_Y1</th>
+<th style="text-align: right;">Simulation_Y2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Simulation_Y1</td>
-<td style="text-align: right;">0.6480643</td>
-<td style="text-align: right;">-0.0367693</td>
+<td style="text-align: left;">Y1-Lag</td>
+<td style="text-align: right;">0.9545508</td>
+<td style="text-align: right;">0.0298198</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Simulation_Y2</td>
-<td style="text-align: right;">-0.0008705</td>
-<td style="text-align: right;">0.6482623</td>
+<td style="text-align: left;">Y2-Lag</td>
+<td style="text-align: right;">0.0298198</td>
+<td style="text-align: right;">0.9493277</td>
 </tr>
 </tbody>
 </table>
@@ -766,53 +790,53 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 </ol>
 <p>Two functions code are added representing the derived posterior.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>compute_sbar2 <span class="ot">=</span> <span class="cf">function</span>(s2, Sigma, V) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  sbar2 <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>s2</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Sigma)) {</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    sbar2 <span class="ot">=</span> sbar2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>(Sigma[i,i]<span class="sc">*</span>V[i<span class="sc">+</span><span class="dv">1</span>,i<span class="sc">+</span><span class="dv">1</span>])</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="dv">1</span><span class="sc">/</span>sbar2)</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>compute_a_posterior <span class="ot">=</span> <span class="cf">function</span>(sbar2, Sigma,V,A){</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  a_posterior <span class="ot">=</span> m_a<span class="sc">/</span>sbar2</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  n<span class="ot">=</span><span class="fu">nrow</span>(Sigma)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  A_1 <span class="ot">=</span> A[<span class="dv">2</span><span class="sc">:</span>(n<span class="sc">+</span><span class="dv">1</span>),]</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    a_posterior <span class="ot">=</span> a_posterior <span class="sc">+</span> A_1[i,i]<span class="sc">/</span>(Sigma[i,i]<span class="sc">*</span>V[i<span class="sc">+</span><span class="dv">1</span>,i<span class="sc">+</span><span class="dv">1</span>])</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sbar2<span class="sc">*</span>a_posterior)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>compute_sbar2 <span class="ot">=</span> <span class="cf">function</span>(s2, Sigma, V) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  sbar2 <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>s2</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Sigma)) {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    sbar2 <span class="ot">=</span> sbar2 <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span>(Sigma[i,i]<span class="sc">*</span>V[i<span class="sc">+</span><span class="dv">1</span>,i<span class="sc">+</span><span class="dv">1</span>])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="dv">1</span><span class="sc">/</span>sbar2)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>compute_a_posterior <span class="ot">=</span> <span class="cf">function</span>(sbar2, Sigma,V,A){</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  a_posterior <span class="ot">=</span> m_a<span class="sc">/</span>sbar2</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  n<span class="ot">=</span><span class="fu">nrow</span>(Sigma)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  A_1 <span class="ot">=</span> A[<span class="dv">2</span><span class="sc">:</span>(n<span class="sc">+</span><span class="dv">1</span>),]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    a_posterior <span class="ot">=</span> a_posterior <span class="sc">+</span> A_1[i,i]<span class="sc">/</span>(Sigma[i,i]<span class="sc">*</span>V[i<span class="sc">+</span><span class="dv">1</span>,i<span class="sc">+</span><span class="dv">1</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sbar2<span class="sc">*</span>a_posterior)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The following codes are to get posterior mean of each element.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  sbar2 <span class="ot">=</span> <span class="fu">compute_sbar2</span>(s2, Sigma.posterior,V.bar)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  a_posterior <span class="ot">=</span> <span class="fu">compute_a_posterior</span>(sbar2, Sigma.posterior,V.bar, A.posterior)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  a.posterior <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, a_posterior, <span class="fu">sqrt</span>(sbar2))</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  a.posterior.store[s] <span class="ot">=</span> a.posterior</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrix normal-inverse Wishart posterior parameters</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  V.bar.inv <span class="ot">&lt;-</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  V.bar     <span class="ot">&lt;-</span> <span class="fu">solve</span>(V.bar.inv)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  A.bar     <span class="ot">&lt;-</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior))</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  nu.bar    <span class="ot">&lt;-</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  S.bar     <span class="ot">&lt;-</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>((A.prior<span class="sc">*</span>a.posterior))<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior) <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  S.bar.inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(S.bar)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw Posterior distribution</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)[,,<span class="dv">1</span>]</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior.store[,,s]   <span class="ot">&lt;-</span> <span class="fu">solve</span>(Sigma.posterior)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw A from matrix-variate normal distribution</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  A.posterior <span class="ot">=</span> <span class="fu">matrix</span>(mvtnorm<span class="sc">::</span><span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">as.vector</span>(A.bar), <span class="at">sigma=</span>Sigma.posterior.store[,,s]<span class="sc">%x%</span>V.bar), <span class="at">ncol=</span>N)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  A.posterior.store[,,s] <span class="ot">=</span> A.posterior</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Draw from the Structural Form</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  cholSigma.s        <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior.store[,,s])</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  B0.posterior.store[,,s]  <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  B1.posterior.store[,,s]  <span class="ot">&lt;-</span> B0.posterior.store[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior.store [,,s])</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  sbar2 <span class="ot">=</span> <span class="fu">compute_sbar2</span>(s2, Sigma.posterior,V.bar)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  a_posterior <span class="ot">=</span> <span class="fu">compute_a_posterior</span>(sbar2, Sigma.posterior,V.bar, A.posterior)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  a.posterior <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, a_posterior, <span class="fu">sqrt</span>(sbar2))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  a.posterior.store[s] <span class="ot">=</span> a.posterior</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrix normal-inverse Wishart posterior parameters</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  V.bar.inv <span class="ot">&lt;-</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  V.bar     <span class="ot">&lt;-</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  A.bar     <span class="ot">&lt;-</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  nu.bar    <span class="ot">&lt;-</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  S.bar     <span class="ot">&lt;-</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>((A.prior<span class="sc">*</span>a.posterior))<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior) <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  S.bar.inv <span class="ot">&lt;-</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw Posterior distribution</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)[,,<span class="dv">1</span>]</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior.store[,,s]   <span class="ot">&lt;-</span> <span class="fu">solve</span>(Sigma.posterior)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Draw A from matrix-variate normal distribution</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  A.posterior <span class="ot">=</span> <span class="fu">matrix</span>(mvtnorm<span class="sc">::</span><span class="fu">rmvnorm</span>(<span class="dv">1</span>, <span class="at">mean=</span><span class="fu">as.vector</span>(A.bar), <span class="at">sigma=</span>Sigma.posterior.store[,,s]<span class="sc">%x%</span>V.bar), <span class="at">ncol=</span>N)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  A.posterior.store[,,s] <span class="ot">=</span> A.posterior</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Draw from the Structural Form</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  cholSigma.s        <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior.store[,,s])</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  B0.posterior.store[,,s]  <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  B1.posterior.store[,,s]  <span class="ot">&lt;-</span> B0.posterior.store[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior.store [,,s])</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We get the mean of <span class="math inline">\(\overline{a}\)</span> first:</p>
 <div class="cell">
@@ -892,51 +916,51 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 </div>
 <p>The sign restrictions seem to enforce non-negative impacts in the matrix elements. Because all parameters in <span class="math inline">\(B_0\)</span> and <span class="math inline">\(B+\)</span> are with positive sign.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identification via sign restrictions </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(sign.restrictions)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage matrices for Q identified estimates</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>Q.store      <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S)))</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>B0.store    <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S)))</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>B1.store     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,(S)))</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>A.store     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(K,N,S))</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>Sigma.store  <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  A             <span class="ot">&lt;-</span> A.posterior.store[,,s]</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  Sigma         <span class="ot">&lt;-</span> Sigma.posterior.store[,,s]</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  B0.tilde      <span class="ot">&lt;-</span> B0.posterior.store[,,s]</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  B1.tilde      <span class="ot">&lt;-</span> B1.posterior.store[,,s]</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  sign.restrictions.do.not.hold <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  i<span class="ot">=</span><span class="dv">1</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (sign.restrictions.do.not.hold){</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    X           <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(N<span class="sc">*</span>N),N,N)         </span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    QR          <span class="ot">&lt;-</span> <span class="fu">qr</span>(X, <span class="at">tol =</span> <span class="fl">1e-10</span>)</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    Q           <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    R           <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    Q           <span class="ot">&lt;-</span> <span class="fu">t</span>(Q <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sign</span>(<span class="fu">diag</span>(R))))</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    B0          <span class="ot">&lt;-</span> Q<span class="sc">%*%</span>B0.tilde                    </span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    B1          <span class="ot">&lt;-</span> Q<span class="sc">%*%</span>B1.tilde                   </span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    B0.inv      <span class="ot">&lt;-</span> <span class="fu">solve</span>(B0)      </span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    check       <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">c</span>(B0[<span class="dv">1</span>,<span class="dv">1</span>], B0[<span class="dv">2</span>,<span class="dv">2</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (check){sign.restrictions.do.not.hold<span class="ot">=</span><span class="cn">FALSE</span>}</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span> </span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>(i.vec,i) </span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  Q.store[,,s] <span class="ot">&lt;-</span> Q</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  B0.store[,,s] <span class="ot">&lt;-</span> B0</span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  B0.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B0.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  B1.store[,,s] <span class="ot">&lt;-</span> B1</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>  B1.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B1.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  A.store[,,s]       <span class="ot">&lt;-</span> A</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  A.mean             <span class="ot">&lt;-</span> <span class="fu">apply</span>(A,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  Sigma.store[,,s]   <span class="ot">&lt;-</span> Sigma</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  Sigma.mean         <span class="ot">&lt;-</span> <span class="fu">apply</span>(Sigma,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identification via sign restrictions </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>R1 <span class="ot">&lt;-</span> <span class="fu">diag</span>(sign.restrictions)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Storage matrices for Q identified estimates</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>Q.store      <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S)))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>B0.store    <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S)))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>B1.store     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,(S)))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>A.store     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(K,N,S))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>Sigma.store  <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  A             <span class="ot">&lt;-</span> A.posterior.store[,,s]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  Sigma         <span class="ot">&lt;-</span> Sigma.posterior.store[,,s]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  B0.tilde      <span class="ot">&lt;-</span> B0.posterior.store[,,s]</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  B1.tilde      <span class="ot">&lt;-</span> B1.posterior.store[,,s]</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  sign.restrictions.do.not.hold <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> (sign.restrictions.do.not.hold){</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    X           <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(N<span class="sc">*</span>N),N,N)         </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    QR          <span class="ot">&lt;-</span> <span class="fu">qr</span>(X, <span class="at">tol =</span> <span class="fl">1e-10</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    Q           <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    R           <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(QR,<span class="at">complete=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    Q           <span class="ot">&lt;-</span> <span class="fu">t</span>(Q <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="fu">sign</span>(<span class="fu">diag</span>(R))))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    B0          <span class="ot">&lt;-</span> Q<span class="sc">%*%</span>B0.tilde                    </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    B1          <span class="ot">&lt;-</span> Q<span class="sc">%*%</span>B1.tilde                   </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    B0.inv      <span class="ot">&lt;-</span> <span class="fu">solve</span>(B0)      </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    check       <span class="ot">&lt;-</span> <span class="fu">all</span>(<span class="fu">c</span>(B0[<span class="dv">1</span>,<span class="dv">1</span>], B0[<span class="dv">2</span>,<span class="dv">2</span>]) <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (check){sign.restrictions.do.not.hold<span class="ot">=</span><span class="cn">FALSE</span>}</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span> </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  i.vec <span class="ot">&lt;-</span> <span class="fu">c</span>(i.vec,i) </span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  Q.store[,,s] <span class="ot">&lt;-</span> Q</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  B0.store[,,s] <span class="ot">&lt;-</span> B0</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>  B0.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B0.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  B1.store[,,s] <span class="ot">&lt;-</span> B1</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  B1.mean <span class="ot">&lt;-</span> <span class="fu">apply</span>(B1.store,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  A.store[,,s]       <span class="ot">&lt;-</span> A</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>  A.mean             <span class="ot">&lt;-</span> <span class="fu">apply</span>(A,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>  Sigma.store[,,s]   <span class="ot">&lt;-</span> Sigma</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  Sigma.mean         <span class="ot">&lt;-</span> <span class="fu">apply</span>(Sigma,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,mean)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
@@ -979,15 +1003,15 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Simulation_Y1ext</td>
-<td style="text-align: right;">-0.0341173</td>
-<td style="text-align: right;">0.6471458</td>
-<td style="text-align: right;">-0.0307080</td>
+<td style="text-align: right;">-0.0339679</td>
+<td style="text-align: right;">0.6618084</td>
+<td style="text-align: right;">-0.0057784</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Simulation_Y2ext</td>
-<td style="text-align: right;">-0.0334955</td>
-<td style="text-align: right;">-0.0028863</td>
-<td style="text-align: right;">0.6435134</td>
+<td style="text-align: right;">-0.0319256</td>
+<td style="text-align: right;">-0.0360985</td>
+<td style="text-align: right;">0.6592920</td>
 </tr>
 </tbody>
 </table>
@@ -995,10 +1019,37 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 </div>
 </section>
 </section>
-<section id="empirical-analysis" class="level1">
-<h1>4. Empirical Analysis</h1>
-<section id="impulse-response" class="level2">
-<h2 class="anchored" data-anchor-id="impulse-response">4.1 Impulse Response</h2>
+<section id="stochastic-volatility" class="level1">
+<h1>4. Stochastic Volatility</h1>
+<p>Stochastic Volatility (SV) models can be estimated to test the existence of heteroskedasticity in all variables.</p>
+<p><span class="math display">\[
+\begin{gather}
+Y = XA + E \\
+\\ E|X \sim \mathcal{MN}_{T \times N}(0_{T \times N},\Sigma,\text{diag}(\sigma^2))
+\end{gather}
+\]</span> where <span class="math inline">\(\sigma^2=(\sigma^2_1,...,\sigma^2_T)^{'}\)</span>, which follows a Stochastic Volatility process.</p>
+<p>Then the likelihood function looks as follow: <span class="math display">\[
+\begin{gather}
+L(A,\Sigma|Y,X,\sigma^2) \propto det(\text{diag}(\sigma^2))^{-\frac{N}{2}} det(\Sigma)^{-\frac{T}{2}} exp \left\{-\frac{1}{2} tr \left[ \Sigma^{-1}(Y-XA)'\text{diag}(\sigma^2)^{-1}(Y-XA) \right] \right\} \\
+\end{gather}
+\]</span></p>
+<p>The full conditional posterior of <span class="math inline">\((A,\Sigma)\)</span> follows a <span class="math inline">\(\mathcal{MNIW}(\bar{A},\bar{V},\bar{S},\bar{\nu})\)</span> distribution.</p>
+<p><span class="math display">\[
+\begin{gather}
+p(A,\Sigma|X,Y,\sigma^2) \propto L(A,\Sigma|Y,X,\sigma^2) \times  p(A|\Sigma,\sigma^2) \times p(\Sigma)
+\end{gather}
+\]</span> with parameters:</p>
+<p><span class="math display">\[
+\begin{gather}
+\bar{V} = (X'\text{diag}(\sigma^2)^{-1}X+\underline{V}^{-1})^{-1} \\
+\\ \bar{A} = \bar{V}(X'\text{diag}(\sigma^2)^{-1}Y+\underline{V}^{-1}\underline{A}) \\
+\\ \bar{S} = \underline{S} + Y'\text{diag}(\sigma^2)^{-1}Y + \underline{A}^{'}\underline{V}^{-1}\underline{A} - \bar{A}^{'}\bar{V}^{-1}\bar{A} \\
+\\ \bar{\nu}= T + \underline{\nu}
+\end{gather}
+\]</span></p>
+</section>
+<section id="impulse-response" class="level1">
+<h1>5.Impulse Response</h1>
 <p>Impulse response functions(IRF) to orthogonal shocks computed for an empirically relevant SVAR model are considered the dynamic causal effects of the underlying shocks on economic measurements, <span class="math inline">\(Y_t\)</span> for example.</p>
 <p>The following graphs are impulse responses of basic model after real data are incorporated. The response of unemployment rate is slightly decreasing, indicating that the shock might have a limited but negative impact on it. The slight upward trend suggests an expansion in government expenditure following the shock. Obvious positive effect is shown by tax revenue,real GDP, and cash rate target while initial jump followed by stabilization of inflation suggests that the shock might lead to short-term inflationary pressures that stabilize over time.</p>
 <p>From the impulse response plots, we can conclude there is significant effect on government spending, but insignificant for others.</p>
@@ -1021,7 +1072,6 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 </div>
 </div>
 </div>
-</section>
 <section id="references" class="level2 unnumbered">
 
 
