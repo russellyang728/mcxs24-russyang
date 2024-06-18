@@ -1027,6 +1027,7 @@ $$
 
 ## 4.1 Baseline Model
 
+
 ```{r}
 #| echo: false
 #| message: false
@@ -1081,6 +1082,33 @@ for (s in 1:S){
 }
 
 ```
+
+After importing real data, we get the posterior mean of hyper parameters.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#the mean of posterior draws of A matrices
+mean_A <- round(apply(draws$A.posterior,1:2,mean),4)
+colnames(mean_A) <- colnames(data_df)
+knitr::kable(mean_A, caption = "Posterior Mean of A",index=TRUE)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#the mean of posterior draws of A matrices
+mean_Sigma <- round(apply(draws$Sigma.posterior,1:2,mean),4)
+colnames(mean_Sigma) <- colnames(data_df)
+knitr::kable(mean_Sigma, caption = "Posterior Mean of Sigma",index=TRUE)
+
+```
+The code below is for stochastic volatility.
 
 ```{r}
 #| echo: true
@@ -1434,6 +1462,30 @@ for (s in 1:S){
   Sigma.store[,,s] <- solve(B0.store[,,s]) %*% t(solve(B0.store[,,s]))
   A.store[,,s] <- t(solve(B0.store[,,s] )%*% Bplus.store[,,s])
 }
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#the mean of posterior draws of A matrices
+mean_A.ext <- round(apply(draws.ext$A.posterior,1:2,mean),4)
+colnames(mean_A.ext) <- colnames(data_df)
+knitr::kable(mean_A.ext, caption = "Posterior Mean of A_ext",index=TRUE)
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+#the mean of posterior draws of A matrices
+mean_Sigma.ext <- round(apply(draws.ext$Sigma.posterior,1:2,mean),4)
+colnames(mean_Sigma.ext) <- colnames(data_df)
+knitr::kable(mean_Sigma.ext, caption = "Posterior Mean of Sigma_ext",index=TRUE)
+
 ```
 
 The difference between the code below and code of baseline model posterior draw's stochastic volatility is updating $A.prior$ to $A.prior*a.posterior$ like I did in extension model simulation.
