@@ -1021,6 +1021,158 @@ p(A,\Sigma|X,Y,\sigma^2) \propto L(A,\Sigma|Y,X,\sigma^2) \times  p(A|\Sigma,\si
 \]</span></p>
 <section id="baseline-model" class="level2">
 <h2 class="anchored" data-anchor-id="baseline-model">4.1 Baseline Model</h2>
+<p>After importing real data, we get the posterior mean of hyper parameters.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of A</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">unemp</th>
+<th style="text-align: right;">govspend</th>
+<th style="text-align: right;">taxrev</th>
+<th style="text-align: right;">infl</th>
+<th style="text-align: right;">rgdp</th>
+<th style="text-align: right;">cr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-1.5864</td>
+<td style="text-align: right;">-920.8368</td>
+<td style="text-align: right;">-11041.0871</td>
+<td style="text-align: right;">2.0922</td>
+<td style="text-align: right;">-2417.5678</td>
+<td style="text-align: right;">6.3686</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1.0256</td>
+<td style="text-align: right;">24.1005</td>
+<td style="text-align: right;">63.4800</td>
+<td style="text-align: right;">-0.1392</td>
+<td style="text-align: right;">-99.8916</td>
+<td style="text-align: right;">-0.1852</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.0225</td>
+<td style="text-align: right;">0.3347</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.3444</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-0.0055</td>
+<td style="text-align: right;">0.8465</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-0.1548</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-0.0024</td>
+<td style="text-align: right;">-210.5361</td>
+<td style="text-align: right;">-29.5882</td>
+<td style="text-align: right;">0.0798</td>
+<td style="text-align: right;">-547.6578</td>
+<td style="text-align: right;">0.1956</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0008</td>
+<td style="text-align: right;">-0.0027</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.9844</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0909</td>
+<td style="text-align: right;">12.9916</td>
+<td style="text-align: right;">122.8446</td>
+<td style="text-align: right;">0.0136</td>
+<td style="text-align: right;">-150.0445</td>
+<td style="text-align: right;">0.7601</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of Sigma</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 20%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">unemp</th>
+<th style="text-align: right;">govspend</th>
+<th style="text-align: right;">taxrev</th>
+<th style="text-align: right;">infl</th>
+<th style="text-align: right;">rgdp</th>
+<th style="text-align: right;">cr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.1076</td>
+<td style="text-align: right;">19.1970</td>
+<td style="text-align: right;">-296.0112</td>
+<td style="text-align: right;">-0.0709</td>
+<td style="text-align: right;">-912.0382</td>
+<td style="text-align: right;">-0.0276</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">19.1970</td>
+<td style="text-align: right;">638536.4782</td>
+<td style="text-align: right;">-21431.7816</td>
+<td style="text-align: right;">-53.3348</td>
+<td style="text-align: right;">-804317.9852</td>
+<td style="text-align: right;">-24.7433</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-296.0112</td>
+<td style="text-align: right;">-21431.7816</td>
+<td style="text-align: right;">5224689.7984</td>
+<td style="text-align: right;">297.2538</td>
+<td style="text-align: right;">6023410.1979</td>
+<td style="text-align: right;">126.0042</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.0709</td>
+<td style="text-align: right;">-53.3348</td>
+<td style="text-align: right;">297.2538</td>
+<td style="text-align: right;">0.3148</td>
+<td style="text-align: right;">852.9998</td>
+<td style="text-align: right;">0.0445</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-912.0382</td>
+<td style="text-align: right;">-804317.9852</td>
+<td style="text-align: right;">6023410.1979</td>
+<td style="text-align: right;">852.9998</td>
+<td style="text-align: right;">23630453.5014</td>
+<td style="text-align: right;">156.5968</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.0276</td>
+<td style="text-align: right;">-24.7433</td>
+<td style="text-align: right;">126.0042</td>
+<td style="text-align: right;">0.0445</td>
+<td style="text-align: right;">156.5968</td>
+<td style="text-align: right;">0.1621</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The code below is for stochastic volatility.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>SVcommon.Gibbs.iteration <span class="ot">=</span> <span class="cf">function</span>(aux, priors){</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># A single iteration of the Gibbs sampler for the SV component</span></span>
@@ -1290,6 +1442,156 @@ Figure&nbsp;8: Impulse Response of Basic Model
 </section>
 <section id="extension-model-1" class="level2">
 <h2 class="anchored" data-anchor-id="extension-model-1">4.2 Extension Model</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of A_ext</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">unemp</th>
+<th style="text-align: right;">govspend</th>
+<th style="text-align: right;">taxrev</th>
+<th style="text-align: right;">infl</th>
+<th style="text-align: right;">rgdp</th>
+<th style="text-align: right;">cr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-1.8438</td>
+<td style="text-align: right;">-736.9932</td>
+<td style="text-align: right;">-10262.0905</td>
+<td style="text-align: right;">2.1828</td>
+<td style="text-align: right;">-1277.5779</td>
+<td style="text-align: right;">6.5262</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1.0397</td>
+<td style="text-align: right;">13.3003</td>
+<td style="text-align: right;">54.5696</td>
+<td style="text-align: right;">-0.1355</td>
+<td style="text-align: right;">-105.6788</td>
+<td style="text-align: right;">-0.1928</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">1.0217</td>
+<td style="text-align: right;">0.3184</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.3272</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-0.0049</td>
+<td style="text-align: right;">0.8568</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">-0.1404</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0084</td>
+<td style="text-align: right;">-195.7048</td>
+<td style="text-align: right;">-57.5642</td>
+<td style="text-align: right;">0.1033</td>
+<td style="text-align: right;">-587.1330</td>
+<td style="text-align: right;">0.1917</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.0005</td>
+<td style="text-align: right;">-0.0032</td>
+<td style="text-align: right;">0.0000</td>
+<td style="text-align: right;">0.9826</td>
+<td style="text-align: right;">0.0000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0964</td>
+<td style="text-align: right;">7.8234</td>
+<td style="text-align: right;">101.5348</td>
+<td style="text-align: right;">0.0089</td>
+<td style="text-align: right;">-177.4863</td>
+<td style="text-align: right;">0.7583</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Posterior Mean of Sigma_ext</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 13%">
+<col style="width: 20%">
+<col style="width: 13%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">unemp</th>
+<th style="text-align: right;">govspend</th>
+<th style="text-align: right;">taxrev</th>
+<th style="text-align: right;">infl</th>
+<th style="text-align: right;">rgdp</th>
+<th style="text-align: right;">cr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.1119</td>
+<td style="text-align: right;">18.3457</td>
+<td style="text-align: right;">-288.9285</td>
+<td style="text-align: right;">-0.0685</td>
+<td style="text-align: right;">-902.1633</td>
+<td style="text-align: right;">-0.0260</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">18.3457</td>
+<td style="text-align: right;">630529.4163</td>
+<td style="text-align: right;">-2208.0708</td>
+<td style="text-align: right;">-46.1132</td>
+<td style="text-align: right;">-782356.9898</td>
+<td style="text-align: right;">-21.9730</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-288.9285</td>
+<td style="text-align: right;">-2208.0708</td>
+<td style="text-align: right;">5179728.9634</td>
+<td style="text-align: right;">276.5932</td>
+<td style="text-align: right;">6041460.8684</td>
+<td style="text-align: right;">130.9466</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.0685</td>
+<td style="text-align: right;">-46.1132</td>
+<td style="text-align: right;">276.5932</td>
+<td style="text-align: right;">0.3459</td>
+<td style="text-align: right;">849.7804</td>
+<td style="text-align: right;">0.0444</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-902.1633</td>
+<td style="text-align: right;">-782356.9898</td>
+<td style="text-align: right;">6041460.8684</td>
+<td style="text-align: right;">849.7804</td>
+<td style="text-align: right;">23406550.0969</td>
+<td style="text-align: right;">168.9330</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.0260</td>
+<td style="text-align: right;">-21.9730</td>
+<td style="text-align: right;">130.9466</td>
+<td style="text-align: right;">0.0444</td>
+<td style="text-align: right;">168.9330</td>
+<td style="text-align: right;">0.1728</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The difference between the code below and code of baseline model posterior draw’s stochastic volatility is updating <span class="math inline">\(A.prior\)</span> to <span class="math inline">\(A.prior*a.posterior\)</span> like I did in extension model simulation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>DrawPosterior.sv.ext <span class="ot">&lt;-</span> <span class="cf">function</span> (Y,X,Prior.ext,S1,S2){</span>
