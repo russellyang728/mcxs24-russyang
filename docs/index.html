@@ -200,6 +200,9 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#baseline-model" id="toc-baseline-model" class="nav-link" data-scroll-target="#baseline-model">4.1 Baseline Model</a></li>
   <li><a href="#extension-model-1" id="toc-extension-model-1" class="nav-link" data-scroll-target="#extension-model-1">4.2 Extension Model</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">5. Conclusion</a>
+  <ul class="collapse">
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -246,12 +249,12 @@ window.Quarto = {
 <h1>2. Data and Their Properties</h1>
 <section id="variables-selected" class="level2">
 <h2 class="anchored" data-anchor-id="variables-selected">2.1 Variables Selected</h2>
-<p>Unemployment Rate(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.</p>
-<p>Government Spending(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
-<p>Tax Revenue(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
-<p>Inflation Rate(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.</p>
-<p>Real Gross Domestic Product(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.</p>
-<p>Cash Rate Target(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.</p>
+<p><strong>Unemployment Rate</strong>(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.</p>
+<p><strong>Government Spending</strong>(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.</p>
+<p><strong>Tax Revenue</strong>(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.</p>
+<p><strong>Inflation Rate</strong>(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.</p>
+<p><strong>Real Gross Domestic Product</strong>(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.</p>
+<p><strong>Cash Rate Target</strong>(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.</p>
 </section>
 <section id="why-chose-them" class="level2">
 <h2 class="anchored" data-anchor-id="why-chose-them">2.2 Why Chose Them?</h2>
@@ -259,26 +262,25 @@ window.Quarto = {
 </section>
 <section id="data-visualization" class="level2">
 <h2 class="anchored" data-anchor-id="data-visualization">2.3 Data Visualization</h2>
-<p>The time series plots[Figure 1: Time Series Data] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.</p>
+<p>The <strong>Time Series Plots</strong> for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.</p>
 <p>Government spending’s steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue’s increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it’s both a reflection of and a contributor to the fiscal environment. Inflation’s volatility is without a clear trend line.</p>
 <p>The steady increase of Real GDP shows the economy’s growth and resilience in response to policy measures and global economic shifts. The fluctuations in the Cash Rate Target reflect the central bank’s monetary policy adjustments aimed at maintaining stability and stimulating economic activity.</p>
 <p>These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.</p>
-<div>
-
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ts" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-ts-1.png" class="img-fluid figure-img" width="672">
 </div>
-<div class="cell quarto-layout-panel" data-layout-nrow="3">
-<div class="quarto-layout-row">
-<div class="quarto-layout-cell" style="flex-basis: 100.0%;justify-content: flex-start;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Time Series Data</figcaption>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Time Series Plots
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-</div>
-<p>[Table 1: Summary Statistic] shows variables’ description during 1990 Q1 to 2023 Q4.</p>
+<p><strong>Summary Statistic Table</strong> shows variables’ description during 1990 Q1 to 2023 Q4.</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
@@ -349,8 +351,8 @@ window.Quarto = {
 </section>
 <section id="property-tested" class="level2">
 <h2 class="anchored" data-anchor-id="property-tested">2.4 Property Tested</h2>
-<p>From the ACF test[Figure 2: Autocorrelation Function], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.</p>
-<p>From the PACF test[Figure 3: Partial Autocorrelation Function], for unemployment, there’s a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there’s little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.</p>
+<p>From the <strong>ACF Test</strong> figures, the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.</p>
+<p>From the <strong>PACF Test</strong> figures, for unemployment, there’s a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there’s little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-ACF" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -359,7 +361,7 @@ window.Quarto = {
 <img src="index_files/figure-html/fig-ACF-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ACF-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Autocorrelation Function
+Figure&nbsp;2: Autocorrelation Function
 </figcaption>
 </figure>
 </div>
@@ -373,7 +375,7 @@ Figure&nbsp;1: Autocorrelation Function
 <img src="index_files/figure-html/fig-PACF-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-PACF-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Partial Autocorrelation Function
+Figure&nbsp;3: Partial Autocorrelation Function
 </figcaption>
 </figure>
 </div>
@@ -502,7 +504,7 @@ A|\Sigma,Y &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V}
 <img src="index_files/figure-html/fig-actificial-data-1.png" class="img-fluid figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-actificial-data-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Bi-variate Gaussian random walk
+Figure&nbsp;4: Bi-variate Gaussian random walk
 </figcaption>
 </figure>
 </div>
@@ -514,7 +516,7 @@ Figure&nbsp;3: Bi-variate Gaussian random walk
 <img src="index_files/figure-html/fig-actificial-data-2.png" class="img-fluid figure-img" style="width:60.0%">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-actificial-data-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Bi-variate Gaussian random walk
+Figure&nbsp;5: Bi-variate Gaussian random walk
 </figcaption>
 </figure>
 </div>
@@ -524,55 +526,54 @@ Figure&nbsp;4: Bi-variate Gaussian random walk
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>Posterior_parameters <span class="ot">&lt;-</span> <span class="cf">function</span>(X,Y,A.prior,V.prior,S.prior,nu.prior){</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>V.bar.inv <span class="ot">=</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>V.bar <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>A.bar <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>nu.bar <span class="ot">=</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>S.bar <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span> (<span class="fu">list</span>(<span class="at">V.bar =</span> V.bar,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">A.bar =</span> A.bar,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">nu.bar =</span> nu.bar,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">S.bar =</span> S.bar))</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Posterior_param <span class="ot">=</span> <span class="fu">Posterior_parameters</span>(<span class="at">X=</span>X,<span class="at">Y=</span>Y,<span class="at">A=</span>Prior<span class="sc">$</span>A.prior,<span class="at">V=</span>Prior<span class="sc">$</span>V.prior, <span class="at">S=</span>Prior<span class="sc">$</span>S.prior,<span class="at">nu=</span>Prior<span class="sc">$</span>nu.prior)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">#######################################################################</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Posterior.draws <span class="ot">=</span> <span class="cf">function</span>(S, Posterior_param){</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  A.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>A.bar</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  V.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>V.bar</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  S.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>S.bar</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  nu.bar <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>nu.bar</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  B0.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  Bplus.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  L        <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar)) </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">rWishart</span>(S, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span><span class="fu">solve</span>(S.bar))  </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)            </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,S))   </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  A.posterior       <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute the initial value of SF parameters</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    cholSigma.s      <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior[,,s])</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    B0.tilde[,,s] <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s] <span class="ot">&lt;-</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span>cholSigma.s </span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    Bplus.tilde[,,s]  <span class="ot">&lt;-</span> B0.tilde[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior[,,s])</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample draws from the joint posterior distribution </span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">A.posterior     =</span> A.posterior,</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">B0.tilde        =</span> B0.tilde,</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">Bplus.tilde        =</span> Bplus.tilde,</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>              <span class="at">Sigma.posterior =</span> Sigma.posterior))</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">=</span> <span class="fu">Posterior.draws</span>(<span class="at">S =</span> <span class="dv">1000</span>, <span class="at">Posterior_param =</span> Posterior_param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  V.bar.inv <span class="ot">=</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  V.bar <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  A.bar <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  nu.bar <span class="ot">=</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  S.bar <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span> (<span class="fu">list</span>(<span class="at">V.bar =</span> V.bar,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">A.bar =</span> A.bar,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">nu.bar =</span> nu.bar,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">S.bar =</span> S.bar))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Posterior_param <span class="ot">=</span> <span class="fu">Posterior_parameters</span>(<span class="at">X=</span>X,<span class="at">Y=</span>Y,<span class="at">A=</span>Prior<span class="sc">$</span>A.prior,<span class="at">V=</span>Prior<span class="sc">$</span>V.prior, <span class="at">S=</span>Prior<span class="sc">$</span>S.prior,<span class="at">nu=</span>Prior<span class="sc">$</span>nu.prior)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">#####################################################################</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>Posterior.draws <span class="ot">=</span> <span class="cf">function</span>(S, Posterior_param){</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  A.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>A.bar</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  V.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>V.bar</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  S.bar  <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>S.bar</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  nu.bar <span class="ot">&lt;-</span> Posterior_param<span class="sc">$</span>nu.bar</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  B0.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  Bplus.tilde <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,S))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  L        <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar)) </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">rWishart</span>(S, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span><span class="fu">solve</span>(S.bar))  </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)            </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior   <span class="ot">&lt;-</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,S))   </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  A.posterior       <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute the initial value of SF parameters</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    cholSigma.s      <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    B0.tilde[,,s] <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(cholSigma.s)) </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s] <span class="ot">&lt;-</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span>cholSigma.s </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    Bplus.tilde[,,s]  <span class="ot">&lt;-</span> B0.tilde[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior[,,s])</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sample draws from the joint posterior distribution </span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">A.posterior     =</span> A.posterior,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>              <span class="at">B0.tilde        =</span> B0.tilde,</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>              <span class="at">Bplus.tilde        =</span> Bplus.tilde,</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>              <span class="at">Sigma.posterior =</span> Sigma.posterior))</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">=</span> <span class="fu">Posterior.draws</span>(<span class="at">S =</span> <span class="dv">1000</span>, <span class="at">Posterior_param =</span> Posterior_param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we employed sign restriction into the posterior draws.</p>
 <div class="cell">
@@ -797,7 +798,7 @@ exp\left\{ -\frac{(\underline{a}-A_{1,nn})^2}{\Sigma_{nn}\underline{V}_{(n+1)(n+
 <li><p>Compute <span class="math inline">\(\overline{A},\overline{V},\overline{S},\overline{\nu}\)</span>.</p></li>
 <li><p>Draw sample <span class="math inline">\(\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}\)</span>.</p></li>
 </ol>
-<p>Two functions code are added representing the derived posterior.</p>
+<p>Two functions code are added representing the derived <span class="math inline">\(\overline{a}\)</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>compute_sbar2 <span class="ot">=</span> <span class="cf">function</span>(s2, Sigma, V) {</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  sbar2 <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>s2</span>
@@ -1201,7 +1202,7 @@ p(A,\Sigma|X,Y,\sigma^2) \propto L(A,\Sigma|Y,X,\sigma^2) \times  p(A|\Sigma,\si
 <img src="index_files/figure-html/fig-pos-svts-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pos-svts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Posterior Draw Mean of Stochastic Volatility
+Figure&nbsp;6: Posterior Draw Mean of Stochastic Volatility
 </figcaption>
 </figure>
 </div>
@@ -1216,7 +1217,7 @@ Figure&nbsp;5: Posterior Draw Mean of Stochastic Volatility
 <img src="index_files/figure-html/fig-Gibbs-Sampler-SV-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Gibbs-Sampler-SV-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Gibbs Sampler draws of A and Sigma-SV model
+Figure&nbsp;7: Gibbs Sampler draws of A and Sigma-SV model
 </figcaption>
 </figure>
 </div>
@@ -1226,6 +1227,53 @@ Figure&nbsp;6: Gibbs Sampler draws of A and Sigma-SV model
 <p>The following graphs are impulse responses of basic model after real data are incorporated. The response of unemployment rate is slightly decreasing, indicating that the shock might have a limited but negative impact on it. The slight upward trend suggests an expansion in government expenditure following the shock. Obvious positive effect is shown by tax revenue,real GDP, and cash rate target while initial jump followed by stabilization of inflation suggests that the shock might lead to short-term inflationary pressures that stabilize over time.</p>
 <p>From the impulse response plots, we can conclude there is significant effect on government spending, but insignificant for others.</p>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>B.posterior <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  B <span class="ot">=</span> <span class="fu">solve</span>(B0.store[,,s])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  B.posterior[,,s]<span class="ot">=</span> B </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#A.posterior[,,s]= t(B %*% B1.store[,,s]) </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>h<span class="ot">=</span><span class="dv">8</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>IRF.posterior     <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,h<span class="sc">+</span><span class="dv">1</span>,S))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>IRF.inf.posterior <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>FEVD.posterior    <span class="ot">=</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,h<span class="sc">+</span><span class="dv">1</span>,S))</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>J                 <span class="ot">=</span> <span class="fu">cbind</span>(<span class="fu">diag</span>(N),<span class="fu">matrix</span>(<span class="dv">0</span>,N,N<span class="sc">*</span>(p<span class="dv">-1</span>)))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  A.bold          <span class="ot">=</span> <span class="fu">rbind</span>(<span class="fu">t</span>(A.store[<span class="dv">2</span><span class="sc">:</span>(<span class="dv">1</span><span class="sc">+</span>N<span class="sc">*</span>p),,s]),<span class="fu">cbind</span>(<span class="fu">diag</span>(N<span class="sc">*</span>(p<span class="dv">-1</span>)),<span class="fu">matrix</span>(<span class="dv">0</span>,N<span class="sc">*</span>(p<span class="dv">-1</span>),N)))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  IRF.inf.posterior[,,s]          <span class="ot">=</span> J <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">diag</span>(N<span class="sc">*</span>p)<span class="sc">-</span>A.bold) <span class="sc">%*%</span> <span class="fu">t</span>(J) <span class="sc">%*%</span> B.posterior[,,s]</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  A.bold.power    <span class="ot">=</span> A.bold</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(h<span class="sc">+</span><span class="dv">1</span>)){</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      IRF.posterior[,,i,s]        <span class="ot">=</span> B.posterior[,,s]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      IRF.posterior[,,i,s]        <span class="ot">=</span> J <span class="sc">%*%</span> A.bold.power <span class="sc">%*%</span> <span class="fu">t</span>(J) <span class="sc">%*%</span> B.posterior[,,s]</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      A.bold.power                <span class="ot">=</span> A.bold.power <span class="sc">%*%</span> A.bold</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N){</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (nn <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N){</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        FEVD.posterior[n,nn,i,s]  <span class="ot">=</span> <span class="fu">sum</span>(IRF.posterior[n,nn,<span class="dv">1</span><span class="sc">:</span>i,s]<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    FEVD.posterior[,,i,s]         <span class="ot">=</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">apply</span>(FEVD.posterior[,,i,s],<span class="dv">1</span>,sum))<span class="sc">%*%</span>FEVD.posterior[,,i,s]</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>FEVD.posterior    <span class="ot">=</span> <span class="dv">100</span><span class="sc">*</span>FEVD.posterior</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>IRF.posterior.mps <span class="ot">=</span> IRF.posterior[,<span class="dv">2</span>,,]</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>IRFs.k1           <span class="ot">=</span> <span class="fu">apply</span>(IRF.posterior.mps,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,median)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>IRFs.k1           <span class="ot">=</span> <span class="fu">apply</span>(IRF.posterior.mps,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,median)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>IRFs.inf.k1       <span class="ot">=</span> <span class="fu">apply</span>(IRF.posterior.mps,<span class="dv">1</span>,mean)</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(IRFs.k1) <span class="ot">=</span> <span class="fu">colnames</span>(data_df)</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(HDInterval)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>IRFs.k1.hdi    <span class="ot">=</span> <span class="fu">apply</span>(IRF.posterior.mps,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,hdi, <span class="at">credMass=</span><span class="fl">0.68</span>)</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>hh             <span class="ot">=</span> <span class="dv">1</span><span class="sc">:</span>(h<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Unemployment Rate"</span>,<span class="st">"Government Spending"</span>,<span class="st">"Tax Revenue"</span>,<span class="st">"Inflation"</span>,<span class="st">"Real GDP"</span>,<span class="st">"Cash Rate Target"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
 <div class="cell-output-display">
 <div id="fig-IRF" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1233,7 +1281,7 @@ Figure&nbsp;6: Gibbs Sampler draws of A and Sigma-SV model
 <img src="index_files/figure-html/fig-IRF-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-IRF-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Impulse Response of Basic Model
+Figure&nbsp;8: Impulse Response of Basic Model
 </figcaption>
 </figure>
 </div>
@@ -1242,7 +1290,104 @@ Figure&nbsp;7: Impulse Response of Basic Model
 </section>
 <section id="extension-model-1" class="level2">
 <h2 class="anchored" data-anchor-id="extension-model-1">4.2 Extension Model</h2>
-<p>The time series plot is posterior draws mean of <span class="math inline">\(\sigma^2\)</span> at each time spot in extension model. The plot shows same volatility as baseline model.</p>
+<p>The difference between the code below and code of baseline model posterior draw’s stochastic volatility is updating <span class="math inline">\(A.prior\)</span> to <span class="math inline">\(A.prior*a.posterior\)</span> like I did in extension model simulation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>DrawPosterior.sv.ext <span class="ot">&lt;-</span> <span class="cf">function</span> (Y,X,Prior.ext,S1,S2){</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> <span class="fu">ncol</span>(Y)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  K <span class="ot">&lt;-</span> <span class="fu">ncol</span>(X)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  T <span class="ot">&lt;-</span> <span class="fu">nrow</span>(Y)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  A.prior  <span class="ot">&lt;-</span> Prior.ext<span class="sc">$</span>A.prior</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  V.prior  <span class="ot">&lt;-</span> Prior.ext<span class="sc">$</span>V.prior</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  Sigma.prior  <span class="ot">&lt;-</span> Prior.ext<span class="sc">$</span>Sigma.prior</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  nu.prior <span class="ot">&lt;-</span> Prior.ext<span class="sc">$</span>nu.prior</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  a.posetrior <span class="ot">&lt;-</span> Posterior.param.ext<span class="sc">$</span>a.posterior</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  A.posterior     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(K,N,(S1<span class="sc">+</span>S2)))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  Sigma.posterior <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S1<span class="sc">+</span>S2))) </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  H.posterior     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(<span class="fu">nrow</span>(Y),(S1<span class="sc">+</span>S2<span class="sc">+</span><span class="dv">1</span>)))  </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  B.posterior     <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,N,(S1<span class="sc">+</span>S2)))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  B1.tilde.s      <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="cn">NA</span>,<span class="fu">c</span>(N,K,(S1<span class="sc">+</span>S2)))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialize h^{0}, which is  T by 1 matrix </span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  H.posterior[,<span class="dv">1</span>]       <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span>,T,<span class="dv">1</span>) </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  nu.bar                <span class="ot">&lt;-</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  HH                    <span class="ot">&lt;-</span>  <span class="dv">2</span><span class="sc">*</span><span class="fu">diag</span>(T)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">sdiag</span>(HH,<span class="sc">-</span><span class="dv">1</span>)    <span class="ot">&lt;-</span>  <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  mgcv<span class="sc">::</span><span class="fu">sdiag</span>(HH,<span class="dv">1</span>)     <span class="ot">&lt;-</span>  <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  priors <span class="ot">=</span> <span class="fu">list</span>(<span class="at">HH       =</span> HH,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                <span class="at">h0.m     =</span> <span class="dv">0</span>,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">h0.v     =</span> <span class="dv">1</span>,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>                <span class="at">sigmav.s =</span> <span class="dv">1</span>,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>                <span class="at">sigmav.nu=</span> <span class="dv">1</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(S1<span class="sc">+</span>S2)){</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STEP 1: draw (A Sigma).s from MNIW(A.bar,V.bar,S.bar,nu.bar)</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># setting up parameters </span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    V.bar.inv       <span class="ot">&lt;-</span> <span class="fu">t</span>(X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>H.posterior[,s])<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    V.bar           <span class="ot">&lt;-</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    A.bar           <span class="ot">&lt;-</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>H.posterior[,s])<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior))</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    Sigma.bar           <span class="ot">&lt;-</span> Sigma.prior<span class="sc">+</span><span class="fu">t</span>(Y)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span>H.posterior[,s])<span class="sc">%*%</span>Y<span class="sc">+</span><span class="fu">t</span>((A.prior<span class="sc">*</span>a.posterior))<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>(A.prior<span class="sc">*</span>a.posterior) <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    draw.sigma.inv  <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span><span class="fu">solve</span>(Sigma.bar))[,,<span class="dv">1</span>])</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior[,,s] <span class="ot">=</span> draw.sigma.inv</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start drawing </span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    cholSigma.s      <span class="ot">&lt;-</span> <span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s] <span class="ot">&lt;-</span> <span class="fu">matrix</span>(MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="dv">1</span>,<span class="fu">as.vector</span>(A.bar),Sigma.posterior[,,s]<span class="sc">%x%</span>V.bar),<span class="at">ncol=</span>N)      </span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    L                <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># B.posterior[,,s] &lt;- t(chol(Sigma.posterior[,,s]))</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    B.posterior[,,s] <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(<span class="fu">chol</span>(Sigma.posterior[,,s])))  </span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    B1.tilde.s[,,s]  <span class="ot">&lt;-</span> B.posterior[,,s]<span class="sc">%*%</span><span class="fu">t</span>(A.posterior[,,s])</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STEP 2: draw H from SVcommon.Gibbs.iteration</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (s <span class="sc">==</span> <span class="dv">1</span>){ <span class="co"># initializing input arguments </span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>      aux <span class="ot">=</span> <span class="fu">list</span>( </span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">Y             =</span> Y,</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">X             =</span> X,</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">H             =</span> <span class="fu">matrix</span>(<span class="dv">1</span>,T,<span class="dv">1</span>),</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">h0            =</span> <span class="dv">0</span>,</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">sigma.v2      =</span> <span class="dv">1</span>,</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">s             =</span> <span class="fu">matrix</span>(<span class="dv">1</span>,T,<span class="dv">1</span>),</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sigma         =</span> Sigma.posterior[,,s],</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>        <span class="at">A             =</span> A.posterior[,,s],</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">sigma2        =</span> <span class="fu">matrix</span>(<span class="dv">1</span>,T,<span class="dv">1</span>)</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{ <span class="co"># updating input arguments  </span></span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>      aux <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">Y           =</span> Y,</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>        <span class="at">X           =</span> X,</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>        <span class="at">H           =</span> tmp<span class="sc">$</span>H,</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>        <span class="at">h0          =</span> tmp<span class="sc">$</span>h0,</span>
+<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>        <span class="at">sigma.v2    =</span> tmp<span class="sc">$</span>sigma.v2,</span>
+<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>        <span class="at">s           =</span> tmp<span class="sc">$</span>s,</span>
+<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>        <span class="at">Sigma       =</span> Sigma.posterior[,,s],</span>
+<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">A           =</span> A.posterior[,,s],</span>
+<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>        <span class="at">sigma2      =</span> tmp<span class="sc">$</span>sigma2</span>
+<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>    <span class="co"># H                     &lt;- diag(T)</span></span>
+<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sdiag(H,-1)           &lt;- -1     </span></span>
+<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>    tmp                     <span class="ot">&lt;-</span> <span class="fu">SVcommon.Gibbs.iteration</span>(aux,priors)</span>
+<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>    H.posterior[,s<span class="sc">+</span><span class="dv">1</span>]      <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(tmp<span class="sc">$</span>sigma2)</span>
+<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">Sigma.posterior =</span> Sigma.posterior[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(S1<span class="sc">+</span>S2)],</span>
+<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>              <span class="at">A.posterior     =</span> A.posterior[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(S1<span class="sc">+</span>S2)],</span>
+<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>              <span class="at">B1.tilde.s      =</span> B1.tilde.s[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(S1<span class="sc">+</span>S2)],</span>
+<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a>              <span class="at">B.posterior     =</span> B.posterior[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(S1<span class="sc">+</span>S2)],</span>
+<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>              <span class="at">H.sv            =</span> H.posterior[,(S1<span class="sc">+</span><span class="dv">2</span>)<span class="sc">:</span>(S1<span class="sc">+</span>S2<span class="sc">+</span><span class="dv">1</span>)]))</span>
+<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The time series plot is posterior draws mean of <span class="math inline">\(\sigma^2\)</span> at each time spot in extension model. The plot shows similar volatility as baseline model.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-pos-svts-ext" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -1251,13 +1396,13 @@ Figure&nbsp;7: Impulse Response of Basic Model
 <img src="index_files/figure-html/fig-pos-svts-ext-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pos-svts-ext-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Posterior Draw Mean of Stochastic Volatility of Extension Model
+Figure&nbsp;9: Posterior Draw Mean of Stochastic Volatility of Extension Model
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>Compare the Gibbs Sampler of the Stochastic Volatility model of extension model, the parameters appear to fluctuate within a wider range compared to the baseline one. The variance in <span class="math inline">\(Σ_{22}\)</span> in the second set also exhibits larger spikes than in the basic.</p>
+<p>Compare to the Gibbs Sampler of the Stochastic Volatility model of baseline model, the parameters of extension model appear to fluctuate within a wider range. The variance in <span class="math inline">\(Σ_{22}\)</span> in the second set also exhibits larger spikes.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-Gibbs-Sampler-SV-ext" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -1266,7 +1411,7 @@ Figure&nbsp;8: Posterior Draw Mean of Stochastic Volatility of Extension Model
 <img src="index_files/figure-html/fig-Gibbs-Sampler-SV-ext-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-Gibbs-Sampler-SV-ext-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Gibbs Sampler draws of A and Sigma-SV model of Extension Model
+Figure&nbsp;10: Gibbs Sampler draws of A and Sigma-SV model of Extension Model
 </figcaption>
 </figure>
 </div>
@@ -1281,13 +1426,17 @@ Figure&nbsp;9: Gibbs Sampler draws of A and Sigma-SV model of Extension Model
 <img src="index_files/figure-html/fig-IRF-ext-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-IRF-ext-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10: Impulse Response of Extension Model
+Figure&nbsp;11: Impulse Response of Extension Model
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1>5. Conclusion</h1>
+<p>In this project, I utilized the Bayesian Structural VAR approach to explore the impact of fiscal policy on the Australian unemployment rate. The use of sign restrictions enhanced the validity of our results. Additionally, stochastic volatility and extensions on <span class="math inline">\(A_1\)</span> were incorporated into the analysis. The impulse response analysis indicates that government spending significantly influences the unemployment rate in the short term in Australia, although its effects tend to diminish over a two-year period.</p>
 <section id="references" class="level2 unnumbered">
 
 
