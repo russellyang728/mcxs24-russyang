@@ -24,13 +24,13 @@ Unemployment is pivotal in the macroeconomic framework, directly tied to social 
 
 **Unemployment Rate**(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
 
-**Government Spending**(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
+**Government Spending**(GOVSPEND)(in Million\$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
 
-**Tax Revenue**(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
+**Tax Revenue**(TAXREV)(in Million\$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
 
 **Inflation Rate**(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
-**Real Gross Domestic Product**(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
+**Real Gross Domestic Product**(RGDP)(in Million\$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
 
 **Cash Rate Target**(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
 
@@ -246,7 +246,7 @@ unemp_t\\
  gdp_t\\
  cr_t
 \end{pmatrix}
-$$ 
+$$
 
 The **Reduced Form (RF)** representation is:
 
@@ -293,8 +293,7 @@ $$
 Var[vec(A)] &= \Sigma \otimes  \underline{V} \\
 \underline{V} &= \text{diag}([\kappa_2 \quad \kappa_1 (p^{-2} \otimes \imath_N)]) \\
 \end{align}
-$$
-$\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$. But in this report, I take value $1^{2}$.
+$$ $\kappa_1$ is the overall shrinkage level for autoregressive slopes with common value $0.02^{2}$. But in this report, I take value $1^{2}$.
 
 $\kappa_2$ is the overall shrinkage level for the constant term with common value $100$.
 
@@ -322,16 +321,14 @@ p(A, \Sigma | Y) &\propto |\Sigma|^{-T/2} \exp \left\{ -\frac{1}{2} \text{tr}\le
 &\quad\times |\Sigma|^{-(\underline{\nu}+T+N+1)/2}\exp\left\{ -\frac{1}{2}\text{tr}\left[ (Y'Y+\underline{S}+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}\overline{A})\Sigma^{-1} \right] \right\} \\
 &=p(A|\Sigma,Y)\times p(\Sigma|Y)
 \end{align*}
-$$
-Then we get
+$$ Then we get
 
 $$
 \begin{align*}
 A|\Sigma,Y &\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma, \overline{V},) \\
 \Sigma|Y &\sim \mathcal{IW}_N(\overline{S}, \overline{\nu})
 \end{align*}
-$$
-where
+$$ where
 
 $$
 \begin{align*}
@@ -344,16 +341,15 @@ $$
 
 Here are model process:
 
-1. We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
+1.  We can draw $\Sigma^{(s)}$ and then $A^{(s)}$ for each iteration $s$ to form sample draws through joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
-2. Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
+2.  Then, compute the initial value of SF parameters to have $\tilde{B_{0}} = chol(\Sigma^{(s)-1})$ and $\tilde{B_{+}} = \tilde{B_{0}} A^{(s)}$.
 
-3. From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
+3.  From here, we employ sign restriction by adopting a diagonal restrict matrix $R$. Let $P$ be an $N*N$ random matrix with each element having an independent standard normal distribution. Let $P$ = $QR$ be the $QR$ decomposition of $P$ with the diagonal of R normalized to be positive. The random matrix Q is orthogonal and is a draw from the Haar distribution which is a uniform distribution over orthogonal matrices $O(N)$.
 
-4. Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
+4.  Use matrix $Q^{(D)}$ to compute parameters $B_{0} = Q\tilde{B_{0}}$ and $B_{+} = Q\tilde{B_{+}}$.
 
-5. From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
-
+5.  From above, get corresponding IRF(Impulse Response Function) to check whether conducted parameters satisfy sign restriction or not. If not, back to Step 3 to draw new parameters.
 
 ## 3.2 Simulation of Basic Model
 
@@ -585,7 +581,7 @@ knitr::kable(Sigma_df, caption = "Posterior Mean of Sigma")
 
 ```
 
-From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficients in both $B_0$ and $B+$ matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also,  the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.
+From the tables of posterior mean of $B_0$ and $B+$.The signs of the coefficients in both $B_0$ and $B+$ matrices are consistent across corresponding variables. This suggests that the model structure may correctly capture the dynamic relationships between variables. Also, the strong influence of Y1-Lag on Simulation_Y1(0.64) and Y2-Lag on Simulation_Y2 (0.65) suggests similar dynamic responses in these directions.
 
 ```{r}
 #| echo: false
@@ -615,9 +611,9 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 
 ## 3.3 Extension Model
 
-Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
+Since from released public reports, the mean of $A$ is seldom deeply analyzed. Hence, we try to discover an extension on $A$.
 
-$\underline{a}$ is the prior mean only for diagonal elements of $A_1$. So, 
+$\underline{a}$ is the prior mean only for diagonal elements of $A_1$. So,
 
 $$
 \begin{align*}
@@ -636,8 +632,7 @@ $$
 &\underline{a}|Y,X,A,\Sigma \propto L(A,\Sigma,Y,X)p(A|\Sigma,\underline{a}) p(\Sigma) p(\underline{a}) \\
 & \propto p(\underline{a})\left[\prod_{n=1}^Np(A_{1,nn}|\Sigma,\underline{a},\underline{V})\right] \\
 \end{align*}
-$$
-where
+$$ where
 
 $$
 \begin{align*}
@@ -671,20 +666,19 @@ $$
 \end{align*}
 $$
 
-
 ## 3.4 Simulation of Extension Model
 
-Different to $Section3.2$, Gibb Sampler is used to get draws. 
+Different to $Section3.2$, Gibb Sampler is used to get draws.
 
-At each iteration, 
+At each iteration,
 
-1. Compute $\overline{a}$ and $\overline{s}^2_a$.
+1.  Compute $\overline{a}$ and $\overline{s}^2_a$.
 
-2. Draw sample $\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}$.
+2.  Draw sample $\overline{a}^{(s)}|\Sigma^{(s-1)},A^{(s-1)}$.
 
-3. Compute $\overline{A},\overline{V},\overline{S},\overline{\nu}$.
+3.  Compute $\overline{A},\overline{V},\overline{S},\overline{\nu}$.
 
-4. Draw sample $\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}$.
+4.  Draw sample $\Sigma^{(s)},A^{(s)}|\overline{a}^{(s)}$.
 
 ```{r fig.show='hold', out.width='60%'}
 #| echo: false
@@ -960,7 +954,7 @@ knitr::kable(Sigma_df_ext, caption = "Posterior Mean of Sigma_ext")
 
 ```
 
-The sign restrictions seem to enforce non-negative impacts in the matrix elements.  Because all parameters in $B_0$ and $B+$ are with positive sign. 
+The sign restrictions seem to enforce non-negative impacts in the matrix elements. Because all parameters in $B_0$ and $B+$ are with positive sign.
 
 ```{r}
 #| echo: false
@@ -997,24 +991,21 @@ $$
 Y = XA + E \\
 \\ E|X \sim \mathcal{MN}_{T \times N}(0_{T \times N},\Sigma,\text{diag}(\sigma^2)) 
 \end{gather} 
-$$
-where $\sigma^2=(\sigma^2_1,...,\sigma^2_T)^{'}$, which follows a Stochastic Volatility process. 
+$$ where $\sigma^2=(\sigma^2_1,...,\sigma^2_T)^{'}$, which follows a Stochastic Volatility process.
 
-Then the likelihood function looks as follow: 
-$$
+Then the likelihood function looks as follow: $$
 \begin{gather}
 L(A,\Sigma|Y,X,\sigma^2) \propto det(\text{diag}(\sigma^2))^{-\frac{N}{2}} det(\Sigma)^{-\frac{T}{2}} exp \left\{-\frac{1}{2} tr \left[ \Sigma^{-1}(Y-XA)'\text{diag}(\sigma^2)^{-1}(Y-XA) \right] \right\} \\
 \end{gather} 
 $$
 
-The full conditional posterior of $(A,\Sigma)$ follows a $\mathcal{MNIW}(\bar{A},\bar{V},\bar{S},\bar{\nu})$ distribution. 
+The full conditional posterior of $(A,\Sigma)$ follows a $\mathcal{MNIW}(\bar{A},\bar{V},\bar{S},\bar{\nu})$ distribution.
 
 $$
 \begin{gather}
 p(A,\Sigma|X,Y,\sigma^2) \propto L(A,\Sigma|Y,X,\sigma^2) \times  p(A|\Sigma,\sigma^2) \times p(\Sigma) 
 \end{gather}
-$$
-with parameters: 
+$$ with parameters:
 
 $$
 \begin{gather}
@@ -1026,7 +1017,6 @@ $$
 $$
 
 ## 4.1 Baseline Model
-
 
 ```{r}
 #| echo: false
@@ -1108,6 +1098,7 @@ colnames(mean_Sigma) <- colnames(data_df)
 knitr::kable(mean_Sigma, caption = "Posterior Mean of Sigma",index=TRUE)
 
 ```
+
 The code below is for stochastic volatility.
 
 ```{r}
@@ -1293,7 +1284,7 @@ DrawPosterior.sv <- function (Y,X,Prior,S1,S2){
 
 ```
 
-The plot below provides a time series plot of posterior draws mean of $\sigma^2$ at each time spot. Notably, the estimates of $\sigma^2$ remain relatively stable throughout most periods but exhibit significant spikes at certain points, indicating higher volatility captured by the model at these times. 
+The plot below provides a time series plot of posterior draws mean of $\sigma^2$ at each time spot. Notably, the estimates of $\sigma^2$ remain relatively stable throughout most periods but exhibit significant spikes at certain points, indicating higher volatility captured by the model at these times.
 
 ```{r}
 #| label: fig-pos-svts 
@@ -1309,9 +1300,7 @@ abline(h=mean(sigma2.mean.vec),lty=2)
 
 ```
 
-The plots the S2 draws of Gibbs Sampler of the Stochastic Volatility model, and it shown to be stationary for A and $\Sigma$ when $S_1=500, S_2=4000$.
-$A_{21}$ and $A_{32}$ plots: These parameters demonstrate substantial stability in sampling, particularly for $A_{21}$, which fluctuates between $0.9$ and $1.1$. In contrast, $A_{32}$ varies more widely between $-10$ and $10$, indicating greater variability.
-$Σ_{21}$ and $Σ_{22}$ plots: The $Σ_{21}$ parameter shows relatively low variability with small values, suggesting stable estimates. Conversely, $Σ_{22}$ exhibits larger fluctuations, particularly at specific points, suggesting significant changes in volatility estimates at these points.
+The plots the S2 draws of Gibbs Sampler of the Stochastic Volatility model, and it shown to be stationary for A and $\Sigma$ when $S_1=500, S_2=4000$. $A_{21}$ and $A_{32}$ plots: These parameters demonstrate substantial stability in sampling, particularly for $A_{21}$, which fluctuates between $0.9$ and $1.1$. In contrast, $A_{32}$ varies more widely between $-10$ and $10$, indicating greater variability. $Σ_{21}$ and $Σ_{22}$ plots: The $Σ_{21}$ parameter shows relatively low variability with small values, suggesting stable estimates. Conversely, $Σ_{22}$ exhibits larger fluctuations, particularly at specific points, suggesting significant changes in volatility estimates at these points.
 
 ```{r}
 #| label: fig-Gibbs-Sampler-SV 
@@ -1407,7 +1396,6 @@ for (n in 1:N){
 ```
 
 ## 4.2 Extension Model
-
 
 ```{r}
 #| echo: false
@@ -1607,7 +1595,7 @@ abline(h=mean(sigma2.mean.vec),lty=2)
 
 ```
 
-Compare to the Gibbs Sampler of the Stochastic Volatility model of baseline model, the parameters of extension model appear to fluctuate within a wider range. The variance in $Σ_{22}$ in the second set also exhibits larger spikes.
+Compare to the Gibbs Sampler of the Stochastic Volatility model of baseline model, the parameters of extension model appear to fluctuate within a wider range. The variance in $Σ_{21}$ in the second set also exhibits larger spikes.
 
 ```{r}
 #| label: fig-Gibbs-Sampler-SV-ext
