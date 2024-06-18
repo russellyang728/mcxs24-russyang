@@ -22,17 +22,17 @@ Unemployment is pivotal in the macroeconomic framework, directly tied to social 
 
 ## 2.1 Variables Selected
 
-Unemployment Rate(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
+**Unemployment Rate**(UNEMP)(in %): Monthly data on the unemployment rate in Australia, sourced from the Australian Bureau of Statistics (ABS). In further steps, it will be converted to quarterly data.
 
-Government Spending(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
+**Government Spending**(GOVSPEND)(in Million$): Quarterly data on total government expenditure, including both consumption and investment, also obtained from ABS.
 
-Tax Revenue(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
+**Tax Revenue**(TAXREV)(in Million$): Quarterly tax revenue data for the Australian government, which can be sourced from ABS.
 
-Inflation Rate(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
+**Inflation Rate**(INFL)(in %): The consumer price index (CPI) from which the quarterly inflation rate can be calculated, available from ABS.
 
-Real Gross Domestic Product(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
+**Real Gross Domestic Product**(RGDP)(in Million$): Quarterly data of the value of all goods and services produced by Australia, adjusted for inflation. Sourced from RBA.
 
-Cash Rate Target(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
+**Cash Rate Target**(CR)(in%): Quarterly data of the interest rate that banks pay to borrow funds from central banks in the overnight markets, set by RBA.
 
 ## 2.2 Why Chose Them?
 
@@ -134,7 +134,7 @@ rgdp_p = autoplot(rgdp) +
 
 ```
 
-The time series plots\[Figure 1: Time Series Data\] for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
+The **Time Series Plots** for unemployment rate, government spending, tax revenue, and inflation collectively offer a glimpse into the interplay between fiscal policy and economic indicators in an economy. The unemployment rate displays cyclical patterns with notable spikes, hinting at its sensitivity to economic conditions and potentially reactive fiscal policies. The upward trajectories of both government spending and tax revenue suggest an expanding fiscal capacity over time, likely driven by both economic growth and policy decisions.
 
 Government spending's steady rise, with occasional steeper inclines, could imply proactive fiscal stimulus during periods of economic downturn, which often sees a lagged corresponding dip in the unemployment rate. Tax revenue's increase, while generally consistent with economic growth, also shows sensitivity to business cycles, indicating that it's both a reflection of and a contributor to the fiscal environment. Inflation's volatility is without a clear trend line.
 
@@ -142,12 +142,9 @@ The steady increase of Real GDP shows the economy’s growth and resilience in r
 
 These time series hint at a complex relationship where fiscal policy, through government spending and tax revenue, aims to moderate the impacts of economic cycles on unemployment, all while operating within the broader context influenced by inflation dynamics. The ebb and flow in these indicators reflect the challenges and responses in managing an economy over time.
 
-```{r fig.show='hold', out.width='100%'}
-#| echo: false
-#| message: false
-#| warning: false
-#| layout-nrow: 3
-#| fig-cap: "Time Series Data"
+```{r}
+#| label: fig-ts
+#| fig-cap: "Time Series Plots"
 
 combined_plot <- unemp_p + govspend_p + taxrev_p + infl_p + rgdp_p + cr_p +
   plot_layout(nrow = 3, ncol = 2) + 
@@ -159,7 +156,7 @@ combined_plot
 
 ```
 
-\[Table 1: Summary Statistic\] shows variables' description during 1990 Q1 to 2023 Q4.
+**Summary Statistic Table** shows variables' description during 1990 Q1 to 2023 Q4.
 
 ```{r}
 #| echo: false
@@ -183,13 +180,14 @@ Max <- sapply(data_df, max)
 table1 =data.frame(Length, Mean,SD, Min, Max)
 
 knitr::kable(table1, caption = "Summary Statistics", digits = 2)
+
 ```
 
 ## 2.4 Property Tested
 
-From the ACF test\[Figure 2: Autocorrelation Function\], the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.
+From the **ACF Test** figures, the unemployment rate shows a strong initial correlation that quickly tails off, indicating that past unemployment only affects the current rate for a short period. Government spending and tax revenue, on the other hand, display more prolonged correlations, suggesting that current values are influenced by a longer history of the series. This persistence might be a sign of a trend or other non-stationary behavior in the series. Inflation shows some initial correlation that diminishes, which could be indicative of cyclical behavior being smoothed out over time.
 
-From the PACF test\[Figure 3: Partial Autocorrelation Function\], for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
+From the **PACF Test** figures, for unemployment, there's a significant direct correlation with the immediate past, which is not seen in the following lags. This indicates that other than the most recent past, there's little direct effect on the current unemployment rate. In the case of government spending, tax revenue, and inflation, the PACF plots suggest that after accounting for other factors, the direct correlations are quite minimal. This could imply that these time series are driven by a more complex set of factors than just their immediate past values.
 
 ```{r}
 #| label: fig-ACF
@@ -362,7 +360,6 @@ Here are model process:
 First, we test the dynamics of two bi-variate Gaussian random walk processes,which are explored below. The graphs display these walks over 1,000 time observations.
 
 ```{r fig.show='hold', out.width='60%'}
-#| echo: false
 #| label: fig-actificial-data
 #| fig-cap: Bi-variate Gaussian random walk
 
@@ -374,6 +371,7 @@ RW2 <- arima.sim(model= list(order = c(0, 1, 0)), n=1000, mean=0, sd=1)
 plot.ts(RW2,main="Random Walk 2", col=4,xlab="")
 
 RW  <- cbind(RW1,RW2)
+
 ```
 
 ```{r}
@@ -391,6 +389,7 @@ S = 1000
  
 A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
 Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
 ```
 
 ```{r}
@@ -400,18 +399,18 @@ Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
  
 GetPrior.parameters <- function (N,p,Sigma.hat){
 
-kappa.1 = 1
-kappa.2 = 100
-A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
-A.prior[2:(N+1),] = diag(N)
-V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-S.prior = diag(diag(Sigma.hat))
-nu.prior = N+1
-
-return (list(A.prior=A.prior,
-             V.prior = V.prior,
-             S.prior = S.prior,
-             nu.prior = nu.prior))
+  kappa.1 = 1
+  kappa.2 = 100
+  A.prior = matrix(0,nrow(A.hat),ncol(A.hat))
+  A.prior[2:(N+1),] = diag(N)
+  V.prior = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+  S.prior = diag(diag(Sigma.hat))
+  nu.prior = N+1
+  
+  return (list(A.prior=A.prior,
+               V.prior = V.prior,
+               S.prior = S.prior,
+               nu.prior = nu.prior))
 }
 
 # find the prior for the sample
@@ -428,22 +427,21 @@ We get the posterior parameters and draws by following two functions.
 
 Posterior_parameters <- function(X,Y,A.prior,V.prior,S.prior,nu.prior){
   
-V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
-V.bar = solve(V.bar.inv)
-A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
-nu.bar = nrow(Y) + nu.prior
-S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
-
-
-return (list(V.bar = V.bar,
-             A.bar = A.bar,
-             nu.bar = nu.bar,
-             S.bar = S.bar))
+  V.bar.inv = t(X)%*%X + diag(1/diag(V.prior))
+  V.bar = solve(V.bar.inv)
+  A.bar = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
+  nu.bar = nrow(Y) + nu.prior
+  S.bar = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+  
+  return (list(V.bar = V.bar,
+               A.bar = A.bar,
+               nu.bar = nu.bar,
+               S.bar = S.bar))
 }
 
 Posterior_param = Posterior_parameters(X=X,Y=Y,A=Prior$A.prior,V=Prior$V.prior, S=Prior$S.prior,nu=Prior$nu.prior)
 
-#######################################################################
+#####################################################################
 
 Posterior.draws = function(S, Posterior_param){
   
@@ -477,6 +475,7 @@ Posterior.draws = function(S, Posterior_param){
 }
 
 draws = Posterior.draws(S = 1000, Posterior_param = Posterior_param)
+
 ```
 
 Then we employed sign restriction into the posterior draws.
@@ -555,6 +554,7 @@ for (s in 1:S){
   Sigma.store[,,s] <- solve(B0.store[,,s]) %*% t(solve(B0.store[,,s]))
   A.store[,,s] <- t(solve(B0.store[,,s] )%*% Bplus.store[,,s])
 }
+
 ```
 
 After drawing, we have following results of $A$ and $\Sigma$.
@@ -617,9 +617,7 @@ knitr::kable(Bplus_df, caption = "Posterior Mean of B+")
 
 Since from released public reports, the mean of $A$ is seldom deeply analyzed.  Hence, we try to discover an extension on $A$.
 
-
 $\underline{a}$ is the prior mean only for diagonal elements of $A_1$. So, 
-
 
 $$
 \begin{align*}
@@ -708,6 +706,7 @@ sign.restrictions = c(1,1)
 
 A.hat = solve(t(X)%*%X)%*%t(X)%*%Y                
 Sigma.hat = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
 ```
 
 ```{r}
@@ -733,9 +732,10 @@ GetPrior.parameters.ext <- function (N,p,Sigma.hat){
 
 # find the prior for the sample
 Prior.ext = GetPrior.parameters.ext(N=N,p=p,Sigma.hat=Sigma.hat)
+
 ```
 
-Two functions code are added representing the derived posterior.
+Two functions code are added representing the derived $\overline{a}$.
 
 ```{r}
 #| echo: true
@@ -760,7 +760,6 @@ compute_a_posterior = function(m_a,sbar2, Sigma,V,A){
   return(sbar2*a_posterior)
 }
 ```
-
 
 The following codes are to get posterior mean of each element.
 
@@ -805,6 +804,7 @@ Posterior.parameters.ext <- function(X,Y,Prior.ext,S){
 }
 
 Posterior.param.ext = Posterior.parameters.ext(X,Y,Prior.ext,S)
+
 ```
 
 ```{r}
@@ -918,6 +918,7 @@ for (s in 1:S){
 }
 
 ```
+
 We get the mean of $\overline{a}$ first:
 
 ```{r}
@@ -986,7 +987,6 @@ rownames(Bplus_df_ext) <- c("Simulation_Y1ext", "Simulation_Y2ext")
 knitr::kable(Bplus_df_ext, caption = "Posterior Mean of Bplus_ext")
 
 ```
-
 
 # 4. Stochastic Volatility and Empirical Results
 
@@ -1079,6 +1079,7 @@ for (s in 1:S){
   Sigma.store[,,s] <- solve(B0.store[,,s]) %*% t(solve(B0.store[,,s]))
   A.store[,,s] <- t(solve(B0.store[,,s] )%*% Bplus.store[,,s])
 }
+
 ```
 
 ```{r}
@@ -1261,6 +1262,7 @@ DrawPosterior.sv <- function (Y,X,Prior,S1,S2){
               B.posterior     = B.posterior[,,(S1+1):(S1+S2)],
               H.sv            = H.posterior[,(S1+2):(S1+S2+1)]))
 }
+
 ```
 
 The plot below provides a time series plot of posterior draws mean of $\sigma^2$ at each time spot. Notably, the estimates of $\sigma^2$ remain relatively stable throughout most periods but exhibit significant spikes at certain points, indicating higher volatility captured by the model at these times. 
@@ -1303,7 +1305,7 @@ The following graphs are impulse responses of basic model after real data are in
 From the impulse response plots, we can conclude there is significant effect on government spending, but insignificant for others.
 
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -1434,8 +1436,10 @@ for (s in 1:S){
 }
 ```
 
+The difference between the code below and code of baseline model posterior draw's stochastic volatility is updating $A.prior$ to $A.prior*a.posterior$ like I did in extension model simulation.
+
 ```{r}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -1535,7 +1539,7 @@ DrawPosterior.sv.ext <- function (Y,X,Prior.ext,S1,S2){
 }
 ```
 
-The time series plot is posterior draws mean of $\sigma^2$ at each time spot in extension model. The plot shows same volatility as baseline model.
+The time series plot is posterior draws mean of $\sigma^2$ at each time spot in extension model. The plot shows similar volatility as baseline model.
 
 ```{r}
 #| label: fig-pos-svts-ext
@@ -1551,7 +1555,7 @@ abline(h=mean(sigma2.mean.vec),lty=2)
 
 ```
 
-Compare the Gibbs Sampler of the Stochastic Volatility model of extension model, the parameters appear to fluctuate within a wider range compared to the baseline one. The variance in $Σ_{22}$ in the second set also exhibits larger spikes than in the basic.
+Compare to the Gibbs Sampler of the Stochastic Volatility model of baseline model, the parameters of extension model appear to fluctuate within a wider range. The variance in $Σ_{22}$ in the second set also exhibits larger spikes.
 
 ```{r}
 #| label: fig-Gibbs-Sampler-SV-ext
@@ -1559,10 +1563,10 @@ Compare the Gibbs Sampler of the Stochastic Volatility model of extension model,
 
 par(mfrow=c(2,2),mar=c(2,2,2,2))
 
-plot(Posterior.sv.ext$A.posterior[2,1,],type='l',col="#660099",ylab="",xlab="",main=expression(A[21]), lwd = 0.1)
-plot(Posterior.sv.ext$A.posterior[3,2,],type='l',col="#CC66CC",ylab="",xlab="",main=expression(A[32]), lwd = 0.1)
-plot(Posterior.sv.ext$Sigma.posterior[1,1,],type='l',col="#6699CC",ylab="",xlab="",main=expression(Sigma[21]), lwd = 0.1)
-plot(Posterior.sv.ext$Sigma.posterior[2,2,],type='l',col="#0066CC",ylab="",xlab="",main=expression(Sigma[22]), lwd = 0.1)
+plot(Posterior.sv.ext$A.posterior[2,1,],type='l',col="#8B0000",ylab="",xlab="",main=expression(A[21]), lwd = 0.1)
+plot(Posterior.sv.ext$A.posterior[3,2,],type='l',col="#FFB6C1",ylab="",xlab="",main=expression(A[32]), lwd = 0.1)
+plot(Posterior.sv.ext$Sigma.posterior[1,1,],type='l',col="#1E90FF",ylab="",xlab="",main=expression(Sigma[21]), lwd = 0.1)
+plot(Posterior.sv.ext$Sigma.posterior[2,2,],type='l',col="#ADD8E6",ylab="",xlab="",main=expression(Sigma[22]), lwd = 0.1)
 
 
 ```
@@ -1643,5 +1647,8 @@ for (n in 1:N){
 
 ```
 
+# 5. Conclusion
+
+In this project, I utilized the Bayesian Structural VAR approach to explore the impact of fiscal policy on the Australian unemployment rate. The use of sign restrictions enhanced the validity of our results. Additionally, stochastic volatility and extensions on $A_1$ were incorporated into the analysis. The impulse response analysis indicates that government spending significantly influences the unemployment rate in the short term in Australia, although its effects tend to diminish over a two-year period.
 
 ## References {.unnumbered}
